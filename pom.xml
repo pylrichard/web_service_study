@@ -12,6 +12,7 @@
         <module>java_se_study</module>
         <module>junit_study</module>
         <module>sword_for_offer</module>
+        <module>java_multithread_core_tech</module>
     </modules>
 
     <dependencies>
