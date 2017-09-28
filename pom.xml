@@ -13,6 +13,7 @@
         <module>junit_study</module>
         <module>sword_for_offer</module>
         <module>java_multithread_core_tech</module>
+        <module>imooc_study</module>
     </modules>
 
     <dependencies>
