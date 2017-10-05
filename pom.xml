@@ -16,11 +16,19 @@
         <module>imooc_study</module>
     </modules>
 
+    <properties>
+        <!-- 注意Spring Boot与Spring的版本匹配，否则编译会报错，避免出现2个版本的Spring -->
+        <spring.version>4.3.11.RELEASE</spring.version>
+        <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
+        <es.version>5.6.2</es.version>
+        <junit.version>4.12</junit.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit.version}</version>
         </dependency>
     </dependencies>
 
