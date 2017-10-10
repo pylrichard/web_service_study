@@ -1,13 +1,13 @@
 package com.roncoo.spring_boot.controller;
 
 import com.roncoo.spring_boot.bean.User;
+import com.roncoo.spring_boot.bean.UserLog;
+import com.roncoo.spring_boot.cache.UserLogCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -22,7 +22,11 @@ public class APIController {
     private int number;
     @Value(value = "${rsb.desc}")
     private String desc;
+
     private static final Logger logger = LoggerFactory.getLogger(APIController.class);
+
+    @Autowired
+    private UserLogCache userLogCache;
 
     @RequestMapping
     public String api() {
@@ -56,5 +60,26 @@ public class APIController {
         user.setDate(new Date());
 
         return user;
+    }
+
+    @GetMapping(value = "select")
+    public UserLog get(@RequestParam(defaultValue = "1") Integer id) {
+        return userLogCache.selectById(id);
+    }
+
+    @GetMapping(value = "update")
+    public UserLog update(@RequestParam(defaultValue = "1") Integer id) {
+        UserLog bean = userLogCache.selectById(id);
+
+        bean.setUserName("pyl");
+        bean.setCreateTime(new Date());
+        userLogCache.updateById(bean);
+
+        return bean;
+    }
+
+    @GetMapping(value = "del")
+    public void del(@RequestParam(defaultValue = "1") Integer id) {
+        userLogCache.deleteById(id);
     }
 }
