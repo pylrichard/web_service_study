@@ -1,10 +1,10 @@
 package com.roncoo.spring_boot;
 
 import com.roncoo.spring_boot.bean.UserLog;
+import com.roncoo.spring_boot.component.JMSComponent;
 import com.roncoo.spring_boot.component.RedisComponent;
 import com.roncoo.spring_boot.controller.APIController;
 import com.roncoo.spring_boot.dao.UserLogDAO;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +34,8 @@ public class RoncooSpringBootApplicationTest {
     private RedisComponent redisComponent;
     @Autowired
     private UserLogDAO userLogDAO;
+    @Autowired
+    private JMSComponent jmsComponent;
 
     private MockMvc mvc;
 
@@ -106,5 +108,10 @@ public class RoncooSpringBootApplicationTest {
         System.out.println(result.getContent());
         result = userLogDAO.findAll(pageable);
         System.out.println(result.getContent());
+    }
+
+    @Test
+    public void send() {
+        jmsComponent.send("hello world");
     }
 }

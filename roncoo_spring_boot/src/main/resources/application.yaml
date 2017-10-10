@@ -47,6 +47,8 @@ spring:
       #redis-server &
       #采用默认配置，无密码
       #password:
+    activemq:
+      in-memory: true
 
 ---
 spring:
