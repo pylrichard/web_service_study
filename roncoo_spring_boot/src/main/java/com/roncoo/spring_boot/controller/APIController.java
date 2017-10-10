@@ -3,6 +3,7 @@ package com.roncoo.spring_boot.controller;
 import com.roncoo.spring_boot.bean.User;
 import com.roncoo.spring_boot.bean.UserLog;
 import com.roncoo.spring_boot.cache.UserLogCache;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,12 +63,12 @@ public class APIController {
         return user;
     }
 
-    @GetMapping(value = "select")
+    @GetMapping("select")
     public UserLog get(@RequestParam(defaultValue = "1") Integer id) {
         return userLogCache.selectById(id);
     }
 
-    @GetMapping(value = "update")
+    @GetMapping("update")
     public UserLog update(@RequestParam(defaultValue = "1") Integer id) {
         UserLog bean = userLogCache.selectById(id);
 
@@ -78,8 +79,39 @@ public class APIController {
         return bean;
     }
 
-    @GetMapping(value = "del")
+    @GetMapping("del")
     public void del(@RequestParam(defaultValue = "1") Integer id) {
         userLogCache.deleteById(id);
+    }
+
+    @PostMapping("update")
+    public UserLog update(@RequestBody JsonNode jsonNode) {
+        UserLog bean = userLogCache.selectById(jsonNode.get("id").asInt(1));
+
+        System.out.println("jsonNode = " + jsonNode);
+        if(bean == null){
+            bean = new UserLog();
+        }
+        bean.setUserName("pyl");
+        bean.setCreateTime(new Date());
+        bean.setUserIp("192.168.8.10");
+        userLogCache.updateById(bean);
+
+        return bean;
+    }
+
+    @GetMapping("update/{id}")
+    public UserLog updateById(@PathVariable(value = "id") Integer id) {
+        UserLog bean = userLogCache.selectById(id);
+
+        if(bean == null){
+            bean = new UserLog();
+        }
+        bean.setUserName("syl");
+        bean.setCreateTime(new Date());
+        bean.setUserIp("192.168.8.11");
+        userLogCache.updateById(bean);
+
+        return bean;
     }
 }

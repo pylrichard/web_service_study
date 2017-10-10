@@ -5,23 +5,36 @@ import com.roncoo.spring_boot.component.JMSComponent;
 import com.roncoo.spring_boot.component.RedisComponent;
 import com.roncoo.spring_boot.controller.APIController;
 import com.roncoo.spring_boot.dao.UserLogDAO;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.protocol.HttpContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,6 +49,8 @@ public class RoncooSpringBootApplicationTest {
     private UserLogDAO userLogDAO;
     @Autowired
     private JMSComponent jmsComponent;
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
 
     private MockMvc mvc;
 
@@ -113,5 +128,44 @@ public class RoncooSpringBootApplicationTest {
     @Test
     public void send() {
         jmsComponent.send("hello world");
+    }
+
+    @Test
+    public void getForObject() {
+        //使用RestTemplateBuilder创建RestTemplate对象
+        //RestTemplate是Spring提供的用于访问REST服务的客户端
+        UserLog bean = restTemplateBuilder.build().getForObject("http://192.168.8.10:8080/api/update/{id}", UserLog.class, 1);
+        System.out.println(bean.getUserName());
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", 2);
+        bean = restTemplateBuilder.build().postForObject("http://192.168.8.10:8080/api/update", map, UserLog.class);
+        System.out.println(bean.getUserIp());
+
+        //使用代理访问REST服务
+//        String result = restTemplateBuilder.additionalCustomizers(new ProxyCustomizer()).build().getForObject("http://www.qq.com", String.class);
+//        System.out.println(result);
+    }
+
+    static class ProxyCustomizer implements RestTemplateCustomizer {
+        @Override
+        public void customize(RestTemplate restTemplate) {
+            String proxyHost = "x.x.x.x";
+            int proxyPort = 8080;
+            HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+            HttpClient httpClient = HttpClientBuilder.create().setRoutePlanner(new DefaultProxyRoutePlanner(proxy) {
+                @Override
+                public HttpHost determineProxy(HttpHost target, HttpRequest request, HttpContext context) throws HttpException {
+                    System.out.println(target.getHostName());
+
+                    return super.determineProxy(target, request, context);
+                }
+            }).build();
+            HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+
+            httpComponentsClientHttpRequestFactory.setConnectTimeout(10000);
+            httpComponentsClientHttpRequestFactory.setReadTimeout(60000);
+            restTemplate.setRequestFactory(httpComponentsClientHttpRequestFactory);
+        }
     }
 }
