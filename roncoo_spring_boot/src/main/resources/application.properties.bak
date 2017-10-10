@@ -1,0 +1,38 @@
+#配置项的生效顺序，会对值进行覆盖：
+#1. @TestPropertySource注解
+#2. 命令行参数
+#3. Java系统属性System.getProperties()
+#4. 操作系统环境变量
+#5. 只有在random.*里包含的属性会产生一个RandomValuePropertySource
+#6. 在打包的jar外的应用程序配置文件:application.properties，包含YAML和profile变量
+#7. 在打包的jar内的应用程序配置文件:application.properties，包含YAML和profile变量
+#8. 在@Configuration类上的@PropertySource注解
+#9. 默认属性，使用SpringApplication.setDefaultProperties指定
+
+#配置文件生效顺序，按优先级排序
+#1. 当前目录下config子目录
+#2. 当前目录
+#3. classpath下config包
+#4. classpath根路径
+
+#设置生效的配置文件
+#application.properties中的配置项会覆盖application-dev.properties中相同配置项
+spring.profiles.active=dev
+
+#优先级较低
+#32位随机字符串，读取使用注解：@Value(value = "${rsb.secret}")
+rsb.secret=${random.value}
+#int类型的随机数字
+rsb.number=${random.int}
+
+rsb.name=www.qq.com
+#属性占位符属性，引用先前定义的值
+rsb.desc=the domain is ${rsb.name}
+
+#端口
+server.port=8080
+
+#时间格式化
+spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+#时区设置
+spring.jackson.time-zone=Asia/Chongqing

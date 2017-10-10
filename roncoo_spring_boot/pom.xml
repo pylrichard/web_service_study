@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>roncoo_spring_boot</artifactId>
+
+    <parent>
+        <artifactId>java_study</artifactId>
+        <groupId>com.bd</groupId>
+        <version>0.1.0</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <!-- 监控文件发生修改，自动编译重启应用 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <!-- 自动生成配置元数据，见additional-spring-configuration-metadata.json-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${spring-boot.version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <!-- 打包生成可运行的jar
+                执行java -jar xxx.jar &
+                报错no main manifest attribute
+                在MANIFEST.MF中指定Main-Class以便运行java -jar xxx.jar时找到对应的主类
+                如果想在运行时指定运行的主类，用-cp/–classpath
+                报错Error: Could not find or load main class
+                在jar的META-INF/MANIFEST.MF中查看Main Class，Spring Boot App的是org.springframework.boot.loader.JarLauncher
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

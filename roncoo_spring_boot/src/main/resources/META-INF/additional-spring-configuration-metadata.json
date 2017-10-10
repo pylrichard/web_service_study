@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "rsb.secret",
+      "type": "java.lang.String",
+      "description": "Description for rsb.secret."
+    },
+    {
+      "name": "rsb.desc",
+      "type": "java.lang.String",
+      "description": "Description for rsb.desc."
+    },
+    {
+      "name": "rsb.name",
+      "type": "java.lang.String",
+      "description": "Description for rsb.name."
+    },
+    {
+      "name": "rsb.number",
+      "type": "java.lang.String",
+      "description": "Description for rsb.number."
+    }
+  ]
+}

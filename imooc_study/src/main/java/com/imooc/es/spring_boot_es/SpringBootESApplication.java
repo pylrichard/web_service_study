@@ -29,6 +29,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 注解@RestController 组合注解=@ResponseBody+@Controller
+ * 注解@Controller 处理http请求
+ */
 @SpringBootApplication
 @RestController
 public class SpringBootESApplication {
@@ -37,6 +41,11 @@ public class SpringBootESApplication {
 
     /**
      * Postman执行GET 192.168.8.10:8080/get/book/novel?id=2
+     *
+     * 注解@RequestMapping/@GetMapping 配置url映射
+     *
+     * /get和/query都能访问到同一个方法
+     * 注解@RequestMapping(value = {"/get", "/query"}, method = RequestMethod.GET)
      */
     @GetMapping("/get/book/novel")
     @ResponseBody
@@ -56,6 +65,9 @@ public class SpringBootESApplication {
 
     /**
      * POST 192.168.8.10:8080/query/book/novel，Body->x-www-form-urlencoded
+     *
+     * 注解@RequestParam("id") 获取请求参数id的值，如/get?id=5中的5
+     * 注解@PathVariable 获取url中的数据，如/get/5中的5
      */
     @PostMapping("/query/book/novel")
     @ResponseBody
