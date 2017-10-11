@@ -15,6 +15,7 @@
         <module>java_multithread_core_tech</module>
         <module>imooc_study</module>
         <module>roncoo_spring_boot</module>
+        <module>spring_boot_admin_monitor</module>
     </modules>
 
     <properties>

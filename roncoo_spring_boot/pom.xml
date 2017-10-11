@@ -68,6 +68,11 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.3</version>
         </dependency>
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>1.5.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -87,6 +92,8 @@
                     <execution>
                         <goals>
                             <goal>repackage</goal>
+                            <!-- 显示项目版本号 -->
+                            <goal>build-info</goal>
                         </goals>
                     </execution>
                 </executions>

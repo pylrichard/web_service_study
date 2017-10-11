@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: sba-monitor
+  boot:
+    admin:
+      #配置访问路径为http://localhost:64000/sba-monitor/sba
+      #监控端和被监控端都启动后，访问http://localhost:64000/sba-monitor/sba，可以看到被监控服务的各种详情
+      context-path: /sba
+server:
+  port: 64000
+  #为访问的url加上一个前缀
+  context-path: /sba-monitor/

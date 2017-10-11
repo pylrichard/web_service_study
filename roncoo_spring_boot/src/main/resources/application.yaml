@@ -47,13 +47,38 @@ spring:
       #redis-server &
       #采用默认配置，无密码
       #password:
-    activemq:
-      in-memory: true
-    session:
-      store-type: none
-      #spring session刷新模式：默认on-save
-      redis:
-        flush-mode: on-save
+  activemq:
+    in-memory: true
+  session:
+    store-type: none
+      #spring session刷新模式：默认ON_SAVE
+    redis:
+      flush-mode: ON_SAVE
+  #被监控端启动时出现InetAddress.getLocalHost() throws UnknownHostException错误
+  #是因为/etc/hosts没配置本机机器名和ip的对应关系
+  boot:
+    admin:
+      client:
+        #解决Windows下运行时无法识别主机名的问题
+        prefer-ip: true
+      #被监控端主动注册向监控端注册的地址
+      #如果被监控端使用Spring Cloud向Eureka注册了服务，可以由监控端向Euraka发现并监控这个服务。此方法调试起来比较复杂
+      url: http://localhost:64000/sba-monitor
+
+management:
+  port: 64001
+  security:
+    #Spring Boot 1.5.2之后严格执行安全策略，此项配置为false
+    enabled: false
+
+#定义各种额外的详情给服务端显示
+info:
+  app:
+    #从pom.xml中获取
+    name: "@project.name@"
+    description: "@project.description@"
+    version: "@project.version@"
+    spring-boot-version: "@project.parent.version@"
 
 ---
 spring:
