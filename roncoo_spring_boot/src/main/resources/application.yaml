@@ -27,6 +27,22 @@ spring:
     url: jdbc:mysql://localhost:3306/roncoo_spring_boot?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: Pyl123456
+    #Spring Boot默认数据源是org.apache.tomcat.jdbc.pool.DataSource
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      #初始化连接大小
+      initial-size: 8
+      #最小空闲连接数
+      min-idle: 5
+      #最大连接数
+      max-active: 10
+      #查询超时时间
+      query-timeout: 6000
+      #事务查询超时时间
+      transaction-query-timeout: 6000
+      #关闭空闲连接超时时间
+      remove-abandoned-timeout: 1800
+      filter-class-names: stat
   jpa:
     hibernate:
       #create 先drop已存在的表，再创建1个空表
