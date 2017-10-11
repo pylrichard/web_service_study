@@ -5,6 +5,7 @@ import com.roncoo.spring_boot.component.JMSComponent;
 import com.roncoo.spring_boot.component.RedisComponent;
 import com.roncoo.spring_boot.controller.APIController;
 import com.roncoo.spring_boot.dao.UserLogDAO;
+import com.roncoo.spring_boot.mapper.UserMapper;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -51,6 +52,8 @@ public class RoncooSpringBootApplicationTest {
     private JMSComponent jmsComponent;
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
+    @Autowired
+    private UserMapper userMapper;
 
     private MockMvc mvc;
 
@@ -171,5 +174,19 @@ public class RoncooSpringBootApplicationTest {
             httpComponentsClientHttpRequestFactory.setReadTimeout(60000);
             restTemplate.setRequestFactory(httpComponentsClientHttpRequestFactory);
         }
+    }
+
+    @Test
+    public void testMyBatis() {
+        UserLog userLog = new UserLog();
+        userLog.setUserName("py");
+        userLog.setCreateTime(new Date());
+        userLog.setUserIp("192.168.8.10");
+
+        int result = userMapper.insert(userLog);
+        System.out.println(result);
+
+        userLog = userMapper.selectByPrimaryKey(6);
+        System.out.println(userLog.getCreateTime());
     }
 }
