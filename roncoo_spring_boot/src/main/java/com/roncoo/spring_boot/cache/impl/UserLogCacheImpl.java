@@ -26,6 +26,8 @@ public class UserLogCacheImpl implements UserLogCache {
     private UserLogDAO userLogDao;
 
     /**
+     * 自动根据方法生成缓存
+     *
      * key属性用来指定Spring对方法的返回结果进行缓存时对应的key
      * 自定义策略可以通过Spring的EL表达式来指定key
      * EL表达式可以使用方法参数及它们对应的属性

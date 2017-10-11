@@ -1,18 +1,20 @@
 package com.roncoo.spring_boot.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.roncoo.spring_boot.bean.User;
 import com.roncoo.spring_boot.bean.UserLog;
 import com.roncoo.spring_boot.cache.UserLogCache;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -113,5 +115,26 @@ public class APIController {
         userLogCache.updateById(bean);
 
         return bean;
+    }
+
+    /**
+     * redis-cli中执行keys '*sessions*'
+     * spring:session:expirations:之后为失效时间
+     * spring:session:sessions:之后为session id
+     *
+     * 在多个Java应用间共享session，只需在另外的Java工程中进行同样的配置即可
+     *
+     * @return session id
+     */
+    @RequestMapping("uid")
+    public String getUUID(HttpSession session) {
+        UUID uid = (UUID) session.getAttribute("uid");
+
+        if (uid == null) {
+            uid = UUID.randomUUID();
+        }
+        session.setAttribute("uid", uid);
+
+        return session.getId();
     }
 }

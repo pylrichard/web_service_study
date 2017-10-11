@@ -49,6 +49,11 @@ spring:
       #password:
     activemq:
       in-memory: true
+    session:
+      store-type: none
+      #spring session刷新模式：默认on-save
+      redis:
+        flush-mode: on-save
 
 ---
 spring:
