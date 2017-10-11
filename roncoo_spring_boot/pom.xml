@@ -88,6 +88,23 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--
+                    命令行支持远程调试
+                    java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -jar xxx.jar
+
+                    在IDEA的Edit Configurations添加Remote
+                    填写Name、Host、Port
+                    点击Debug
+                    Controller的方法中设置断点
+                    Postman中发送请求，触发断点
+
+                    Spring Boot支持远程调试，添加如下配置项
+                -->
+                <configuration>
+                    <jvmArguments>
+                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
+                    </jvmArguments>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
