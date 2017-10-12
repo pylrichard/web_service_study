@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.roncoo.spring_boot.bean.User;
 import com.roncoo.spring_boot.bean.UserLog;
 import com.roncoo.spring_boot.cache.UserLogCache;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -65,11 +68,13 @@ public class APIController {
         return user;
     }
 
+    @ApiOperation(value = "查找", notes = "根据用户ID查找用户")
     @GetMapping("select")
-    public UserLog get(@RequestParam(defaultValue = "1") Integer id) {
+    public UserLog get(@ApiParam("用户ID") @RequestParam(defaultValue = "1") Integer id) {
         return userLogCache.selectById(id);
     }
 
+    @ApiIgnore
     @GetMapping("update")
     public UserLog update(@RequestParam(defaultValue = "1") Integer id) {
         UserLog bean = userLogCache.selectById(id);
