@@ -21,7 +21,7 @@
             </encoder>
         </appender>
 
-        <logger name="com.bd.roncoo_spring_boot" level="debug"/>
+        <logger name="com.roncoo.spring_boot" level="debug"/>
 
         <root level="info">
             <appender-ref ref="CONSOLE" />

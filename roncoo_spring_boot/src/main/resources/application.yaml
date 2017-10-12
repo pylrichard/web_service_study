@@ -10,6 +10,10 @@ rsb:
 #自定义配置
 logging:
   config: classpath:logback-spring.xml
+  #Spring Boot的Hibernate打印Info信息，无法查看H2数据连接信息
+  level:
+    org:
+      hibernate: DEBUG
 
 #Properties配置多环境，需要添加多个配置文件，YAML只需要一个文件
 #YAML不能通过@PropertySource注解加载
@@ -94,7 +98,7 @@ info:
     name: "@project.name@"
     description: "@project.description@"
     version: "@project.version@"
-    spring-boot-version: "@project.parent.version@"
+    spring-boot-version: "@project.parent.properties.spring-boot.version@"
 
 ---
 spring:

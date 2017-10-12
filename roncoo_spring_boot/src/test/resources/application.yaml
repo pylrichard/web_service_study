@@ -1,0 +1,62 @@
+#执行单元测试优先读取src/test/resources下的配置文件
+#除去数据源配置改为H2之外，其他的配置项与src/main/resources下的相同
+#
+#使用h2可以让dao层的单元测试和service层的单元测试不依赖具体数据库，提高单元测试的效率
+#
+#启动应用后，在http://localhost:8080/h2-console/查看H2中的数据
+#
+#maven运行单个test class中的部分测试
+#mvn -Dtest=RoncooSpringBootApplicationTest#testMyBatis test
+rsb:
+  secret: ${random.value}
+  number: ${random.int}
+  name: www.qq.com
+  desc: ${rsb.name} is a domain name
+
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    #执行单元测试，数据在内存中
+    url: jdbc:h2:mem:roncoo_spring_boot;MODE=MYSQL
+    #数据写入文件
+    #url: jdbc:h2:file:~/Workspace/h2/roncoo_spring_boot
+    schema: classpath:create_table.sql
+    data: classpath:insert_data.sql
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      #初始化连接大小
+      initial-size: 8
+      #最小空闲连接数
+      min-idle: 5
+      #最大连接数
+      max-active: 10
+      #查询超时时间
+      query-timeout: 6000
+      #事务查询超时时间
+      transaction-query-timeout: 6000
+      #关闭空闲连接超时时间
+      remove-abandoned-timeout: 1800
+      filter-class-names: stat
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
+    pool:
+      max-active: 8
+      max-idle: 8
+      #不指定配置文件启动
+      #redis-server &
+      #采用默认配置，无密码
+      #password:
+  activemq:
+    in-memory: true
+  session:
+    store-type: none
+      #spring session刷新模式：默认ON_SAVE
+    redis:
+      flush-mode: ON_SAVE

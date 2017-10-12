@@ -5,7 +5,7 @@ import com.roncoo.spring_boot.component.JMSComponent;
 import com.roncoo.spring_boot.component.RedisComponent;
 import com.roncoo.spring_boot.controller.APIController;
 import com.roncoo.spring_boot.dao.UserLogDAO;
-import com.roncoo.spring_boot.mapper.UserMapper;
+import com.roncoo.spring_boot.mapper.UserLogMapper;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.protocol.HttpContext;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +43,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+//不指定classes，则Spring Boot会启动整个Spring容器，比如执行初始化、ApplicationRunner、CommandLineRunner等
+@SpringBootTest//(classes={DataSourceAutoConfiguration.class, MybatisAutoConfiguration.class, MybatisScanConfiguration.class})
 public class RoncooSpringBootApplicationTest {
     @Autowired
     private RedisComponent redisComponent;
@@ -53,7 +55,7 @@ public class RoncooSpringBootApplicationTest {
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
     @Autowired
-    private UserMapper userMapper;
+    private UserLogMapper userLogMapper;
 
     private MockMvc mvc;
 
@@ -183,10 +185,12 @@ public class RoncooSpringBootApplicationTest {
         userLog.setCreateTime(new Date());
         userLog.setUserIp("192.168.8.10");
 
-        int result = userMapper.insert(userLog);
-        System.out.println(result);
+        userLogMapper.insert(userLog);
 
-        userLog = userMapper.selectByPrimaryKey(6);
+        //MySQL下构建相应测试数据，但测试用例依赖特定数据，不推荐
+        //推荐使用H2在内存中构建测试数据
+        userLog = userLogMapper.selectByPrimaryKey(1);
         System.out.println(userLog.getCreateTime());
+        Assert.assertEquals(new Integer(1), userLog.getId());
     }
 }

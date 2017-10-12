@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS user_log (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  user_name VARCHAR(100),
+  create_time TIMESTAMP,
+  user_ip VARCHAR(100)
+);
