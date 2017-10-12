@@ -1,0 +1,38 @@
+## 1 向授权服务器发送请求(包好client id和回调URI(localhost:8080))
+重定向URI(application.properties的security.oauth2.client.user-authorization-uri(https://github.com/login/oauth/authorize))让用户进行授权
+1.1 OAuth2ClientContextFilter.doFilter
+1.2 AbstractAuthenticationProcessingFilter.doFilter
+1.3 OAuth2ClientAuthenticationProcessingFilter.attemptAuthentication
+1.4 OAuth2RestTemplate.getAccessToken
+1.5 OAuth2RestTemplate.acquireAccessToken
+1.6 AuthorizationCodeAccessTokenProvider.obtainAccessToken
+1.7 AuthorizationCodeAccessTokenProvider.getRedirectForAuthorization
+1.8 OAuth2RestTemplate.getAccessToken
+1.9 OAuth2ClientContextFilter.doFilter
+1.10 OAuth2ClientContextFilter.redirectUser
+
+## 2 用户进行授权后，授权服务器返回授权码，第三方应用服务器发送授权码和回调URI(localhost:8080)获取AccessToken
+2.1 OAuth2ClientContextFilter.doFilter
+2.2 AuthorizationCodeAccessTokenProvider.obtainAccessToken.retrieveToken
+2.3 OAuth2AccessTokenSupport.retrieveToken
+2.4 RestTemplate.execute
+2.5 RestTemplate.doExecute
+2.6 OAuth2AccessTokenSupport.OAuth2AuthTokenCallback.doWithRequest
+2.7 FormHttpMessageConverter.write
+2.8 FormHttpMessageConverter.writeForm
+
+## 3 授权服务器返回AccessToken，第三方应用服务器发送AccessToken到授权服务器获取用户信息
+3.1 OAuth2ClientAuthenticationProcessingFilter.attemptAuthentication
+3.2 OAuth2RestTemplate.getAccessToken
+3.3 UserInfoTokenServices.loadAuthentication
+3.4 UserInfoTokenServices.getMap
+3.5 RestTemplate.getForEntity
+3.6 RestTemplate.doExecute
+3.7 OAuth2RestTemplate.createRequest
+3.8 DefaultOAuth2RequestAuthenticator.authenticate
+3.9 UserInfoTokenServices.extractAuthentication
+3.10 UserInfoTokenServices.getPrincipal
+3.11 FixedPrincipalExtractor.extractPrincipal
+3.12 FixedAuthoritiesExtractor.extractAuthorities
+3.13 AbstractAuthenticationProcessingFilter.doFilter
+3.14 AbstractAuthenticationProcessingFilter.successfulAuthentication
