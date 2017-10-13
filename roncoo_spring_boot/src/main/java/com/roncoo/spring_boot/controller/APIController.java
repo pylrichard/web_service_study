@@ -24,14 +24,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = "/api")
 public class APIController {
+    private static final Logger logger = LoggerFactory.getLogger(APIController.class);
+
     @Value(value = "${rsb.secret}")
     private String secret;
     @Value(value = "${rsb.number}")
     private int number;
     @Value(value = "${rsb.desc}")
     private String desc;
-
-    private static final Logger logger = LoggerFactory.getLogger(APIController.class);
 
     @Autowired
     private UserLogCache userLogCache;
