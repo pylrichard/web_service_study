@@ -10,10 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,14 +60,20 @@ public class APIController {
         return map;
     }
 
-    @RequestMapping(value = "find/{id}/{name}")
-    public User find(@PathVariable int id, @PathVariable String name) {
-        User user = new User();
-        user.setId(id);
-        user.setName(name);
-        user.setDate(new Date());
+    @PostMapping("add_user")
+    public User addUser(@Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.info(bindingResult.getFieldError().getDefaultMessage());
+            return null;
+        }
 
-        return user;
+        User newUser = new User();
+        newUser.setId(user.getId());
+        newUser.setName(user.getName());
+        newUser.setAge(user.getAge());
+        newUser.setDate(new Date());
+
+        return newUser;
     }
 
     @ApiOperation(value = "查找", notes = "根据用户ID查找用户")

@@ -1,10 +1,13 @@
 package com.roncoo.spring_boot.bean;
 
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 public class User {
     private int id;
     private String name;
+    @Min(value = 18, message = "未成年人不能注册用户")
+    private int age;
     private Date date;
 
     public int getId() {
@@ -29,5 +32,13 @@ public class User {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
