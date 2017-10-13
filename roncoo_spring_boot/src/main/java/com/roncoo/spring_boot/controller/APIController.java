@@ -1,9 +1,13 @@
 package com.roncoo.spring_boot.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.roncoo.spring_boot.bean.Result;
 import com.roncoo.spring_boot.bean.User;
 import com.roncoo.spring_boot.bean.UserLog;
 import com.roncoo.spring_boot.cache.UserLogCache;
+import com.roncoo.spring_boot.enums.ResultEnum;
+import com.roncoo.spring_boot.exception.RoncooExcepiton;
+import com.roncoo.spring_boot.util.ResultUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -61,19 +65,23 @@ public class APIController {
     }
 
     @PostMapping("add_user")
-    public User addUser(@Valid User user, BindingResult bindingResult) {
+    public Result<User> addUser(@Valid User user, BindingResult bindingResult) throws Exception {
+        //User中有@NotBlank的name为空，此处打印提示信息
         if (bindingResult.hasErrors()) {
-            logger.info(bindingResult.getFieldError().getDefaultMessage());
-            return null;
+            //HttpAspect.doAfterReturning的参数object是此处的返回结果
+            return ResultUtil.fail(ResultEnum.PARAM_NOTBLANK.getCode(), bindingResult.getFieldError().getDefaultMessage());
+            //返回null，触发Null异常，ExceptionHandle返回ResultEnum.UNKNOWN_ERROR
+//            return null;
         }
 
-        User newUser = new User();
-        newUser.setId(user.getId());
-        newUser.setName(user.getName());
-        newUser.setAge(user.getAge());
-        newUser.setDate(new Date());
-
-        return newUser;
+        int age = user.getAge();
+        if (age <= 18) {
+            throw new RoncooExcepiton(ResultEnum.SCHOOL);
+        } else if (age > 18 && age < 25) {
+            throw new RoncooExcepiton(ResultEnum.UNIVERSITY);
+        } else {
+            return ResultUtil.success(user);
+        }
     }
 
     @ApiOperation(value = "查找", notes = "根据用户ID查找用户")

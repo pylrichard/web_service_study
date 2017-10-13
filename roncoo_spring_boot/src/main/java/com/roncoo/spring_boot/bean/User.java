@@ -1,14 +1,16 @@
 package com.roncoo.spring_boot.bean;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.validation.constraints.Min;
-import java.util.Date;
 
 public class User {
     private int id;
+    //见addUser的BindingResult
+    @NotBlank(message = "用户名必传")
     private String name;
     @Min(value = 18, message = "未成年人不能注册用户")
     private int age;
-    private Date date;
 
     public int getId() {
         return id;
@@ -26,14 +28,6 @@ public class User {
         this.name = name;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public int getAge() {
         return age;
     }
@@ -48,7 +42,6 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
-                ", date=" + date +
                 '}';
     }
 }
