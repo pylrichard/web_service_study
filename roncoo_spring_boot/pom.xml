@@ -147,12 +147,12 @@
                     Postman中发送请求，触发断点
 
                     Spring Boot支持远程调试，添加如下配置项
-                -->
                 <configuration>
                     <jvmArguments>
                         -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
                     </jvmArguments>
                 </configuration>
+                -->
                 <executions>
                     <execution>
                         <goals>
