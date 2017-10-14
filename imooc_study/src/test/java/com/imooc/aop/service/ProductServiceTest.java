@@ -1,6 +1,7 @@
 package com.imooc.aop.service;
 
 import com.imooc.aop.security.CurrentUserHolder;
+import com.imooc.aop.service.sub.SubService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class ProductServiceTest {
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private SubService subService;
 
     @Test(expected = Exception.class)
     public void delete1() throws Exception {
@@ -25,5 +29,10 @@ public class ProductServiceTest {
 //        CurrentUserHolder.set("pyl");
         CurrentUserHolder.set("admin");
         productService.delete(1L);
+    }
+
+    @Test
+    public void subServiceMethod() {
+        subService.method();
     }
 }
