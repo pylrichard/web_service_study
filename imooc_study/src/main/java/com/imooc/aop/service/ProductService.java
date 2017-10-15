@@ -26,9 +26,14 @@ public class ProductService implements ILogger {
         System.out.println("execute product service delete");
     }
 
-    public void getName() throws IllegalAccessException{
-        System.out.println("execute get name");
+    public void throwException() throws IllegalAccessException{
+        System.out.println("execute throw exception");
         throw new IllegalAccessException("TEST");
+    }
+
+    public String getName() {
+        System.out.println("execute get name");
+        return "product service";
     }
 
     public void log() {

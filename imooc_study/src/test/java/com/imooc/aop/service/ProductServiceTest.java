@@ -28,12 +28,17 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void getName() {
+    public void throwException() {
         try {
-            productService.getName();
+            productService.throwException();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void getName() {
+        productService.getName();
     }
 
     @Test
