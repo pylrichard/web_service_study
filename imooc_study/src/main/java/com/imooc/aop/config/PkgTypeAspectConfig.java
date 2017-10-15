@@ -20,7 +20,7 @@ public class PkgTypeAspectConfig {
 
     @Before("matchType()")
     public void before(){
-        System.out.println();
+        System.out.println("PkgTypeAspectConfig");
         System.out.println("###before");
     }
 }

@@ -13,7 +13,7 @@ public class SecurityAspect {
     @Autowired
     private AuthService authService;
 
-    @Pointcut("@annotation(AdminOnly)")
+    @Pointcut("@annotation(com.imooc.aop.annotation.AdminOnly)")
     public void adminOnly() {}
 
     @Before("adminOnly()")
