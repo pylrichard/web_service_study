@@ -1,4 +1,4 @@
-package com.imooc.aop.pattern;
+package com.imooc.aop.proxy.static_proxy;
 
 public class Proxy implements Subject {
     private RealSubject realSubject;
@@ -17,5 +17,12 @@ public class Proxy implements Subject {
         } finally {
             System.out.println("after");
         }
+    }
+
+    /**
+     * 静态代理在类增加方法时，需要同步增加调用，而动态代理不需要
+     */
+    public void test() {
+        realSubject.test();
     }
 }

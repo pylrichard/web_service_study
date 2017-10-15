@@ -1,4 +1,4 @@
-package com.imooc.aop.pattern;
+package com.imooc.aop.proxy.static_proxy;
 
 public class Client {
     public static void main(String[] args){
