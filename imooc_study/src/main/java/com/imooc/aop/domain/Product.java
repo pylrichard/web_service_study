@@ -1,5 +1,8 @@
 package com.imooc.aop.domain;
 
+import com.imooc.aop.annotation.NeedSecured;
+
+@NeedSecured
 public class Product {
     private Long id;
     private String name;

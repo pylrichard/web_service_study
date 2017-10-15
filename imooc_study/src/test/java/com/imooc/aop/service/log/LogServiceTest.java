@@ -1,5 +1,6 @@
 package com.imooc.aop.service.log;
 
+import com.imooc.aop.domain.Product;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,11 @@ public class LogServiceTest {
     @Test
     public void log() throws Exception {
         logService.log();
+    }
+
+    @Test
+    public void annoArg() throws Exception {
+        Product product = new Product();
+        logService.annoArg(product);
     }
 }
