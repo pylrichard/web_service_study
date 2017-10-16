@@ -1,5 +1,6 @@
 package com.imooc.aop.service;
 
+import com.imooc.aop.config.ApplicationContextHolder;
 import com.imooc.aop.dao.UserDAO;
 import com.imooc.aop.dao.UserLogDAO;
 import com.imooc.aop.domain.User;
@@ -80,5 +81,14 @@ public class UserService {
         System.out.println("mock: get from db");
 
         return Arrays.asList("pyl", "admin");
+    }
+
+    public List<String> innerCall(){
+        //内部调用方法，AOP缓存命中无法执行
+//        return this.getUserList();
+
+        //使用UserService代理调用方法，AOP缓存命中可以执行
+        UserService proxy = ApplicationContextHolder.getContext().getBean(UserService.class);
+        return proxy.getUserList();
     }
 }

@@ -23,4 +23,10 @@ public class UserServiceTest {
     public void addUser() throws Exception {
         userService.addUser("pyl");
     }
+
+    @Test
+    public void innerCall(){
+        System.out.println("call: " + userService.innerCall());
+        System.out.println("call: " + userService.innerCall());
+    }
 }
