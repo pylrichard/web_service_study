@@ -13,6 +13,13 @@ public class UserServiceTest {
     UserService userService;
 
     @Test
+    public void getUserList() throws Exception {
+        System.out.println("call: " + userService.getUserList());
+        //第二次从缓存中获取
+        System.out.println("call: " + userService.getUserList());
+    }
+
+    @Test
     public void addUser() throws Exception {
         userService.addUser("pyl");
     }

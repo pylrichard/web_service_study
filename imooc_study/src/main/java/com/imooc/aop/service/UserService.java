@@ -5,8 +5,12 @@ import com.imooc.aop.dao.UserLogDAO;
 import com.imooc.aop.domain.User;
 import com.imooc.aop.domain.UserLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class UserService {
@@ -39,5 +43,42 @@ public class UserService {
         User user = new User();
         user.setName(name);
         userDAO.save(user);
+    }
+
+    /**
+     * 见探秘Spring AOP的39~43.png
+     *
+     * org.springframework.cache.aspectj.AnnotationCacheAspect中定义@Cacheable的pointcut
+     *
+     * 1 org.springframework.aop.framework.CglibAopProxy
+     *
+     * 2 org.springframework.cache.interceptor.CacheInterceptor.invoke
+     * execute设置断点
+     *
+     * 3 org.springframework.cache.interceptor.CacheAspectSupport 进行缓存控制
+     * protected Object execute设置断点
+     *
+     * private Object execute设置断点
+     *
+     * 3.1 查询是否已经缓存返回结果
+     * findCachedItem
+     * findInCaches
+     * AbstractCacheInvoker.doGet
+     *
+     * 3.2 如果没有缓存命中，则生成Put请求，将返回结果放入缓存
+     * collectPutRequests
+     *
+     * 3.3 如果有缓存命中，则返回缓存结果
+     * wrapCacheValue
+     *
+     * 将DB返回结果放入缓存
+     * 3.4 cachePutRequest.apply
+     */
+    @Cacheable(cacheNames = {"user"})
+    public List<String> getUserList(){
+        System.out.println("");
+        System.out.println("mock: get from db");
+
+        return Arrays.asList("pyl", "admin");
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
+     * 见探秘Spring AOP的33~38.png
+     *
      * 下面的.anyRequest().authenticated()设置断点
      *
      * org.springframework.security.access.intercept.AbstractSecurityInterceptor
