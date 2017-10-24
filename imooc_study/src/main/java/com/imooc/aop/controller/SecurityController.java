@@ -11,7 +11,10 @@ public class SecurityController {
         return "index";
     }
 
-    @RequestMapping("/common")
+    /**
+     * /common和/common_user都可以访问到commonAccess()
+     */
+    @RequestMapping(value = {"/common", "/common_user"})
     public String commonAccess(){
         return "only login can view";
     }

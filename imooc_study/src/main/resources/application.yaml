@@ -20,3 +20,12 @@ spring:
       hibernate:
         enable_lazy_load_no_trans: false
     database-platform: org.hibernate.dialect.MySQL5Dialect
+
+#Tomcat监控端口，见Tomcat目录/conf/tomcat-users.xml
+management:
+  #浏览器中输入http://localhost:8081/trace查看调用链
+  port: 8081
+  #spring-boot-autoconfigure.SecurityProperties解析
+  security:
+    #默认为true
+    enabled: false
