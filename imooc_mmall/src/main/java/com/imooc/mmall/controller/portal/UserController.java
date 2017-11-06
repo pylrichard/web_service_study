@@ -40,8 +40,31 @@ public class UserController {
         return userService.register(user);
     }
 
-    @PostMapping("check_valid.do")
+    @PostMapping("check_validity.do")
     public ServerResponse<String> checkValidity(String str, String type){
         return userService.checkValidity(str,type);
+    }
+
+    /**
+     * 获取用户登录信息
+     */
+    @PostMapping("get_user_info.do")
+    public ServerResponse<User> getUserInfo(HttpSession session){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user != null) {
+            return ServerResponse.createBySuccess(user);
+        }
+
+        return ServerResponse.createByErrorMessage("用户未登录，无法获取当前用户的信息");
+    }
+
+    @PostMapping("find_password_question.do")
+    public ServerResponse<String> findPasswordQuestion(String username){
+        return userService.findPasswordQuestion(username);
+    }
+
+    @PostMapping("check_password_answer.do")
+    public ServerResponse<String> checkPasswordAnswer(String userName, String question, String answer){
+        return userService.checkPasswordAnswer(userName, question, answer);
     }
 }

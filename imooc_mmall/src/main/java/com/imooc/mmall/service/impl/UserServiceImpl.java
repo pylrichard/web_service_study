@@ -2,6 +2,7 @@ package com.imooc.mmall.service.impl;
 
 import com.imooc.mmall.common.Const;
 import com.imooc.mmall.common.ServerResponse;
+import com.imooc.mmall.common.TokenCache;
 import com.imooc.mmall.dao.UserMapper;
 import com.imooc.mmall.pojo.User;
 import com.imooc.mmall.service.UserService;
@@ -9,6 +10,8 @@ import com.imooc.mmall.util.MD5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,12 +21,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServerResponse<User> login(String userName, String password) {
         int resultCount = userMapper.checkUsername(userName);
-        if (resultCount == 0 ) {
+        if (resultCount == 0) {
             return ServerResponse.createByErrorMessage("用户名不存在");
         }
 
         String md5Password = MD5Util.MD5EncodeUtf8(password);
-        User user  = userMapper.selectLogin(userName, md5Password);
+        User user  = userMapper.findUserInfo(userName, md5Password);
         if (user == null) {
             return ServerResponse.createByErrorMessage("密码错误");
         }
@@ -34,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServerResponse<String> register(User user){
-        ServerResponse validResponse = this.checkValidity(user.getUsername(), Const.USERNAME);
+        ServerResponse validResponse = this.checkValidity(user.getUserName(), Const.USERNAME);
         if (!validResponse.isSuccess()) {
             return validResponse;
         }
@@ -52,6 +55,9 @@ public class UserServiceImpl implements UserService {
         return ServerResponse.createBySuccessMessage("注册成功");
     }
 
+    /**
+     * 验证用户名或email的有效性
+     */
     @Override
     public ServerResponse<String> checkValidity(String str, String type) {
         if (StringUtils.isNotBlank(type)) {
@@ -72,5 +78,38 @@ public class UserServiceImpl implements UserService {
         }
 
         return ServerResponse.createBySuccessMessage("校验成功");
+    }
+
+    /**
+     * 获取密码问题
+     */
+    @Override
+    public ServerResponse<String> findPasswordQuestion(String userName) {
+        ServerResponse validResponse = this.checkValidity(userName, Const.USERNAME);
+        if (validResponse.isSuccess()) {
+            return ServerResponse.createByErrorMessage("用户不存在");
+        }
+        String question = userMapper.findPasswordQuestion(userName);
+        if (StringUtils.isNotBlank(question)) {
+            return ServerResponse.createBySuccess(question);
+        }
+
+        return ServerResponse.createByErrorMessage("找回密码的问题是空的");
+    }
+
+    /**
+     * 验证密码问题答案
+     */
+    @Override
+    public ServerResponse<String> checkPasswordAnswer(String userName, String question, String answer) {
+        int resultCount = userMapper.checkPasswordAnswer(userName, question, answer);
+        if (resultCount > 0) {
+            String forgetToken = UUID.randomUUID().toString();
+            TokenCache.setKey(TokenCache.TOKEN_PREFIX + userName, forgetToken);
+
+            return ServerResponse.createBySuccess(forgetToken);
+        }
+
+        return ServerResponse.createByErrorMessage("问题的答案错误");
     }
 }

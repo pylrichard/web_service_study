@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import java.io.Serializable;
 
 /**
- * 保证序列化json时如果value是null的对象，不会保存
+ * JsonSerialize.Inclusion.NON_NULL保证序列化json时，value是null的对象不会被保存
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ServerResponse<T> implements Serializable {

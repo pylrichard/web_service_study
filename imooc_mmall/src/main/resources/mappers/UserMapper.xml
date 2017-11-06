@@ -157,8 +157,8 @@
   </select>
 
   <!-- 传入多个参数时parameterType="map" -->
-  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
-    SELECT
+  <select id="findUserInfo" resultMap="BaseResultMap" parameterType="map">
+    select
     <include refid="Base_Column_List" />
     from mmall_user
     where user_name = #{userName}
@@ -168,5 +168,21 @@
   <select id="checkEmail" resultType="int" parameterType="string" >
     select count(1) from mmall_user
     where email = #{email}
+  </select>
+
+  <select id="findPasswordQuestion" resultType="string" parameterType="string">
+    select
+    question
+    from mmall_user
+    where username = #{userName}
+  </select>
+
+  <select id="checkPasswordAnswer" resultType="int" parameterType="map">
+    SELECT
+    count(1)
+    from mmall_user
+    where username = #{userName}
+    and question = #{question}
+    and answer = #{answer}
   </select>
 </mapper>

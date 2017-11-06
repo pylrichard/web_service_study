@@ -9,4 +9,8 @@ public interface UserService {
     ServerResponse<String> register(User user);
 
     ServerResponse<String> checkValidity(String str, String type);
+
+    ServerResponse<String> findPasswordQuestion(String userName);
+
+    ServerResponse<String> checkPasswordAnswer(String userName, String question, String answer);
 }
