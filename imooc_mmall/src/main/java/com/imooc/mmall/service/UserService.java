@@ -4,8 +4,9 @@ import com.imooc.mmall.common.ServerResponse;
 import com.imooc.mmall.pojo.User;
 
 public interface UserService {
-    /**
-     * 用户登录
-     */
     ServerResponse<User> login(String userName, String password);
+
+    ServerResponse<String> register(User user);
+
+    ServerResponse<String> checkValidity(String str, String type);
 }
