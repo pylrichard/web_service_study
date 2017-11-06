@@ -166,7 +166,7 @@ COMMIT;
 DROP TABLE IF EXISTS `mmall_user`;
 CREATE TABLE `mmall_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户表id',
-  `username` varchar(50) NOT NULL COMMENT '用户名',
+  `user_name` varchar(50) NOT NULL COMMENT '用户名',
   `password` varchar(50) NOT NULL COMMENT '用户密码，MD5加密',
   `email` varchar(50) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,

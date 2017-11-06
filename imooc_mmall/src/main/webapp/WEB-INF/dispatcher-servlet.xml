@@ -21,8 +21,8 @@
                     </list>
                 </property>
             </bean>
-            <!-- 反序列化，返回的结果中key为null的不保存在响应中 -->
-            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+            <!-- 序列化，返回的结果转换为json，并且key为null的不保存在响应中 -->
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
                         <value>application/json;charset=UTF-8</value>

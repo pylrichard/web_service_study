@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.imooc.mmall.pojo.User" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="username" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="userName" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -16,7 +16,7 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, username, password, email, phone, question, answer, role, create_time, update_time
+    id, user_name, password, email, phone, question, answer, role, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -29,11 +29,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.imooc.mmall.pojo.User" >
-    insert into mmall_user (id, username, password, 
+    insert into mmall_user (id, user_name, password,
       email, phone, question, 
       answer, role, create_time, 
       update_time)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
       #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, now(), now())
   </insert>
@@ -43,8 +43,8 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="username != null" >
-        username,
+      <if test="userName != null" >
+        user_name,
       </if>
       <if test="password != null" >
         password,
@@ -75,8 +75,8 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="username != null" >
-        #{username,jdbcType=VARCHAR},
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
         #{password,jdbcType=VARCHAR},
@@ -107,8 +107,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.imooc.mmall.pojo.User" >
     update mmall_user
     <set >
-      <if test="username != null" >
-        username = #{username,jdbcType=VARCHAR},
+      <if test="uuserName!= null" >
+        user_name = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},
@@ -139,7 +139,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.imooc.mmall.pojo.User" >
     update mmall_user
-    set username = #{username,jdbcType=VARCHAR},
+    set user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
@@ -150,4 +150,18 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="checkUsername" resultType="int" parameterType="string" >
+    select count(1) from mmall_user
+    where user_name = #{userName}
+  </select>
+
+  <!-- 传入多个参数时parameterType="map" -->
+  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List" />
+    from mmall_user
+    where user_name = #{userName}
+    and password = #{password}
+  </select>
 </mapper>
