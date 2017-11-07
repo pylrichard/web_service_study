@@ -1,6 +1,7 @@
 package com.imooc.mmall.controller.portal;
 
 import com.imooc.mmall.common.Const;
+import com.imooc.mmall.common.ResponseCode;
 import com.imooc.mmall.common.ServerResponse;
 import com.imooc.mmall.pojo.User;
 import com.imooc.mmall.service.UserService;
@@ -95,5 +96,16 @@ public class UserController {
         }
 
         return response;
+    }
+
+    @PostMapping("get_info.do")
+    public ServerResponse<User> getInfo(HttpSession session) {
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
+                                                "未登录，需要强制登录");
+        }
+
+        return userService.getInfo(currentUser.getId());
     }
 }

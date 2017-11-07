@@ -194,4 +194,24 @@ public class UserServiceImpl implements UserService {
 
         return ServerResponse.createByErrorMessage("更新个人信息失败");
     }
+
+    @Override
+    public ServerResponse<User> getInfo(Integer userId) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        if (user == null) {
+            return ServerResponse.createByErrorMessage("找不到当前用户");
+        }
+        user.setPassword(StringUtils.EMPTY);
+
+        return ServerResponse.createBySuccess(user);
+    }
+
+    @Override
+    public ServerResponse checkAdminRole(User user) {
+        if(user != null && user.getRole().intValue() == Const.Role.ROLE_ADMIN) {
+            return ServerResponse.createBySuccess();
+        }
+
+        return ServerResponse.createByError();
+    }
 }
