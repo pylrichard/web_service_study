@@ -50,4 +50,34 @@ public class CategoryManageController {
             return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
         }
     }
+
+    @RequestMapping("get_category.do")
+    public ServerResponse getChildrenParallelCategory(HttpSession session,
+                                                      @RequestParam(value = "categoryId", defaultValue = "0")Integer categoryId) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
+                    "用户未登录,请登录");
+        }
+        if (userService.checkAdminRole(user).isSuccess()) {
+            return categoryService.getChildrenParallelCategory(categoryId);
+        } else {
+            return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
+        }
+    }
+
+    @RequestMapping("get_deep_category.do")
+    public ServerResponse getCategoryAndDeepChildrenCategory(HttpSession session,
+                                                             @RequestParam(value = "categoryId" , defaultValue = "0")Integer categoryId) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
+                    "用户未登录,请登录");
+        }
+        if(userService.checkAdminRole(user).isSuccess()) {
+            return categoryService.selectCategoryAndChildrenById(categoryId);
+        } else {
+            return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
+        }
+    }
 }
