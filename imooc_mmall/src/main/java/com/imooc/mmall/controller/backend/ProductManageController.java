@@ -55,7 +55,7 @@ public class ProductManageController {
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                    "用户未登录，请登录管理员");
+                                            "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return productService.manageProductDetail(productId);
@@ -70,10 +70,26 @@ public class ProductManageController {
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                    "用户未登录，请登录管理员");
+                                            "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return productService.getProductList(pageNum, pageSize);
+        } else {
+            return ServerResponse.createByErrorMessage("无权限操作");
+        }
+    }
+
+    @RequestMapping("search.do")
+    public ServerResponse productSearch(HttpSession session, String productName, Integer productId,
+                                        @RequestParam(value = "pageNum", defaultValue = "1")int pageNum,
+                                        @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
+                                            "用户未登录，请登录管理员");
+        }
+        if (userService.checkAdminRole(user).isSuccess()) {
+            return productService.searchProduct(productName, productId, pageNum, pageSize);
         } else {
             return ServerResponse.createByErrorMessage("无权限操作");
         }

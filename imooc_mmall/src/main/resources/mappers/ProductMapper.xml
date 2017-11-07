@@ -184,4 +184,19 @@
     from mmall_product
     order by id asc
   </select>
+
+  <!-- 注意<where>和</where>，比where 1 = 1更好 -->
+  <select id="selectByNameAndProductId" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List"/>
+    from mmall_product
+    <where>
+      <if test="productName != null">
+        and name like #{productName}
+      </if>
+      <if test="productId != null">
+        and id = #{productId}
+      </if>
+    </where>
+  </select>
 </mapper>
