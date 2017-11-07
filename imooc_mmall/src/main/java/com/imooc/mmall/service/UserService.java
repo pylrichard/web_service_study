@@ -17,4 +17,6 @@ public interface UserService {
     ServerResponse<String> forgetResetPassword(String userName, String newPassword, String forgetToken);
 
     ServerResponse<String> resetPassword(String oldPassword, String newPassword, User user);
+
+    ServerResponse<User> updateInfo(User user);
 }

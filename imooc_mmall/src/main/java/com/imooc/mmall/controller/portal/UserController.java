@@ -79,4 +79,21 @@ public class UserController {
 
         return userService.resetPassword(oldPassword, newPassword, user);
     }
+
+    @PostMapping("update_info.do")
+    public ServerResponse<User> updateInfo(HttpSession session, User user) {
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+        user.setId(currentUser.getId());
+        user.setUserName(currentUser.getUserName());
+        ServerResponse<User> response = userService.updateInfo(user);
+        if (response.isSuccess()) {
+            response.getData().setUserName(currentUser.getUserName());
+            session.setAttribute(Const.CURRENT_USER, response.getData());
+        }
+
+        return response;
+    }
 }
