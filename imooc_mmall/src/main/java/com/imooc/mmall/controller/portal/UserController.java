@@ -69,4 +69,14 @@ public class UserController {
     public ServerResponse<String> forgetResetPassword(String userName, String newPassword, String forgetToken) {
         return userService.forgetResetPassword(userName, newPassword, forgetToken);
     }
+
+    @PostMapping("reset_password.do")
+    public ServerResponse<String> resetPassword(HttpSession session, String oldPassword, String newPassword) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+
+        return userService.resetPassword(oldPassword, newPassword, user);
+    }
 }
