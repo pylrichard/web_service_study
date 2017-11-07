@@ -1,5 +1,8 @@
 package com.imooc.mmall.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.imooc.mmall.common.ResponseCode;
 import com.imooc.mmall.common.ServerResponse;
 import com.imooc.mmall.dao.CategoryMapper;
@@ -10,9 +13,12 @@ import com.imooc.mmall.service.ProductService;
 import com.imooc.mmall.util.DateTimeUtil;
 import com.imooc.mmall.util.PropertiesUtil;
 import com.imooc.mmall.vo.ProductDetailVo;
+import com.imooc.mmall.vo.ProductListVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -109,5 +115,39 @@ public class ProductServiceImpl implements ProductService {
         productDetailVo.setUpdateTime(DateTimeUtil.dateToStr(product.getUpdateTime()));
 
         return productDetailVo;
+    }
+
+    @Override
+    public ServerResponse<PageInfo> getProductList(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        /*
+            查询逻辑
+         */
+        List<Product> productList = productMapper.selectList();
+        List<ProductListVo> productListVoList = Lists.newArrayList();
+        for (Product productItem : productList) {
+            ProductListVo productListVo = assembleProductListVo(productItem);
+            productListVoList.add(productListVo);
+        }
+        //分页组件进行分页
+        PageInfo pageResult = new PageInfo(productList);
+        pageResult.setList(productListVoList);
+
+        return ServerResponse.createBySuccess(pageResult);
+    }
+
+    private ProductListVo assembleProductListVo(Product product) {
+        ProductListVo productListVo = new ProductListVo();
+        productListVo.setId(product.getId());
+        productListVo.setName(product.getName());
+        productListVo.setCategoryId(product.getCategoryId());
+        productListVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix",
+                "http://img.happymmall.com/"));
+        productListVo.setMainImage(product.getMainImage());
+        productListVo.setPrice(product.getPrice());
+        productListVo.setSubtitle(product.getSubtitle());
+        productListVo.setStatus(product.getStatus());
+
+        return productListVo;
     }
 }

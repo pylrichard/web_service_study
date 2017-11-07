@@ -176,4 +176,12 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- SQL语句结尾不要分号，比如分页组件会在结尾自动添加limit子句，有分号就会报错 -->
+  <select id="selectList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List"/>
+    from mmall_product
+    order by id asc
+  </select>
 </mapper>
