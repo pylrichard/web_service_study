@@ -5,10 +5,7 @@ import com.imooc.mmall.common.ServerResponse;
 import com.imooc.mmall.pojo.User;
 import com.imooc.mmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -66,5 +63,10 @@ public class UserController {
     @PostMapping("check_password_answer.do")
     public ServerResponse<String> checkPasswordAnswer(String userName, String question, String answer){
         return userService.checkPasswordAnswer(userName, question, answer);
+    }
+
+    @PostMapping("forget_reset_password.do")
+    public ServerResponse<String> forgetResetPassword(String userName, String newPassword, String forgetToken) {
+        return userService.forgetResetPassword(userName, newPassword, forgetToken);
     }
 }
