@@ -39,4 +39,29 @@ public class CartController {
 
         return cartService.add(user.getId(), productId, count);
     }
+
+    @RequestMapping("update.do")
+    public ServerResponse<CartVo> update(HttpSession session, Integer count, Integer productId) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if (user ==null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
+                                                        ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return cartService.update(user.getId(),productId,count);
+    }
+
+    /**
+     * 删除商品
+     * @param productIds 以逗号分隔商品Id
+     */
+    @RequestMapping("delete_product.do")
+    public ServerResponse<CartVo> deleteProduct(HttpSession session, String productIds) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if (user ==null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
+                                                        ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return cartService.deleteProduct(user.getId(), productIds);
+    }
 }

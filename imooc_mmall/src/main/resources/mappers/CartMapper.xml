@@ -137,4 +137,15 @@
     where user_id = #{userId}
     and product_id = #{productId}
   </select>
+  <delete id="deleteByUserIdProductIds" parameterType="map">
+    delete
+    from mmall_cart
+    where user_id = #{userId}
+    <if test="productIdList != null">
+      and product_id in
+      <foreach collection="productIdList" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </delete>
 </mapper>

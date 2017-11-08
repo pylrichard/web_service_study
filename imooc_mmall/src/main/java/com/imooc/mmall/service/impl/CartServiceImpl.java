@@ -1,5 +1,6 @@
 package com.imooc.mmall.service.impl;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.imooc.mmall.common.Const;
 import com.imooc.mmall.common.ResponseCode;
@@ -50,6 +51,34 @@ public class CartServiceImpl implements CartService {
             cart.setQuantity(count);
             cartMapper.updateByPrimaryKeySelective(cart);
         }
+
+        return this.list(userId);
+    }
+
+    @Override
+    public ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count) {
+        if (productId == null || count == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),
+                    ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Cart cart = cartMapper.selectCartByUserIdProductId(userId, productId);
+        if (cart != null) {
+            cart.setQuantity(count);
+        }
+        cartMapper.updateByPrimaryKey(cart);
+
+        return this.list(userId);
+    }
+
+    @Override
+    public ServerResponse<CartVo> deleteProduct(Integer userId, String productIds) {
+        //以逗号分隔得到商品id集合
+        List<String> productList = Splitter.on(",").splitToList(productIds);
+        if (CollectionUtils.isEmpty(productList)) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),
+                    ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        cartMapper.deleteByUserIdProductIds(userId,productList);
 
         return this.list(userId);
     }
