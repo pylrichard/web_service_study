@@ -37,4 +37,22 @@ public class Const {
             return code;
         }
     }
+
+    public interface Cart{
+        /**
+         * 购物车选中状态
+         */
+        int CHECKED = 1;
+        /**
+         * 购物车未选中状态
+         */
+        int UN_CHECKED = 0;
+
+        /**
+         * 超过库存最大值，自动修改购物车中商品数量为库存最大值
+         * 前端提示超过最大值
+        */
+        String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";
+        String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS";
+    }
 }

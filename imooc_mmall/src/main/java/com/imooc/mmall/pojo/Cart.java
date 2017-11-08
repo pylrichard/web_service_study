@@ -17,7 +17,8 @@ public class Cart {
 
     private Date updateTime;
 
-    public Cart(Integer id, Integer userId, Integer productId, Integer quantity, Integer checked, Date createTime, Date updateTime) {
+    public Cart(Integer id, Integer userId, Integer productId, Integer quantity,
+                Integer checked, Date createTime, Date updateTime) {
         this.id = id;
         this.userId = userId;
         this.productId = productId;
