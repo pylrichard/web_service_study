@@ -17,7 +17,7 @@
           scope="prototype">
         <property name="patterns">
             <list>
-                <value>com.roncoo.boot.mapper.*</value>
+                <value>com.bd.roncoo.spring.boot.mapper.*</value>
             </list>
         </property>
     </bean>

@@ -21,7 +21,7 @@ public class Swagger2Configuration {
                 //选择哪些路径和API生成Doc
                 .select()
                 //拦截的包路径
-                .apis(RequestHandlerSelectors.basePackage("com.roncoo.boot.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.bd.roncoo.spring.boot.controller"))
                 //拦截的接口路径
                 .paths(regex("/api/.*"))
                 //创建
@@ -33,7 +33,7 @@ public class Swagger2Configuration {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("roncoo")
-                .description("spring spring")
+                .description("spring boot")
                 .termsOfServiceUrl("http://www.roncoo.com")
                 .contact(new Contact("pyl", "http://www.roncoo.com", "pylrichard@qq.com"))
                 .version("1.0")

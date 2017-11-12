@@ -69,7 +69,7 @@ public class RoncooSpringBootApplicationTest {
         MockHttpServletRequestBuilder req = MockMvcRequestBuilders.get("/api");
         mvc.perform(req.accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("hello spring spring"))
+                .andExpect(MockMvcResultMatchers.content().string("hello spring boot"))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
     }

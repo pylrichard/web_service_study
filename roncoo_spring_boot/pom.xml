@@ -23,8 +23,8 @@
             <!-- 使用Jetty，需要排除Tomcat依赖
             <exclusions>
                 <exclusion>
-                    <groupId>org.springframework.spring</groupId>
-                    <artifactId>spring-spring-starter-tomcat</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
             </exclusions>
             -->
@@ -131,7 +131,7 @@
                 在MANIFEST.MF中指定Main-Class以便运行java -jar xxx.jar时找到对应的主类
                 如果想在运行时指定运行的主类，用-cp/–classpath
                 报错Error: Could not find or load main class
-                在jar的META-INF/MANIFEST.MF中查看Main Class，Spring Boot App的是org.springframework.spring.loader.JarLauncher
+                在jar的META-INF/MANIFEST.MF中查看Main Class，Spring Boot App的是org.springframework.boot.loader.JarLauncher
             -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>

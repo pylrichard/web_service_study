@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HttpAspect {
     protected static final Logger logger = LoggerFactory.getLogger(HttpAspect.class);
 
-//    @Pointcut("execution(public * APIController.addUser(..))")
+//    @Pointcut("execution(public * com.bd.roncoo.spring.boot.controller.APIController.addUser(..))")
     //指定切入点，拦截APIController所有的方法，..表示任意参数
     @Pointcut("execution(public * com.bd.roncoo.spring.boot.controller.APIController.*(..))")
     public void pringLog() {}

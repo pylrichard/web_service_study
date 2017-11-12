@@ -45,7 +45,7 @@ public class APIController {
         logger.debug("this is a log test, debug");
         logger.info("this is a log test, info");
 
-        return "hello spring spring";
+        return "hello spring boot";
     }
 
     /**
@@ -54,9 +54,9 @@ public class APIController {
      */
     @RequestMapping(value = "get")
     public Map<String, Object> get(@RequestParam String name) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("name", name);
-        map.put("value", "hello spring spring");
+        map.put("value", "hello spring boot");
         map.put("secret", secret);
         map.put("number", number);
         map.put("desc", desc);
