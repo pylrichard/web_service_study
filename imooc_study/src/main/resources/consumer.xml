@@ -14,5 +14,5 @@
     </bean>
 
     <!-- 消息监听器 -->
-    <bean id = "consumerMessageListener" class = "com.imooc.jms.jms_spring.consumer.ConsumerMessageListener" />
+    <bean id = "consumerMessageListener" class = "com.bd.imooc.study.jms.jms_spring.consumer.ConsumerMessageListener" />
 </beans>

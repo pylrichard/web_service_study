@@ -10,5 +10,5 @@
         <property name = "connectionFactory" ref = "connectionFactory" />
     </bean>
 
-    <bean id = "service" class = "com.imooc.jms.jms_spring.producer.impl.ProducerServiceImpl" />
+    <bean id = "service" class = "com.bd.imooc.study.jms.jms_spring.producer.impl.ProducerServiceImpl" />
 </beans>
