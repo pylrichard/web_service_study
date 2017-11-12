@@ -98,7 +98,7 @@ info:
     name: "@project.name@"
     description: "@project.description@"
     version: "@project.version@"
-    spring-boot-version: "@project.parent.properties.spring-boot.version@"
+    spring-boot-version: "@project.parent.properties.spring-spring.version@"
 
 ---
 spring:

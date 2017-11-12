@@ -2,7 +2,7 @@
 
 <!-- 加载默认配置
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <include resource="org/springframework/spring/logging/logback/base.xml"/>
     <logger name="org.springframework.web" level="DEBUG"/>
 </configuration>
 -->
@@ -21,7 +21,7 @@
             </encoder>
         </appender>
 
-        <logger name="com.roncoo.spring_boot" level="debug"/>
+        <logger name="com.roncoo.boot" level="debug"/>
 
         <root level="info">
             <appender-ref ref="CONSOLE" />
