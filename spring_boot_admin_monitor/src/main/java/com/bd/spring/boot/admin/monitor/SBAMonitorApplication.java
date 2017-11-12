@@ -1,4 +1,4 @@
-package com.bd.spring_boot_admin_monitor;
+package com.bd.spring.boot.admin.monitor;
 
 import de.codecentric.boot.admin.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
