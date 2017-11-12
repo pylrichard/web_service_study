@@ -1,4 +1,4 @@
-package com.bd.sword_for_offer.util;
+package com.bd.sword.of.offer.util;
 
 public class ListNode<T> {
     public T data;

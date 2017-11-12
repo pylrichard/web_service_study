@@ -1,6 +1,6 @@
-package com.bd.sword_for_offer.reverse_list;
+package com.bd.sword.of.offer.list;
 
-import com.bd.sword_for_offer.util.ListNode;
+import com.bd.sword.of.offer.util.ListNode;
 
 /**
  * 《剑指Offer》的面试题16-反转链表
