@@ -1,0 +1,17 @@
+package com.bd.java.multithread.core.tech.chapter3.wait_interrupt_exception;
+
+import com.bd.java.multithread.core.tech.chapter3.wait_interrupt_exception.MyThread;
+
+public class WaitInterruptExceptionTest {
+    public static void main(String[] args) {
+        try {
+            Object lock = new Object();
+            MyThread t = new MyThread(lock);
+            t.start();
+            Thread.sleep(3000);
+            t.interrupt();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}

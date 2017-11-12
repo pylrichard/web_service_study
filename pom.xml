@@ -12,13 +12,14 @@
     <modules>
         <module>java_se_study</module>
         <module>junit_study</module>
-        <module>sword_for_offer</module>
+        <module>sword_of_offer</module>
         <module>java_multithread_core_tech</module>
         <module>imooc_study</module>
         <module>roncoo_spring_boot</module>
         <module>spring_boot_admin_monitor</module>
         <module>imooc_mmall</module>
         <module>ace_trade</module>
+        <module>roncoo_book_shop</module>
     </modules>
 
     <properties>
