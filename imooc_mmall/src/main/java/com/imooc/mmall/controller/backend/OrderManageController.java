@@ -52,16 +52,17 @@ public class OrderManageController {
         }
     }
 
-    @RequestMapping("search.do")
-    public ServerResponse<PageInfo> orderSearch(HttpSession session, Long orderNo, @RequestParam(value = "pageNum", defaultValue = "1")int pageNum,
-                                               @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
+    @RequestMapping("search_order.do")
+    public ServerResponse<PageInfo> searchOrder(HttpSession session, Long orderNo,
+                                                @RequestParam(value = "pageNum", defaultValue = "1")int pageNum,
+                                                @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
                                             "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
-            return orderService.manageSearch(orderNo, pageNum, pageSize);
+            return orderService.searchOrder(orderNo, pageNum, pageSize);
         } else {
             return ServerResponse.createByErrorMessage("无权限操作");
         }
