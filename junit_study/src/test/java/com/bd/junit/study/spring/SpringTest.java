@@ -1,4 +1,4 @@
-package com.bd.junit_study.spring;
+package com.bd.junit.study.spring;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
