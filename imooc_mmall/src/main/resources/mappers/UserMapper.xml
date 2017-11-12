@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.imooc.mmall.dao.UserMapper" >
-  <resultMap id="BaseResultMap" type="com.imooc.mmall.pojo.User" >
+<mapper namespace="com.bd.imooc.mmall.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.bd.imooc.mmall.pojo.User" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="userName" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -28,7 +28,7 @@
     delete from mmall_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.imooc.mmall.pojo.User" >
+  <insert id="insert" parameterType="com.bd.imooc.mmall.pojo.User" >
     insert into mmall_user (id, user_name, password,
       email, phone, question, 
       answer, role, create_time, 
@@ -37,7 +37,7 @@
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
       #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, now(), now())
   </insert>
-  <insert id="insertSelective" parameterType="com.imooc.mmall.pojo.User" >
+  <insert id="insertSelective" parameterType="com.bd.imooc.mmall.pojo.User" >
     insert into mmall_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -104,7 +104,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.imooc.mmall.pojo.User" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.bd.imooc.mmall.pojo.User" >
     update mmall_user
     <set >
       <if test="uuserName!= null" >
@@ -137,7 +137,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.imooc.mmall.pojo.User" >
+  <update id="updateByPrimaryKey" parameterType="com.bd.imooc.mmall.pojo.User" >
     update mmall_user
     set user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
