@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 导入属性配置 -->
+    <properties resource="datasource.properties"/>
+    <!-- 数据库驱动 -->
+    <classPathEntry location="${db.driverLocation}"/>
+    <context id="context" targetRuntime="MyBatis3">
+    <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+    <plugin type="org.mytatis.generator.plugins.SerializablePlugin" />
+    <plugin type="org.mytatis.generator.plugins.EqualsHashCodePlugin" />
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!-- 数据库连接地址、账号、密码 -->
+        <jdbcConnection
+                driverClass="${db.driverClassName}"
+                connectionURL="${db.url}"
+                userId="${db.username}"
+                password="${db.password}">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+
+        <!-- 生成Model类存放位置 -->
+        <javaModelGenerator targetPackage="com.bd.ace.trade.dao.entity" targetProject="trade_dao/src/main/java">
+            <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
+            <property name="enableSubPackages" value="false"/>
+            <!-- 是否对model添加构造函数 -->
+            <property name="constructorBased" value="true"/>
+            <!-- 是否对类CHAR类型的列的数据进行trim操作 -->
+            <property name="trimStrings" value="true"/>
+            <!-- 建立的model对象是否不可改变，即生成的model对象不会有setter()，只有构造方法 -->
+            <property name="immutable" value="false"/>
+        </javaModelGenerator>
+
+        <!-- 生成映射文件存放位置 -->
+        <sqlMapGenerator targetPackage="mappers" targetProject="trade_dao/src/main/resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- 生成Dao类存放位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.bd.ace.trade.dao.mapper" targetProject="trade_dao/src/main/java">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!-- 生成对应表及类名 -->
+        <table tableName="trade_goods"  enableCountByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" enableUpdateByExample="true">
+            <generatedKey column="goods_id" sqlStatement="MySQL" identity="true"/>
+        </table>
+        <table tableName="trade_coupon"  enableCountByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" enableUpdateByExample="true">
+        </table>
+        <table tableName="trade_user_money_log"  enableCountByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" enableUpdateByExample="true">
+        </table>
+        <table tableName="trade_goods_number_log"  enableCountByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" enableUpdateByExample="true">
+        </table>
+        <table tableName="trade_user"  enableCountByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" enableUpdateByExample="true">
+            <generatedKey column="user_id" sqlStatement="MySQL" identity="true"/>
+        </table>
+        <table tableName="trade_order"  enableCountByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" enableUpdateByExample="true">
+        </table>
+        <table tableName="trade_pay"  enableCountByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" enableUpdateByExample="true">
+        </table>
+        <table tableName="trade_mq_consumer_log"  enableCountByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" enableUpdateByExample="true">
+        </table>
+        <table tableName="trade_mq_producer_log"  enableCountByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" enableUpdateByExample="true">
+        </table>
+    </context>
+</generatorConfiguration>
