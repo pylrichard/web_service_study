@@ -1,11 +1,8 @@
 package com.bd.roncoo.book.shop.db.domain;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.awt.print.Book;
+import java.util.List;
 
 /**
  * 注解@Table(name = "bs_category")添加前缀，生成新表
@@ -42,6 +39,19 @@ public class Category {
     @Transient
     private String tmp;
 
+    /**
+     * 生成bs_bs_category_bs_book表实现单向一对多关系，推荐建立双向关系，方便通过get()获取数据
+     * mappedBy表示由Book对象的category变量来实现双向关系，Category对象不管理
+     * orphanRemoval表示集合中元素被移除后是否从DB删除
+     *  比如books有5本书，执行books.remove(1)移除1本书，这本书不属于任何一个Category，是否从DB删除相应的Book记录
+     *  true表示删除，默认为false
+     * cascade表示级联操作，默认为空，不进行删除
+     *  比如cascade = CascadeType.REMOVE表示删除Category对象记录时会删除相应的Book对象记录
+     *  有外键时删除会报错
+     */
+    @OneToMany(mappedBy = "category")
+    private List<Book> books;
+
     public Long getId() {
         return id;
     }
@@ -64,5 +74,13 @@ public class Category {
 
     public void setTmp(String tmp) {
         this.tmp = tmp;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }
