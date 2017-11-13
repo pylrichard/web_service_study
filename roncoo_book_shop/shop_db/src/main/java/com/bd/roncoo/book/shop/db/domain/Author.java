@@ -45,6 +45,22 @@ public class Author {
     @ElementCollection
     private List<Address> addresses;
 
+    /**
+     * 注解@OrderBy指定排序，List集合中元素是有序的，默认按主键升序排列
+     * 注解@OneToMany由BookAuthor.author维护一对多关系
+     * 指向Book就是一对多关系，这里要实现多对多关系，指向中间对象BookAuthor
+     */
+    @OrderBy("book.name ASC")
+    @OneToMany(mappedBy = "author")
+    private List<BookAuthor> books;
+
+    /**
+     * 平常使用select * from查询常用字段所在的表Author
+     * 需要的时候通过一对一关系(info变量)查询不常用字段所在的表AuthorInfo
+     */
+    @OneToOne
+    private AuthorInfo info;
+
     public Long getId() {
         return id;
     }
@@ -99,5 +115,29 @@ public class Author {
 
     public void setHobbies(List<String> hobbies) {
         this.hobbies = hobbies;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+
+    public List<BookAuthor> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<BookAuthor> books) {
+        this.books = books;
+    }
+
+    public AuthorInfo getInfo() {
+        return info;
+    }
+
+    public void setInfo(AuthorInfo info) {
+        this.info = info;
     }
 }

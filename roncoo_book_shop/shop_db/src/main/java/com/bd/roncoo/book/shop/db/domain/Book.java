@@ -1,9 +1,7 @@
 package com.bd.roncoo.book.shop.db.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Book {
@@ -25,6 +23,14 @@ public class Book {
      */
     @ManyToOne
     private Category category;
+
+    /**
+     * 注解@ManyToMany不建议使用，多对多关系通过中间对象拆分为两个一对多关系
+     * 通过中间对象BookAuthor可以方便地构建查询，比如通过book成员查询得到此book的所有author
+     * 由BookAuthor.book维护一对多关系
+     */
+    @OneToMany(mappedBy = "book")
+    private List<BookAuthor> authors;
 
     public Long getId() {
         return id;
@@ -48,5 +54,13 @@ public class Book {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public List<BookAuthor> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<BookAuthor> authors) {
+        this.authors = authors;
     }
 }
