@@ -18,7 +18,7 @@ public class AuthorInfo {
 
     /**
      * 一对一关系是一对多关系的特例
-     *  配置双向一对一关系，只需要一方管理关系，一般由常用对象(此处是Author，info变量)管理
+     * 配置双向一对一关系，只需要一方管理关系，一般由常用对象(此处是Author，info变量)管理
      */
     @OneToOne(mappedBy = "info")
     private Author author;

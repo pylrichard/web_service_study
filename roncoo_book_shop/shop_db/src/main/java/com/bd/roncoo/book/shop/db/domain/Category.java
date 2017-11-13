@@ -11,19 +11,7 @@ import java.util.List;
  * 在application.properties中添加spring.jpa.generate-ddl=true才会在数据库中生成对应的表
  */
 @Entity
-public class Category {
-    /**
-     * 注解@Id表示主键
-     * 注解@GeneratedValue指定主键生成策略
-     * GeneratedValue.strategy()默认为GenerationType.AUTO，根据数据库在TABLE/SEQUENCE/IDENTITY之间选择策略
-     * MySQL就使用IDENTITY，既是Auto Increment
-     * JPA会检查数据库对应的表/字段是否存在，如果存在则新设置不会生效，生效则需要在数据库中删除对应的表/字段
-     * Long在表中转换为BIGINT
-     */
-    @Id
-    @GeneratedValue
-    private Long id;
-
+public class Category extends DomainImpl {
     /**
      * 没有添加注解，默认添加@Basic
      * String在表中转换为VARCHAR
@@ -51,14 +39,6 @@ public class Category {
      */
     @OneToMany(mappedBy = "category")
     private List<Book> books;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

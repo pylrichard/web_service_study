@@ -5,11 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Author {
-    @Id
-    @GeneratedValue
-    private Long id;
-
+public class Author extends DomainImpl {
     private String name;
 
     /**
@@ -25,6 +21,7 @@ public class Author {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
+    @Column(columnDefinition = "VARCHAR(2)")
     @Enumerated(EnumType.STRING)
     private Sex sex;
 
@@ -60,14 +57,6 @@ public class Author {
      */
     @OneToOne
     private AuthorInfo info;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

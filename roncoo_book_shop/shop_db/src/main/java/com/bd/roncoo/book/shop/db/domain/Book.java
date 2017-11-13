@@ -4,11 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Book {
-    @Id
-    @GeneratedValue
-    private Long id;
-
+public class Book extends DomainImpl {
     private String name;
 
     /**
@@ -31,14 +27,6 @@ public class Book {
      */
     @OneToMany(mappedBy = "book")
     private List<BookAuthor> authors;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
