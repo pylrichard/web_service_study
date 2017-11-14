@@ -5,7 +5,9 @@ import com.bd.roncoo.book.shop.db.domain.Book;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,5 +133,31 @@ public class RepositoryTest extends BaseTest {
     @Test
     public void testUpdateBookInfo() {
         bookRepository.updateBookInfo("战争", 1L);
+    }
+
+    @Test
+    public void testSpecification() {
+        Specification<Book> spec = new Specification<Book>() {
+            @Override
+            public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                /*
+                    Predicate实现类似组合模式，自身既是容器，也是实体
+                    比如p1和p2是实体，通过and封装在p3中，p3相当于是一个容器
+                    "战争与和平"和"世界名著"在应用中由前端传入
+                    构建动态查询时根据相应参数是否有值来决定是否生成相应过滤条件
+                 */
+                Predicate p1 = cb.equal(root.get("name"), "战争与和平");
+                Predicate p2 = cb.equal(root.get("category").get("name"), "世界名著");
+                //生成的SQL语句关联bs_book表和bs_category表
+                Predicate p3 = cb.and(p1, p2);
+
+                //指定查询结果包含bs_category表记录和join类型
+                root.fetch("category", JoinType.LEFT);
+
+                return p3;
+            }
+        };
+
+        bookRepository.findOne(spec);
     }
 }

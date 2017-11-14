@@ -4,6 +4,7 @@ import com.bd.roncoo.book.shop.db.domain.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,8 +12,12 @@ import java.util.List;
 
 /**
  * Repository(T, ID)中泛型T代表操作的数据库表，ID代表主键类型
+ * Specification<T>只有一个方法
+ * Root<T>是对泛型T的封装，CriteriaQuery<?>抽象整个SQL语句，组合各个段(select段，where段)
+ * CriteriaBuilder创建Predicate(封装过滤条件，相当于where子句)
+ * Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb);
  */
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
     /**
      * 声明静态查询很方便，但方法名会很长
      * 不能声明update、delete、count、sum
