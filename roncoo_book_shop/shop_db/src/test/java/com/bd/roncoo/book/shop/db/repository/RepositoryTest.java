@@ -6,6 +6,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -18,6 +21,8 @@ public class RepositoryTest extends BaseTest {
      */
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
     /**
      * BookRepository继承CrudRepository
@@ -162,5 +167,44 @@ public class RepositoryTest extends BaseTest {
         };
 
         bookRepository.findOne(spec);
+    }
+
+    @Test
+    public void testPersistenceContext1() {
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+        /*
+            Book与Category是多对一关系，生成的SQL语句中会与bs_category表进行关联
+            持久化上下文可以理解为一个Map，在事务开始时创建，事务结束时销毁
+            事务中可以把Domain对象关联到持久化上下文中
+            如findOne查询得到的Book对象，与持久化上下文关联起来了，对开发者不可见
+            事务提交时，JPA会执行脏检查，检查持久化上下文中保存的Domain对象数据与数据库表记录是否一致，不一致会更新数据库表记录
+            事务回滚，不会执行上述操作
+            事务中进行查询，优先在持久化上下文中查找，持久化上下文是一级缓存
+            此处BaseTest设置了@Transactional，进行事务回滚，所以save不会生成update语句
+        */
+        Book book = bookRepository.findOne(1L);
+        book.setName("美女与野兽");
+        //saveAndFlush生成update语句，不是在commit时生成
+        bookRepository.saveAndFlush(book);
+        //在commit时生成update语句
+        //bookRepository.save(book);
+        //System.out.println("save success");
+        transactionManager.commit(status);
+    }
+
+    @Test
+    public void testPersistenceContext2() {
+        /*
+            findOne查询得到的对象会缓存在持久化上下文中(实现一级缓存功能)
+            再次执行findOne会到持久化上下文中查询
+            此处生成一个select语句
+        */
+        //bookRepository.findOne(1L);
+        //bookRepository.findOne(1L);
+
+        //此处生成2个select语句
+        bookRepository.findAll();
+        bookRepository.findAll();
     }
 }
