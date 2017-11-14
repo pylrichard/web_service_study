@@ -28,6 +28,9 @@ public class RepositoryTest extends BaseTest {
         bookRepository.findByName("战争与和平");
     }
 
+    /**
+     * 添加BookShopRepositoryImpl自定义实现
+     */
     @Test
     public void testSave() {
         Book book = new Book();
