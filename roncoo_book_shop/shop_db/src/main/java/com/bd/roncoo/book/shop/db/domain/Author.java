@@ -1,5 +1,7 @@
 package com.bd.roncoo.book.shop.db.domain;
 
+import org.hibernate.validator.constraints.Email;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +9,13 @@ import java.util.List;
 @Entity
 public class Author extends DomainImpl {
     private String name;
+
+    /**
+     * 添加@NotBlank则ORM框架会检查保证email必须有值，不能为空，但不影响数据库中字段定义，数据库中字段定义没有指定NOT NULL
+     * 不同于@Column的nullable为true，则字段定义为NOT NULL
+     */
+    @Email
+    private String email;
 
     /**
      * length指定VARCHAR长度
@@ -128,5 +137,13 @@ public class Author extends DomainImpl {
 
     public void setInfo(AuthorInfo info) {
         this.info = info;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

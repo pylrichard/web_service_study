@@ -1,6 +1,7 @@
 package com.bd.roncoo.book.shop.db.repository;
 
 import com.bd.roncoo.book.shop.db.BaseTest;
+import com.bd.roncoo.book.shop.db.domain.Author;
 import com.bd.roncoo.book.shop.db.domain.Book;
 import com.bd.roncoo.book.shop.db.domain.EBook;
 import com.bd.roncoo.book.shop.db.domain.PrintBook;
@@ -24,9 +25,11 @@ public class RepositoryTest extends BaseTest {
     @Autowired
     private BookRepository bookRepository;
     @Autowired
-    private PlatformTransactionManager transactionManager;
+    private AuthorRepository authorRepository;
     @Autowired
     private PrintBookRepository printBookRepository;
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
     /**
      * BookRepository继承CrudRepository
@@ -243,5 +246,12 @@ public class RepositoryTest extends BaseTest {
         Book book = bookRepository.findOne(1L);
         book.setName("美女与野兽");
         bookRepository.saveAndFlush(book);
+    }
+
+    @Test
+    public void testValidator() {
+        Author author = new Author();
+        author.setEmail("xxx");
+        authorRepository.saveAndFlush(author);
     }
 }

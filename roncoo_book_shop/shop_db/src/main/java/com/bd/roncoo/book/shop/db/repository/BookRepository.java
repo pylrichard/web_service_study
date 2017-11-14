@@ -1,9 +1,12 @@
 package com.bd.roncoo.book.shop.db.repository;
 
 import com.bd.roncoo.book.shop.db.domain.Book;
+import com.bd.roncoo.book.shop.db.support.BookShopRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -14,7 +17,7 @@ import java.util.List;
  * CriteriaBuilder创建Predicate(封装过滤条件，相当于where子句)
  * Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb);
  */
-public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
+public interface BookRepository extends BookShopRepository<Book> {
     /**
      * 声明静态查询很方便，但方法名会很长
      * 不能声明update、delete、count、sum
