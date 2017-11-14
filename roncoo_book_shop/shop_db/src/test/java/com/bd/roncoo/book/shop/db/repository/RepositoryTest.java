@@ -237,4 +237,11 @@ public class RepositoryTest extends BaseTest {
         List<PrintBook> printBooks = printBookRepository.findAll();
         printBooks.stream().forEach(book -> System.out.println(book.getClass().getSimpleName()));
     }
+
+    @Test
+    public void testOptimisticLock() {
+        Book book = bookRepository.findOne(1L);
+        book.setName("美女与野兽");
+        bookRepository.saveAndFlush(book);
+    }
 }

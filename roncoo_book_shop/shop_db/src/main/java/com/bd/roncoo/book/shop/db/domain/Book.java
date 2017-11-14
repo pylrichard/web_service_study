@@ -43,6 +43,12 @@ public class Book extends DomainImpl {
     @OneToMany(mappedBy = "book")
     private List<BookAuthor> authors;
 
+    /**
+     * 实现乐观锁
+     */
+    @Version
+    private int version;
+
     public String getName() {
         return name;
     }
@@ -65,5 +71,13 @@ public class Book extends DomainImpl {
 
     public void setAuthors(List<BookAuthor> authors) {
         this.authors = authors;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
