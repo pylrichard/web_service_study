@@ -24,7 +24,7 @@
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="url">
-		<value>jdbc:mysql://192.168.8.10:3306/ace_trade</value>
+		<value>jdbc:mysql://192.168.8.10:3306/ace_trade?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false</value>
 		</property>
 		<property name="username">
 			<value>root</value>
