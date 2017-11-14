@@ -1,6 +1,6 @@
 package com.bd.ace.trade.common.protocol.coupon;
 
-public class ChangeCoponStatusReq {
+public class ChangeCouponStatusReq {
 	private String couponId;
 	private String orderId;
 	private String isUsed;

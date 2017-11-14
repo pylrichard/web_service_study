@@ -3,6 +3,7 @@ package com.bd.ace.trade.common.constant;
 public class MqEnums {
     public enum TopicEnum {
         ORDER_CONFIRM("orderTopic", "confirm"), ORDER_CANCEL("orderTopic", "cancel"), PAY_PAID("payTopic", "paid");
+
         private String topic;
         private String tag;
 
@@ -26,11 +27,11 @@ public class MqEnums {
             this.topic = topic;
             this.tag = tag;
         }
-
     }
 
     public enum ConsumerStatusEnum {
         PROCESSING("0", "正在处理"), SUCCESS("1", "处理成功"), FAIL("2", "处理失败");
+
         private String statusCode;
         private String desc;
 

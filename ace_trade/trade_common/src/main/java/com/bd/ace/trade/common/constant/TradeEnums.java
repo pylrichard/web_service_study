@@ -50,6 +50,7 @@ public class TradeEnums {
 
     public enum RetEnum {
         SUCCESS("1", "成功"), FAIL("-1", "失败");
+
         private String code;
         private String desc;
 
@@ -77,7 +78,8 @@ public class TradeEnums {
     }
 
     public enum OrderStatusEnum {
-        NO_CONFIRM("0", "未确认"), CONFIRM("1", "已确认"), CANCEL("2", "已取消"), INVALID("3", "已确认"), RETURNED("4", "退货");
+        NO_CONFIRM("0", "未确认"), CONFIRM("1", "已确认"), CANCEL("2", "已取消"),
+        INVALID("3", "无效"), RETURNED("4", "退货");
 
         private String statusCode;
         private String desc;
@@ -106,6 +108,7 @@ public class TradeEnums {
 
     public enum PayStatusEnum {
         NO_PAY("0", "未付款"), PAYING("1", "支付中"), PAID("2", "已付款");
+
         private String statusCode;
         private String desc;
 
@@ -133,6 +136,7 @@ public class TradeEnums {
 
     public enum ShippingStatusEnum {
         NO_SHIP("0", "未发货"), SHIPPED("1", "已发货"), RECEIVED("2", "已收货");
+
         private String statusCode;
         private String desc;
 
@@ -160,6 +164,7 @@ public class TradeEnums {
 
     public enum YesNoEnum {
         YES("0", "是"), NO("1", "否");
+
         private String code;
         private String desc;
 
@@ -187,6 +192,7 @@ public class TradeEnums {
 
     public enum UserMoneyLogTypeEnum {
         PAID("1", "订单付款"), REFUND("2", "订单退款");
+
         private String code;
         private String desc;
 

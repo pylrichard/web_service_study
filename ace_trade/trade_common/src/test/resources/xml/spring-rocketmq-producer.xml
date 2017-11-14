@@ -12,7 +12,7 @@
 		"
 		>
 	<bean id="aceMqProducer" class="com.bd.ace.trade.common.rocketmq.AceMqProducer" init-method="init">
-	 <property name="groupName" value="AceProducerGroup" />
-	 <property name="namesrvAddr" value="192.168.8.10:9876;192.168.8.11:9876" />
+		<property name="groupName" value="AceProducerGroup" />
+		<property name="namesrvAddr" value="192.168.8.10:9876;192.168.8.11:9876" />
 	</bean>
  </beans>

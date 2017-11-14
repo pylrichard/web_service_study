@@ -14,9 +14,9 @@
 		
 	<bean id="processor" class="com.bd.ace.trade.common.rocketmq.ProcessorTest"/>
 	<bean id="aceMqConsumer" class="com.bd.ace.trade.common.rocketmq.AceMqConsumer" init-method="init">
-	 <property name="groupName" value="AceProducerGroup" />
-	 <property name="topic" value="orderTopic" />
-	 <property name="namesrvAddr" value="192.168.8.10:9876;192.168.8.11:9876" />
-	 <property name="processor" ref="processor"></property>
+		<property name="groupName" value="AceConsumerGroup" />
+		<property name="topic" value="orderTopic" />
+		<property name="namesrvAddr" value="192.168.8.10:9876;192.168.8.11:9876" />
+		<property name="processor" ref="processor"></property>
 	</bean>
  </beans>
