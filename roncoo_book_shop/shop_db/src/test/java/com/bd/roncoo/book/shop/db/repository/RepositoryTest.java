@@ -29,8 +29,14 @@ public class RepositoryTest extends BaseTest {
      */
     @Test
     public void testFindByName() {
+        //findOne是@ManyToOne的方法，在获取Book对象信息的同时获取Category对象信息
         System.out.println(bookRepository.getClass().getName());
-        bookRepository.findByName("战争与和平");
+        /*
+            findByName是自定义方法，此处会生成2个SQL语句
+            在findByName添加@Query注解/@EntityGraph注解
+         */
+        Book book = bookRepository.findByName("战争与和平");
+        System.out.println(book.getCategory().getName());
     }
 
     /**

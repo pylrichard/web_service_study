@@ -3,10 +3,7 @@ package com.bd.roncoo.book.shop.db.repository;
 import com.bd.roncoo.book.shop.db.domain.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 
 import java.util.List;
 
@@ -22,8 +19,12 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
      * 声明静态查询很方便，但方法名会很长
      * 不能声明update、delete、count、sum
      * findBy+关键字，属性名字要大写
+     * 注解@Query("from Book b left join b.category where b.name = ?1")
+     * 注解@EntityGraph(attributePaths = {"category"})，如果有多个类似findByName的方法有同样的这种注解，业务逻辑一但变化需要多次修改
+     * 采用如下方法，只需要在Book类修改注解即可
      */
-    List<Book> findByName(String name);
+    @EntityGraph(value = "Book.fetch.category.and.author")
+    Book findByName(String name);
 
     List<Book> findByNameAndCategoryName(String bookName, String categoryName);
 

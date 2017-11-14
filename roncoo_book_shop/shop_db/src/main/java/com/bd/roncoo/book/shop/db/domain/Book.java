@@ -4,6 +4,13 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+//定义抓取策略
+@NamedEntityGraph(name = "Book.fetch.category.and.author",
+        attributeNodes = {
+                @NamedAttributeNode("category"),
+                @NamedAttributeNode("authors")
+        }
+)
 public class Book extends DomainImpl {
     private String name;
 
