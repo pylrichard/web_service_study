@@ -112,4 +112,24 @@ public class RepositoryTest extends BaseTest {
         Example<Book> example = Example.of(book, matcher);
         bookRepository.findAll(example, req);
     }
+
+    @Test
+    public void testFindByNameAndCategoryName() {
+        bookRepository.findByNameAndCategoryName("战争与和平", "世界名著");
+    }
+
+    @Test
+    public void testFindByNameLike() {
+        bookRepository.findByNameLike("战争%");
+    }
+
+    @Test
+    public void testFindBooks() {
+        bookRepository.findBooks("战争%", "世界名著", new PageRequest(0, 10));
+    }
+
+    @Test
+    public void testUpdateBookInfo() {
+        bookRepository.updateBookInfo("战争", 1L);
+    }
 }
