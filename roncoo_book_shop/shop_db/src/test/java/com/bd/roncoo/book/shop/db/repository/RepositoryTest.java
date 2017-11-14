@@ -2,6 +2,8 @@ package com.bd.roncoo.book.shop.db.repository;
 
 import com.bd.roncoo.book.shop.db.BaseTest;
 import com.bd.roncoo.book.shop.db.domain.Book;
+import com.bd.roncoo.book.shop.db.domain.EBook;
+import com.bd.roncoo.book.shop.db.domain.PrintBook;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -23,6 +25,8 @@ public class RepositoryTest extends BaseTest {
     private BookRepository bookRepository;
     @Autowired
     private PlatformTransactionManager transactionManager;
+    @Autowired
+    private PrintBookRepository printBookRepository;
 
     /**
      * BookRepository继承CrudRepository
@@ -181,6 +185,8 @@ public class RepositoryTest extends BaseTest {
 
         /*
             Book与Category是多对一关系，生成的SQL语句中会与bs_category表进行关联
+        	在bs_book表中添加(bs_id = 1, bs_name = "战争与和平", bs_category_bs_id = 1)
+    		在bs_category表中添加(bs_id = 1, bs_name = "世界名著")
             持久化上下文可以理解为一个Map，在事务开始时创建，事务结束时销毁
             事务中可以把Domain对象关联到持久化上下文中
             如findOne查询得到的Book对象，与持久化上下文关联起来了，对开发者不可见
@@ -212,5 +218,22 @@ public class RepositoryTest extends BaseTest {
         //此处生成2个select语句
         bookRepository.findAll();
         bookRepository.findAll();
+    }
+
+    @Test
+    public void testHierarchy() {
+        PrintBook printBook = new PrintBook();
+        printBook.setName("1");
+        bookRepository.save(printBook);
+
+        EBook eBook = new EBook();
+        eBook.setName("2");
+        bookRepository.save(eBook);
+
+        List<Book> books = bookRepository.findAll();
+        books.stream().forEach(book -> System.out.println(book.getClass().getSimpleName()));
+
+        List<PrintBook> printBooks = printBookRepository.findAll();
+        printBooks.stream().forEach(book -> System.out.println(book.getClass().getSimpleName()));
     }
 }
