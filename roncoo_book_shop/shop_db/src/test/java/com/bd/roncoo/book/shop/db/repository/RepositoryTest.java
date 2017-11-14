@@ -230,6 +230,7 @@ public class RepositoryTest extends BaseTest {
         eBook.setName("2");
         bookRepository.save(eBook);
 
+        //数据量较大时性能会有问题
         List<Book> books = bookRepository.findAll();
         books.stream().forEach(book -> System.out.println(book.getClass().getSimpleName()));
 

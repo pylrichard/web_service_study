@@ -4,6 +4,14 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+/*
+    SINGLE_TABLE为默认策略，父类和子类在同一张表中，通过dtype区分是哪个子类的记录
+    需要删除book_shop库
+    主键在bs_book表，bs_printbook和bs_ebook通过外键连接到bs_book
+    @Inheritance(strategy = InheritanceType.JOINED)
+    TABLE_PER_CLASS不能使用自增主键，bs_book、bs_printbook、bs_ebook都有自己的主键，主键会有冲突
+*/
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 //定义抓取策略
 @NamedEntityGraph(name = "Book.fetch.category.and.author",
         attributeNodes = {
