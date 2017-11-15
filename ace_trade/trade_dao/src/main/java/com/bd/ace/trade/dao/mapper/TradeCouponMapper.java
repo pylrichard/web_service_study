@@ -1,11 +1,12 @@
 package com.bd.ace.trade.dao.mapper;
 
-import com.bd.ace.trade.dao.entity.TradeCouponExample;
 import com.bd.ace.trade.dao.entity.TradeCoupon;
-
-import java.util.List;
+import com.bd.ace.trade.dao.entity.TradeCouponExample;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
 @Repository
 public interface TradeCouponMapper {
     int countByExample(TradeCouponExample example);
@@ -29,6 +30,8 @@ public interface TradeCouponMapper {
     int updateByPrimaryKeySelective(TradeCoupon record);
 
     int updateByPrimaryKey(TradeCoupon record);
+
     int useCoupon(TradeCoupon record);
+
     int unUseCoupon(TradeCoupon record);
 }

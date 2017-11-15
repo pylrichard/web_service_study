@@ -227,16 +227,17 @@
   </update>
   <update id="useCoupon" parameterType="com.bd.ace.trade.dao.entity.TradeCoupon">
     update trade_coupon
-    is_used = '1',
+    set is_used = '1',
     order_id = #{orderId,jdbcType=VARCHAR},
-    used_time=now()
-    where coupon_id = #{couponId,jdbcType=VARCHAR} and  is_used ='0'
+    used_time = now()
+    where coupon_id = #{couponId,jdbcType=VARCHAR}
+    and is_used ='0'
   </update>
   <update id="unUseCoupon" parameterType="com.bd.ace.trade.dao.entity.TradeCoupon">
     update trade_coupon
-    is_used ='0',
+    set is_used ='0',
     order_id = #{orderId,jdbcType=VARCHAR},
-    used_time=now()
+    used_time = now()
     where coupon_id = #{couponId,jdbcType=VARCHAR}
   </update>
 </mapper>
