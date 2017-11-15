@@ -6,6 +6,6 @@ import com.bd.ace.trade.common.protocol.coupon.QueryCouponReq;
 import com.bd.ace.trade.common.protocol.coupon.QueryCouponRes;
 
 public interface ICouponApi {
-    QueryCouponRes queryCoupon(QueryCouponReq queryCouponReq) throws Exception;
+    QueryCouponRes queryCoupon(QueryCouponReq queryCouponReq);
     ChangeCouponStatusRes changeCouponStatus(ChangeCouponStatusReq changeCouponStatusReq) throws Exception;
 }

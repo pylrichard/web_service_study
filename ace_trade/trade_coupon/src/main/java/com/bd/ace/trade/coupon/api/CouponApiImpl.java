@@ -19,10 +19,10 @@ public class CouponApiImpl implements ICouponApi{
      
 	@Override
 	@PostMapping("/queryCoupon")
-	public QueryCouponRes queryCoupon(@RequestBody QueryCouponReq queryCouponReq) throws Exception {
+	public QueryCouponRes queryCoupon(@RequestBody QueryCouponReq queryCouponReq) {
 		if (queryCouponReq == null || StringUtils.isBlank(queryCouponReq.getCouponId())) {
 			//返回给前端的响应包含错误信息
-			throw new Exception("请求参数不正确，优惠券编号为空");
+			throw new RuntimeException("请求参数不正确，优惠券编号为空");
 		}
 
 		return couponService.queryCoupon(queryCouponReq);

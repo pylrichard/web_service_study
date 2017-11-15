@@ -2,9 +2,11 @@ package com.bd.ace.trade.dao.mapper;
 
 import com.bd.ace.trade.dao.entity.TradeGoods;
 import com.bd.ace.trade.dao.entity.TradeGoodsExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
 @Repository
 public interface TradeGoodsMapper {
     int countByExample(TradeGoodsExample example);
@@ -32,7 +34,4 @@ public interface TradeGoodsMapper {
     int reduceGoodsNumber(TradeGoods record);
     
     int addGoodsNumber(TradeGoods record);
-    
-    
-    
 }

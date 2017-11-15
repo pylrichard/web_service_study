@@ -225,12 +225,13 @@
   </update>
   <update id="reduceGoodsNumber" parameterType="com.bd.ace.trade.dao.entity.TradeGoods">
     update trade_goods
-    set  goods_number =  goods_number- #{goodsNumber,jdbcType=INTEGER}
-    where goods_id = #{goodsId,jdbcType=INTEGER} and goods_number>=#{goodsNumber,jdbcType=INTEGER}
+    set goods_number = goods_number - #{goodsNumber,jdbcType=INTEGER}
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+    and goods_number >= #{goodsNumber,jdbcType=INTEGER}
   </update>
   <update id="addGoodsNumber" parameterType="com.bd.ace.trade.dao.entity.TradeGoods">
     update trade_goods
-    set  goods_number =  goods_number+#{goodsNumber,jdbcType=INTEGER}
+    set goods_number = goods_number + #{goodsNumber,jdbcType=INTEGER}
     where goods_id = #{goodsId,jdbcType=INTEGER} 
   </update>
 </mapper>
