@@ -12,12 +12,12 @@
 		"
 		>
 
-	<bean id="cancelOrderProcessor" class="com.bd.ace.trade.order.mq.processor.CancelOrderProcessor"/>
+	<bean id="cancelOrderProcessor"  class="com.bd.ace.trade.user.mq.processor.CancelOrderProcessor"/>
 	<bean id="orderConsumer" class="com.bd.ace.trade.common.rocketmq.AceMqConsumer" init-method="init">
-		<property name="groupName" value="OrderOrderTopicCancelGroup" />
+		<property name="groupName" value="UserOrderTopicCancelGroup" />
 		<property name="topic" value="OrderTopic" />
 		<property name="tag" value="cancel" />
-		<property name="namesrvAddr" value="192.168.8.10:9876;192.168.8.11:9876" />
+		<property name="namesrvAddr" value="192.168.8.10:9876;192.168.8.10:9876" />
 		<property name="processor" ref="cancelOrderProcessor"/>
 	</bean>
  </beans>

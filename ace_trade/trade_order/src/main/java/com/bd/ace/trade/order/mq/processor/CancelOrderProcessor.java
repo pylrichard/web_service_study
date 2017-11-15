@@ -22,7 +22,7 @@ public class CancelOrderProcessor implements IMessageProcessor {
     public boolean handleMessage(MessageExt messageExt) {
         try {
             String body = new String(messageExt.getBody(), "UTF-8");
-            logger.info("user CancelOrderProcessor receive message:" + messageExt);
+            logger.info("order CancelOrderProcessor receive message:" + body);
             CancelOrderMq cancelOrderMq = JSON.parseObject(body, CancelOrderMq.class);
             ChangeOrderStatusReq changeOrderStatusReq = new ChangeOrderStatusReq();
             changeOrderStatusReq.setOrderId(cancelOrderMq.getOrderId());

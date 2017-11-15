@@ -2,10 +2,10 @@ package com.bd.ace.trade.dao.mapper;
 
 import com.bd.ace.trade.dao.entity.TradeUser;
 import com.bd.ace.trade.dao.entity.TradeUserExample;
-
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 @Repository
 public interface TradeUserMapper {
     int countByExample(TradeUserExample example);
@@ -29,8 +29,14 @@ public interface TradeUserMapper {
     int updateByPrimaryKeySelective(TradeUser record);
 
     int updateByPrimaryKey(TradeUser record);
-    
+
+    /**
+     * 扣用户余额
+     */
     int reduceUserMoney(TradeUser record);
-    
+
+    /**
+     * 加用户余额
+     */
     int addUserMoney(TradeUser record);
 }

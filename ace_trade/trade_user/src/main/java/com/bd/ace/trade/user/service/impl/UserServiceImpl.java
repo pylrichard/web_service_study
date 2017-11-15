@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Service
@@ -49,46 +48,41 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     @Override
     public ChangeUserMoneyRes changeUserMoney(ChangeUserMoneyReq changeUserMoneyReq) {
-        ChangeUserMoneyRes changeUserMoneyRes = new ChangeUserMoneyRes();
-        changeUserMoneyRes.setRetCode(TradeEnums.RetEnum.SUCCESS.getCode());
-        changeUserMoneyRes.setRetInfo(TradeEnums.RetEnum.SUCCESS.getDesc());
-        if (changeUserMoneyReq == null || changeUserMoneyReq.getUserId() == null || changeUserMoneyReq.getUserMoney() == null) {
-            throw new RuntimeException("请求参数不一致");
-        }
-        if (changeUserMoneyReq.getUserMoney().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("余额不能小于0");
-        }
-        TradeUserMoneyLog tradeUserMoneyLog = new TradeUserMoneyLog();
-        tradeUserMoneyLog.setOrderId(changeUserMoneyReq.getOrderId());
-        tradeUserMoneyLog.setUserId(changeUserMoneyReq.getUserId());
-        tradeUserMoneyLog.setUseMoney(changeUserMoneyReq.getUserMoney());
-        tradeUserMoneyLog.setCreateTime(new Date());
-        tradeUserMoneyLog.setMoneyLogType(changeUserMoneyReq.getMoneyLogType());
-
         TradeUser tradeUser = new TradeUser();
         tradeUser.setUserId(changeUserMoneyReq.getUserId());
         tradeUser.setUserMoney(changeUserMoneyReq.getUserMoney());
-        //查询是否有订单付款记录
+        /*
+            查询是否有订单付款记录
+         */
         TradeUserMoneyLogExample tradeUserMoneyLogExample = new TradeUserMoneyLogExample();
-        tradeUserMoneyLogExample.createCriteria().andUserIdEqualTo(changeUserMoneyReq.getUserId())
+        tradeUserMoneyLogExample.createCriteria()
+                .andUserIdEqualTo(changeUserMoneyReq.getUserId())
                 .andOrderIdEqualTo(changeUserMoneyReq.getOrderId())
                 .andMoneyLogTypeEqualTo(TradeEnums.UserMoneyLogTypeEnum.PAID.getCode());
         int count = this.tradeUserMoneyLogMapper.countByExample(tradeUserMoneyLogExample);
-        //订单付款
+        /*
+            处理订单付款
+         */
         if (changeUserMoneyReq.getMoneyLogType().equals(TradeEnums.UserMoneyLogTypeEnum.PAID.getCode())) {
             if (count > 0) {
                 throw new RuntimeException("已经付过款了，不能再付款");
             }
+            //扣用户余额
             tradeUserMapper.reduceUserMoney(tradeUser);
         }
-        //订单退款
+        /*
+            处理订单退款
+         */
         if (changeUserMoneyReq.getMoneyLogType().equals(TradeEnums.UserMoneyLogTypeEnum.PAID.getCode())) {
             if (count == 0) {
                 throw new RuntimeException("没有付款信息，不能退款");
             }
-            //防止多次退款
+            /*
+                防止多次退款
+             */
             tradeUserMoneyLogExample = new TradeUserMoneyLogExample();
-            tradeUserMoneyLogExample.createCriteria().andUserIdEqualTo(changeUserMoneyReq.getUserId())
+            tradeUserMoneyLogExample.createCriteria()
+                    .andUserIdEqualTo(changeUserMoneyReq.getUserId())
                     .andOrderIdEqualTo(changeUserMoneyReq.getOrderId())
                     .andMoneyLogTypeEqualTo(TradeEnums.UserMoneyLogTypeEnum.REFUND.getCode());
             count = this.tradeUserMoneyLogMapper.countByExample(tradeUserMoneyLogExample);
@@ -97,6 +91,23 @@ public class UserServiceImpl implements IUserService {
             }
             tradeUserMapper.addUserMoney(tradeUser);
         }
+
+        /*
+            用户余额日志表插入记录
+         */
+        TradeUserMoneyLog tradeUserMoneyLog = new TradeUserMoneyLog();
+        tradeUserMoneyLog.setOrderId(changeUserMoneyReq.getOrderId());
+        tradeUserMoneyLog.setUserId(changeUserMoneyReq.getUserId());
+        tradeUserMoneyLog.setUseMoney(changeUserMoneyReq.getUserMoney());
+        tradeUserMoneyLog.setCreateTime(new Date());
+        tradeUserMoneyLog.setMoneyLogType(changeUserMoneyReq.getMoneyLogType());
+        this.tradeUserMoneyLogMapper.insert(tradeUserMoneyLog);
+        /*
+            设置响应为成功
+         */
+        ChangeUserMoneyRes changeUserMoneyRes = new ChangeUserMoneyRes();
+        changeUserMoneyRes.setRetCode(TradeEnums.RetEnum.SUCCESS.getCode());
+        changeUserMoneyRes.setRetInfo(TradeEnums.RetEnum.SUCCESS.getDesc());
 
         return changeUserMoneyRes;
     }

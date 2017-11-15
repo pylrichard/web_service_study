@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 @RestController
 public class UserApiImpl implements IUserApi {
     @Autowired
@@ -29,6 +31,13 @@ public class UserApiImpl implements IUserApi {
 
     @Override
     public ChangeUserMoneyRes changeUserMoney(@RequestBody ChangeUserMoneyReq changeUserMoneyReq) {
+        if (changeUserMoneyReq == null || changeUserMoneyReq.getUserId() == null
+                || changeUserMoneyReq.getUserMoney() == null) {
+            throw new RuntimeException("请求参数不一致");
+        }
+        if (changeUserMoneyReq.getUserMoney().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("余额不能小于0");
+        }
         ChangeUserMoneyRes changeUserMoneyRes = new ChangeUserMoneyRes();
         try {
             changeUserMoneyRes = this.userService.changeUserMoney(changeUserMoneyReq);

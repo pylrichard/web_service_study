@@ -6,6 +6,6 @@ import com.bd.ace.trade.common.protocol.order.ConfirmOrderReq;
 import com.bd.ace.trade.common.protocol.order.ConfirmOrderRes;
 
 public interface IOrderService {
-    public ConfirmOrderRes confirmOrder(ConfirmOrderReq confirmOrderReq);
-    public ChangeOrderStatusRes changeOrderStatus(ChangeOrderStatusReq changeOrderStatusReq);
+    ConfirmOrderRes confirmOrder(ConfirmOrderReq confirmOrderReq);
+    ChangeOrderStatusRes changeOrderStatus(ChangeOrderStatusReq changeOrderStatusReq);
 }

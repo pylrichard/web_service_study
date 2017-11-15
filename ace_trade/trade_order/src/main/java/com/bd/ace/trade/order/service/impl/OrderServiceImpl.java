@@ -281,12 +281,12 @@ public class OrderServiceImpl implements IOrderService {
     @Transactional
     @Override
     public ChangeOrderStatusRes changeOrderStatus(ChangeOrderStatusReq changeOrderStatusReq) {
-        TradeOrder record = new TradeOrder();
-        record.setOrderId(changeOrderStatusReq.getOrderId());
-        record.setOrderStatus(changeOrderStatusReq.getOrderStatus());
+        TradeOrder tradeOrder = new TradeOrder();
+        tradeOrder.setOrderId(changeOrderStatusReq.getOrderId());
+        tradeOrder.setOrderStatus(changeOrderStatusReq.getOrderStatus());
         ChangeOrderStatusRes changeOrderStatusRes = new ChangeOrderStatusRes();
         try {
-            int num = tradeOrderMapper.updateByPrimaryKey(record);
+            int num = tradeOrderMapper.updateByPrimaryKey(tradeOrder);
             if (num <= 0) {
                 throw new Exception("订单状态修改异常");
             }
