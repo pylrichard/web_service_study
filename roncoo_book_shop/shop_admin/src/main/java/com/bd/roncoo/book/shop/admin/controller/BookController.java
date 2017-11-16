@@ -2,6 +2,7 @@ package com.bd.roncoo.book.shop.admin.controller;
 
 import com.bd.roncoo.book.shop.dto.BookCondition;
 import com.bd.roncoo.book.shop.dto.BookInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ public class BookController {
      * 将请求参数封装成Pageable对象，传递给Spring Data JPA的Repository分页查询方法即可
      */
     @GetMapping
+    @JsonView(BookInfo.BookListView.class)
     public List<BookInfo> query(BookCondition condition, @PageableDefault(size = 10)Pageable pageable) {
         //当前是第几页，0表示第1页
         System.out.println(pageable.getPageNumber());
@@ -36,7 +38,10 @@ public class BookController {
         return bookInfos;
     }
 
-    @GetMapping("/{id}")
+    //:\\d正则表达式，希望传入的id为1位数
+    @GetMapping("/{id:\\d}")
+    //BookInfo.content在调用getInfo()时才显示
+    @JsonView(BookInfo.BookDetailView.class)
     public BookInfo getInfo(@PathVariable long id) {
         System.out.println(id);
 

@@ -11,4 +11,11 @@
         <groupId>com.bd</groupId>
         <version>0.1.0</version>
     </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+    </dependencies>
 </project>

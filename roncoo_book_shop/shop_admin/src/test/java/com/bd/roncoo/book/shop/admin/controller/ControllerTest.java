@@ -68,4 +68,12 @@ public class ControllerTest {
 
         System.out.println(result);
     }
+
+    @Test
+    public void whenGetInfoFail() throws Exception {
+        //发送id为2位数
+        mockMvc.perform(get("/book/10").accept(MediaType.APPLICATION_JSON_UTF8))
+                //希望返回404错误
+                .andExpect(status().is4xxClientError());
+    }
 }
