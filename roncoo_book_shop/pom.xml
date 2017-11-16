@@ -28,5 +28,7 @@
     <modules>
         <module>shop_db</module>
         <module>shop_admin</module>
+        <module>shop_book_service</module>
+        <module>shop_common</module>
     </modules>
 </project>
