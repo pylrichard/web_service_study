@@ -12,8 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import javax.servlet.http.Cookie;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,10 +81,34 @@ public class ControllerTest {
 
     @Test
     public void whenCreateSuccess() throws Exception {
-        String content = "{\"id\":1, \"name\":\"战争与和平\", \"content\":\"hello spring\", \"publishDate\":\"2017-07-08\"}";
+        //创建不指定id
+        String content = "{\"id\":null, \"name\":\"战争与和平\", \"content\":\"hello spring\", \"publishDate\":\"2017-07-08\"}";
         mockMvc.perform(post("/book").content(content).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 //创建成功后返回id为1
                 .andExpect(jsonPath("$.id").value("1"));
+    }
+
+    @Test
+    public void whenUpdateSuccess() throws Exception {
+        String content = "{\"id\":1, \"name\":\"战争与和平\", \"content\":\"hello spring\", \"publishDate\":\"2017-07-08\"}";
+        mockMvc.perform(put("/book/1").content(content).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"));
+    }
+
+    @Test
+    public void whenDeleteSuccess() throws Exception {
+        mockMvc.perform(delete("/book/1").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenCookieOrHeaderExists() throws Exception {
+        mockMvc.perform(get("/book/1")
+                .cookie(new Cookie("token", "123456"))
+                .header("auth", "987654")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

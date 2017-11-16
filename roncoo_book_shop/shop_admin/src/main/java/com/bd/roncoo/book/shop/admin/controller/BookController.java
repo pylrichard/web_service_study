@@ -42,8 +42,10 @@ public class BookController {
     @GetMapping("/{id:\\d}")
     //BookInfo.content在调用getInfo()时才显示
     @JsonView(BookInfo.BookDetailView.class)
-    public BookInfo getInfo(@PathVariable long id) {
+    public BookInfo getInfo(@PathVariable long id, @CookieValue String token, @RequestHeader String auth) {
         System.out.println(id);
+        System.out.println(token);
+        System.out.println(auth);
 
         BookInfo info = new BookInfo();
         info.setId(1);
@@ -67,9 +69,26 @@ public class BookController {
         System.out.println("name is " + info.getName());
         System.out.println("content is " + info.getContent());
         System.out.println("publishDate is " + info.getPublishDate());
-
         info.setId(1L);
 
         return info;
+    }
+
+    @PutMapping("/{id}")
+    public BookInfo update(@Valid @RequestBody BookInfo info, BindingResult result) {
+        if (result.hasErrors()) {
+            result.getAllErrors().stream().forEach(error -> System.out.println(error.getDefaultMessage()));
+        }
+        System.out.println("id is " + info.getId());
+        System.out.println("name is " + info.getName());
+        System.out.println("content is " + info.getContent());
+        System.out.println("publishDate is " + info.getPublishDate());
+
+        return info;
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id) {
+        System.out.println(id);
     }
 }
