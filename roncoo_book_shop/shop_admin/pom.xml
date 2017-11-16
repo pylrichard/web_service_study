@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>shop_db</artifactId>
+    <artifactId>shop_admin</artifactId>
 
     <parent>
         <artifactId>roncoo_book_shop</artifactId>
@@ -14,23 +14,14 @@
 
     <dependencies>
         <dependency>
-            <!-- 使用Spring IO后不需要添加version标签 -->
-            <!-- 数据库操作需要 -->
+            <!-- 编写REST API需要，实际是Spring MVC -->
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <!-- 单元测试需要 -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
         </dependency>
     </dependencies>
 </project>
