@@ -1,4 +1,4 @@
-package com.bd.imooc.study.jms.jms_spring.consumer;
+package com.bd.imooc.study.jms.spring.consumer;
 
 import javax.jms.JMSException;
 import javax.jms.Message;

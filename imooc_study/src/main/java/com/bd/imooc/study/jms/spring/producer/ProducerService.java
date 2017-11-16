@@ -1,4 +1,4 @@
-package com.bd.imooc.study.jms.jms_spring.producer;
+package com.bd.imooc.study.jms.spring.producer;
 
 public interface ProducerService {
     void sendMessage(String message);

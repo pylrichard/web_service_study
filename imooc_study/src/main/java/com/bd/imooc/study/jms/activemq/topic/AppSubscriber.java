@@ -1,24 +1,18 @@
-package com.bd.imooc.study.jms.jms_activemq.queue;
+package com.bd.imooc.study.jms.activemq.topic;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 
 /**
- * 启动activemq
- * 1.activemq start
- * 2.浏览器输入http://192.168.8.10:8161，点击Manage ActiveMQ broker，用户名/密码为admin
+ * 主题模式下订阅者需要先启动，发布者后启动，否则订阅者无法接收到消息
  *
- * 先启动生产者2次，再启动消费者
- * 消费者会消费200条消息
- *
- * 同时启动2个消费者，1个生产者
- * 队列模式下2个消费者分别消费1个生产者发送的消息(1个消费奇数，1个消费偶数)
+ * 先启动2个订阅者，再启动1个发布者，2个订阅者都会接收到发布者发送的全部消息
  */
-public class AppConsumer {
-//    private static final String url = "tcp://localhost:61616";
-    private static final String url = "failover:(tcp://localhost:61616,tcp://localhost:61617,tcp://localhost:61618)?randomize=true";
-    private static final String queueName = "queue-test";
+public class AppSubscriber {
+    private static final String url = "tcp://localhost:61616";
+    //注意发布者和订阅者的主题名字要一致
+    private static final String topicName = "topic-test";
 
     public static void main(String[] args) {
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
@@ -28,7 +22,7 @@ public class AppConsumer {
             connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            Destination destination = session.createQueue(queueName);
+            Destination destination = session.createTopic(topicName);
             MessageConsumer consumer = session.createConsumer(destination);
             //异步监听消息
             consumer.setMessageListener(new MessageListener() {
@@ -36,7 +30,7 @@ public class AppConsumer {
                 public void onMessage(Message message) {
                     TextMessage textMessage = (TextMessage) message;
                     try {
-                        System.out.println("queue mode receive msg " + textMessage.getText());
+                        System.out.println("topic mode receive msg " + textMessage.getText());
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }

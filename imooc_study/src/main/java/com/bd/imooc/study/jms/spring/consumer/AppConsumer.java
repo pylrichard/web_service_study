@@ -1,4 +1,4 @@
-package com.bd.imooc.study.jms.jms_spring.consumer;
+package com.bd.imooc.study.jms.spring.consumer;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

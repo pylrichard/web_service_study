@@ -1,6 +1,6 @@
-package com.bd.imooc.study.jms.jms_spring.producer.impl;
+package com.bd.imooc.study.jms.spring.producer.impl;
 
-import com.bd.imooc.study.jms.jms_spring.producer.ProducerService;
+import com.bd.imooc.study.jms.spring.producer.ProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;

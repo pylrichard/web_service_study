@@ -1,4 +1,4 @@
-package com.bd.imooc.study.es.spring_boot_es;
+package com.bd.imooc.study.es;
 
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;

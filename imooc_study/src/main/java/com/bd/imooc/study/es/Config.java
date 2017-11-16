@@ -1,4 +1,4 @@
-package com.bd.imooc.study.es.spring_boot_es;
+package com.bd.imooc.study.es;
 
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;

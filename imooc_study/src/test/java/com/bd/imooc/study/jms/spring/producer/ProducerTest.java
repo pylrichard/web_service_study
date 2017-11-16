@@ -1,6 +1,5 @@
-package com.bd.imooc.study.jms.jms_spring.producer;
+package com.bd.imooc.study.jms.spring.producer;
 
-import com.bd.imooc.study.jms.jms_spring.producer.ProducerService;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
