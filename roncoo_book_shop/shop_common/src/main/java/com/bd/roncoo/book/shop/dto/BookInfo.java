@@ -1,6 +1,9 @@
 package com.bd.roncoo.book.shop.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.validator.constraints.NotBlank;
+
+import java.util.Date;
 
 public class BookInfo {
     public interface BookListView {}
@@ -8,7 +11,12 @@ public class BookInfo {
 
     private long id;
     private String name;
+    @NotBlank
     private String content;
+    /**
+     * application.properties中添加spring.jackson.time-zone = GMT+8
+     */
+    private Date publishDate;
 
     @JsonView(BookListView.class)
     public long getId() {
@@ -35,5 +43,14 @@ public class BookInfo {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @JsonView(BookListView.class)
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,5 +76,14 @@ public class ControllerTest {
         mockMvc.perform(get("/book/10").accept(MediaType.APPLICATION_JSON_UTF8))
                 //希望返回404错误
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void whenCreateSuccess() throws Exception {
+        String content = "{\"id\":1, \"name\":\"战争与和平\", \"content\":\"hello spring\", \"publishDate\":\"2017-07-08\"}";
+        mockMvc.perform(post("/book").content(content).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                //创建成功后返回id为1
+                .andExpect(jsonPath("$.id").value("1"));
     }
 }

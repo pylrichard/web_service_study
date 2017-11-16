@@ -5,12 +5,12 @@ import com.bd.roncoo.book.shop.dto.BookInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -48,6 +48,27 @@ public class BookController {
         BookInfo info = new BookInfo();
         info.setId(1);
         info.setName("战争与和平");
+        info.setPublishDate(new Date());
+
+        return info;
+    }
+
+    /**
+     * 传入的参数是json格式的字符串，保存在request的body中，需要添加@RequestBody处理
+     * BookInfo.content添加@NotBlank后，Spring MVC不会进行非空检查，需要添加@Valid才会
+     */
+    @PostMapping
+    public BookInfo create(@Valid @RequestBody BookInfo info, BindingResult result) {
+        //BookInfo.content为null时提示错误，并不会中断程序的运行
+        if (result.hasErrors()) {
+            result.getAllErrors().stream().forEach(error -> System.out.println(error.getDefaultMessage()));
+        }
+        System.out.println("id is " + info.getId());
+        System.out.println("name is " + info.getName());
+        System.out.println("content is " + info.getContent());
+        System.out.println("publishDate is " + info.getPublishDate());
+
+        info.setId(1L);
 
         return info;
     }
