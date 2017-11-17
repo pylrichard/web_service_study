@@ -1,8 +1,10 @@
 package com.bd.imooc.security.example.dto;
 
+import com.bd.imooc.security.example.validator.ExampleConstraint;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Past;
 import java.util.Date;
 
 public class User {
@@ -13,12 +15,14 @@ public class User {
     public interface UserDetailView extends UserSimpleView {}
 
     private String id;
+    @ExampleConstraint(message = "自定义验证参数注解")
     private String username;
     /**
      * 需要在方法参数添加注解@Valid才能生效
      */
-    @NotBlank
+    @NotBlank(message = "密码不能为空")
     private String password;
+    @Past(message = "生日必须是过去的时间")
     private Date birthday;
 
     /**

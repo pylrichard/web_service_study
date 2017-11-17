@@ -40,6 +40,30 @@ public class UserController {
         return user;
     }
 
+    @PutMapping("/{id:\\d+}")
+    public User update(@Valid @RequestBody User user, BindingResult errors) {
+        if (errors.hasErrors()) {
+            errors.getAllErrors().stream().forEach(error -> {
+//                FieldError fieldError = (FieldError)error
+//                String message = fieldError.getField() + " " + error.getDefaultMessage()
+                //显示@Past(message = "xxx")的值
+                System.out.println(error.getDefaultMessage());
+            });
+        }
+        System.out.println(user.getId());
+        System.out.println(user.getUsername());
+        System.out.println(user.getPassword());
+        System.out.println(user.getBirthday());
+        user.setId("1");
+
+        return user;
+    }
+
+    @DeleteMapping("/{id:\\d+}")
+    public void delete(@PathVariable String id) {
+        System.out.println(id);
+    }
+
     @GetMapping
     @JsonView(User.UserSimpleView.class)
     public List<User> query(UserQueryCondition condition,
