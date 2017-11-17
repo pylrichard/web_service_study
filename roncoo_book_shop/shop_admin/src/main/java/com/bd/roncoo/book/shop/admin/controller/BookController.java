@@ -7,16 +7,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @RestController
 @RequestMapping("/book")
 public class BookController {
+    private ConcurrentMap<Long, DeferredResult<BookInfo>> map = new ConcurrentHashMap<>();
+
     /**
      * 将查询参数封装在BookCondition，分页查询请求由前端传入
      * 将请求参数封装成Pageable对象，传递给Spring Data JPA的Repository分页查询方法即可
@@ -50,30 +53,14 @@ public class BookController {
     @GetMapping("/{id:\\d}")
     //BookInfo.content在调用getInfo()时才显示
     @JsonView(BookInfo.BookDetailView.class)
-    public Callable<BookInfo> getInfo(@PathVariable long id) throws Exception {
+    public DeferredResult<BookInfo> getInfo(@PathVariable Long id) throws Exception {
         long startTime = System.currentTimeMillis();
         String name = Thread.currentThread().getName();
         System.out.println("Tomcat thread " + name + " begin");
 
-        /*
-            模拟调用远程服务获取BookInfo
-            Spring管理的线程处理获取BookInfo的过程
-         */
-        Callable<BookInfo> result = () -> {
-            String threadName = Thread.currentThread().getName();
-            System.out.println("Spring thread " + threadName + " begin");
-            //模拟调用时间花费1s
-            Thread.sleep(1000);
-            BookInfo info = new BookInfo();
-            info.setName("战争与和平");
-            info.setPublishDate(new Date());
-
-            long endTime = System.currentTimeMillis() - startTime;
-            //耗时1005ms，因为Thread.sleep(1000)
-            System.out.println("Spring thread " + threadName + " end, execution time = " + endTime + "ms");
-
-            return info;
-        };
+        //此线程接收请求，获取响应在另一个线程中
+        DeferredResult<BookInfo> result = new DeferredResult<>();
+        map.put(id, result);
 
         long endTime = System.currentTimeMillis() - startTime;
         //耗时4ms
@@ -84,6 +71,14 @@ public class BookController {
             前端获取响应结果需要耗时1s多，采用以上多线程模型后时间并不会缩短，但Tomcat的吞吐量提高了，可以同时处理更多请求
          */
         return result;
+    }
+
+    /**
+     * 当监听到队列中有新消息时，调用此方法，返回结果给前端
+     */
+    @SuppressWarnings("unused")
+    private void setResult(BookInfo info) {
+        map.get(info.getId()).setResult(info);
     }
 
     /**
