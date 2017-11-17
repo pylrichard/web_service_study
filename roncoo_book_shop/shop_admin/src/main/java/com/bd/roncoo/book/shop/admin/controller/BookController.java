@@ -3,6 +3,8 @@ package com.bd.roncoo.book.shop.admin.controller;
 import com.bd.roncoo.book.shop.common.dto.BookCondition;
 import com.bd.roncoo.book.shop.common.dto.BookInfo;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
@@ -26,6 +28,7 @@ public class BookController {
      */
     @GetMapping
     @JsonView(BookInfo.BookListView.class)
+    @ApiOperation("查询图书信息")
     public List<BookInfo> query(BookCondition condition, @PageableDefault(size = 10)Pageable pageable) {
         //当前是第几页，0表示第1页
         System.out.println(pageable.getPageNumber());
@@ -53,7 +56,8 @@ public class BookController {
     @GetMapping("/{id:\\d}")
     //BookInfo.content在调用getInfo()时才显示
     @JsonView(BookInfo.BookDetailView.class)
-    public DeferredResult<BookInfo> getInfo(@PathVariable Long id) throws Exception {
+    @ApiOperation("获取图书详细信息")
+    public DeferredResult<BookInfo> getInfo(@ApiParam("图书id") @PathVariable Long id) throws Exception {
         long startTime = System.currentTimeMillis();
         String name = Thread.currentThread().getName();
         System.out.println("Tomcat thread " + name + " begin");

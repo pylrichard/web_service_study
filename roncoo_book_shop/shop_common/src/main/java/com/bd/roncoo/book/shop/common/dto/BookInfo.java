@@ -1,6 +1,7 @@
 package com.bd.roncoo.book.shop.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ public class BookInfo {
     public interface BookDetailView extends BookListView {}
 
     private long id;
+    @ApiModelProperty("图书名称")
     private String name;
     @NotBlank
     private String content;
