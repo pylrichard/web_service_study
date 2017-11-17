@@ -49,8 +49,27 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 //设置预期返回值长度，$等符号意义见JsonPath Github
                 .andExpect(jsonPath("$.length()").value(3))
+                //显示响应结果
                 .andReturn().getResponse().getContentAsString();
 
         System.out.println(result);
+    }
+
+    @Test
+    public void whenGetInfoSuccess() throws Exception {
+        String result = mockMvc.perform(get("/user/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("pyl"))
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println(result);
+    }
+
+    @Test
+    public void whenGetInfoFail() throws Exception {
+        mockMvc.perform(get("/user/a")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().is4xxClientError());
     }
 }
