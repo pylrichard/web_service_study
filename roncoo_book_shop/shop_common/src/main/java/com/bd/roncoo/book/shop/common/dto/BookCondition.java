@@ -1,4 +1,4 @@
-package com.bd.roncoo.book.shop.dto;
+package com.bd.roncoo.book.shop.common.dto;
 
 public class BookCondition {
     private String name;

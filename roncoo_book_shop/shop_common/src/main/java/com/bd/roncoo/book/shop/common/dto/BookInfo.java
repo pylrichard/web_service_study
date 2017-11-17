@@ -1,4 +1,4 @@
-package com.bd.roncoo.book.shop.dto;
+package com.bd.roncoo.book.shop.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotBlank;

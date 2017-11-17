@@ -1,7 +1,7 @@
 package com.bd.roncoo.book.shop.admin.controller;
 
-import com.bd.roncoo.book.shop.dto.BookCondition;
-import com.bd.roncoo.book.shop.dto.BookInfo;
+import com.bd.roncoo.book.shop.common.dto.BookCondition;
+import com.bd.roncoo.book.shop.common.dto.BookInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
