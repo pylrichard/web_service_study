@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -42,17 +41,8 @@ public class BookController {
     @GetMapping("/{id:\\d}")
     //BookInfo.content在调用getInfo()时才显示
     @JsonView(BookInfo.BookDetailView.class)
-    public BookInfo getInfo(@PathVariable long id, @CookieValue String token, @RequestHeader String auth) {
-        System.out.println(id);
-        System.out.println(token);
-        System.out.println(auth);
-
-        BookInfo info = new BookInfo();
-        info.setId(1);
-        info.setName("战争与和平");
-        info.setPublishDate(new Date());
-
-        return info;
+    public BookInfo getInfo(@PathVariable long id) {
+        throw new RuntimeException("getInfo exception");
     }
 
     /**
