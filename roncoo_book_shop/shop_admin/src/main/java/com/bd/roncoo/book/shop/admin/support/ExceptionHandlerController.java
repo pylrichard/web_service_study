@@ -17,7 +17,7 @@ public class ExceptionHandlerController {
     @ExceptionHandler(RuntimeException.class)
     //@ResponseStatus默认是500
     @ResponseStatus(code = HttpStatus.FORBIDDEN)
-    public Map<String, Object> handleExcepition(RuntimeException exception) {
+    public Map<String, Object> handleRuntimeExcepition(RuntimeException exception) {
         Map<String, Object> result = new HashMap<>(16);
         result.put("result", "fail");
         result.put("errMsg", exception.getMessage());

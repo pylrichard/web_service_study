@@ -41,8 +41,13 @@ public class BookController {
     @GetMapping("/{id:\\d}")
     //BookInfo.content在调用getInfo()时才显示
     @JsonView(BookInfo.BookDetailView.class)
-    public BookInfo getInfo(@PathVariable long id) {
-        throw new RuntimeException("getInfo exception");
+    public BookInfo getInfo(@PathVariable long id) throws Exception {
+        /*
+            首先被ExceptionHandlerController.handleRuntimeException()处理，不会传递到TimeInterceptor.afterCompletion
+            throw new RuntimeException("getInfo exception")
+            抛出检查异常，被TimeInterceptor.afterCompletion处理
+        */
+        throw new Exception("getInfo exception");
     }
 
     /**
