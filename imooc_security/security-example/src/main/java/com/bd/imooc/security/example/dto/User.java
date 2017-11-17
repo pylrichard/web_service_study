@@ -14,6 +14,9 @@ public class User {
 
     private String id;
     private String username;
+    /**
+     * 需要在方法参数添加注解@Valid才能生效
+     */
     @NotBlank
     private String password;
     private Date birthday;

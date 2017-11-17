@@ -11,7 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Date;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,5 +74,24 @@ public class UserControllerTest {
         mockMvc.perform(get("/user/a")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void whenCreateSuccess() throws Exception {
+        /*
+            前后端分离架构中，日期类型参数传递时间戳，由前端决定显示精度，后端负责提供数据
+         */
+        Date date = new Date();
+        System.out.println(date.getTime());
+        String content = "{\"username\":\"pyl\", \"password\":null, \"birthday\":" + date.getTime() + "}";
+        String result = mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                //注解@RequestBody映射请求体到Java方法的参数
+                .content(content))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println(result);
     }
 }
