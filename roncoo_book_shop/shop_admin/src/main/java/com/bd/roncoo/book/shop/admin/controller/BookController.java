@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 @RestController
 @RequestMapping("/book")
@@ -37,17 +39,51 @@ public class BookController {
         return bookInfos;
     }
 
+    /**
+     * 从Spring MVC 3.2开始，Controller中的方法可以返回Callable类型的返回值Callable<V>
+     * 从Spring容器管理的线程中异步产生返回值，而Servlet容器(Tomcat)主线程会被释放，处理其它请求
+     * Spring MVC从线程池中取出一个线程处理Callable，当Callable返回时，请求会被发送回Servlet容器，并处理Callable
+     * 整个处理过程对前端是透明的，如果Callable处理需要1s，前端发送的请求需要等待1s才能获取到处理结果
+     * 对Tomcat并不会占用一个线程1s，开始处理请求的线程在这1s中可以处理很多其它请求，提高Tomcat吞吐量
+     */
     //:\\d正则表达式，希望传入的id为1位数
     @GetMapping("/{id:\\d}")
     //BookInfo.content在调用getInfo()时才显示
     @JsonView(BookInfo.BookDetailView.class)
-    public BookInfo getInfo(@PathVariable long id) throws Exception {
+    public Callable<BookInfo> getInfo(@PathVariable long id) throws Exception {
+        long startTime = System.currentTimeMillis();
+        String name = Thread.currentThread().getName();
+        System.out.println("Tomcat thread " + name + " begin");
+
         /*
-            首先被ExceptionHandlerController.handleRuntimeException()处理，不会传递到TimeInterceptor.afterCompletion
-            throw new RuntimeException("getInfo exception")
-            抛出检查异常，被TimeInterceptor.afterCompletion处理
-        */
-        throw new Exception("getInfo exception");
+            模拟调用远程服务获取BookInfo
+            Spring管理的线程处理获取BookInfo的过程
+         */
+        Callable<BookInfo> result = () -> {
+            String threadName = Thread.currentThread().getName();
+            System.out.println("Spring thread " + threadName + " begin");
+            //模拟调用时间花费1s
+            Thread.sleep(1000);
+            BookInfo info = new BookInfo();
+            info.setName("战争与和平");
+            info.setPublishDate(new Date());
+
+            long endTime = System.currentTimeMillis() - startTime;
+            //耗时1005ms，因为Thread.sleep(1000)
+            System.out.println("Spring thread " + threadName + " end, execution time = " + endTime + "ms");
+
+            return info;
+        };
+
+        long endTime = System.currentTimeMillis() - startTime;
+        //耗时4ms
+        System.out.println("Tomcat thread " + name + " end, execution time = " + endTime + "ms");
+
+        /*
+            Tomcat主线程返回，去处理其它请求，等待Spring管理的线程返回结果给Tomcat主线程，Tomcat主线程再返回给前端
+            前端获取响应结果需要耗时1s多，采用以上多线程模型后时间并不会缩短，但Tomcat的吞吐量提高了，可以同时处理更多请求
+         */
+        return result;
     }
 
     /**
