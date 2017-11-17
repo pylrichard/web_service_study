@@ -2,6 +2,7 @@ package com.bd.imooc.security.example.web.controller;
 
 import com.bd.imooc.security.example.dto.User;
 import com.bd.imooc.security.example.dto.UserQueryCondition;
+import com.bd.imooc.security.example.exception.UserNotExistException;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -23,13 +24,11 @@ public class UserController {
      * 注解@Valid和BindingResult验证请求参数合法性并处理校验结果
      *
      * BindingResult需要@Valid配合，校验结果保存在BindingResult中
+     *
+     * 没有BindingResult，传入参数不合法就不会调用Controller方法，进入Spring默认错误处理机制
      */
     @PostMapping
-    public User create(@Valid @RequestBody User user, BindingResult errors) {
-        //打印请求参数错误信息
-        if (errors.hasErrors()) {
-            errors.getAllErrors().stream().forEach(error -> System.out.println(error.getDefaultMessage()));
-        }
+    public User create(@Valid @RequestBody User user) {
         System.out.println(user.getId());
         System.out.println(user.getUsername());
         System.out.println(user.getPassword());
@@ -85,13 +84,13 @@ public class UserController {
      * 通过正则表达式控制URL格式
      *
      * 注解@JsonView指定视图，控制json输出内容
+     *
+     * 使用浏览器访问此接口，跳转到404.html/500.html
+     * 使用REST工具访问此接口，被ControllerExceptionHandler处理，返回JSON
      */
     @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
     public User getInfo(@PathVariable String id) {
-        User user = new User();
-        user.setUsername("pyl");
-
-        return user;
+        throw new UserNotExistException(id);
     }
 }
