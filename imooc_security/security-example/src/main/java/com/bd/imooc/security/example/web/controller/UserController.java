@@ -2,7 +2,6 @@ package com.bd.imooc.security.example.web.controller;
 
 import com.bd.imooc.security.example.dto.User;
 import com.bd.imooc.security.example.dto.UserQueryCondition;
-import com.bd.imooc.security.example.exception.UserNotExistException;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -91,6 +90,11 @@ public class UserController {
     @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
     public User getInfo(@PathVariable String id) {
-        throw new UserNotExistException(id);
+//        throw new UserNotExistException(id);
+        System.out.println("进入getInfo服务");
+        User user = new User();
+        user.setUsername("pyl");
+
+        return user;
     }
 }
