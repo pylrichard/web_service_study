@@ -4,9 +4,8 @@ import com.bd.imooc.security.example.web.filter.TimeFilter;
 import com.bd.imooc.security.example.web.interceptor.TimeInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.ArrayList;
@@ -17,12 +16,35 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private TimeInterceptor timeInterceptor;
 
+    /**
+     * 配置异步支持
+     */
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(timeInterceptor);
+    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+        super.configureAsyncSupport(configurer);
+
+        /*
+            注册异步请求拦截器
+            configurer.registerCallableInterceptors()
+            configurer.registerDeferredResultInterceptors()
+
+            设置请求超时时间
+            configurer.setDefaultTimeout()
+
+            Callable不会复用线程，每次新建线程，设置可重用线程池
+            configurer.setTaskExecutor()
+         */
     }
 
-    @Bean
+    /**
+     * 同步请求拦截器
+     */
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(timeInterceptor);
+//    }
+
+//    @Bean
     public FilterRegistrationBean timeFilter() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         TimeFilter timeFilter = new TimeFilter();
