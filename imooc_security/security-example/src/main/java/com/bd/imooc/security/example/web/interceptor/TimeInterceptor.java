@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 请求由Controller的哪个方法处理，通过拦截器得知
+ *
+ * 拦截器无法获取方法参数信息，见DispatcherServlet.doDispatch()
+ *
+ * 使用AOP可以实现获取方法参数信息
  */
 @Component
 public class TimeInterceptor implements HandlerInterceptor {
