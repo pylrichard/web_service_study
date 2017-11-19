@@ -44,6 +44,7 @@ public class UsernamePasswordAuthenticationFilter extends
 	// ===================================================================================================
 
 	public UsernamePasswordAuthenticationFilter() {
+		//过滤/login请求
 		super(new AntPathRequestMatcher("/login", "POST"));
 	}
 

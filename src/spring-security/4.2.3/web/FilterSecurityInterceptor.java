@@ -105,12 +105,15 @@ public class FilterSecurityInterceptor extends AbstractSecurityInterceptor imple
 				fi.getRequest().setAttribute(FILTER_APPLIED, Boolean.TRUE);
 			}
 
-            //FilterSecurityInterceptor是过滤器链上最后一个过滤器
-            //此处设置断点进行观察
+            /*
+            	FilterSecurityInterceptor是过滤器链上最后一个过滤器
+            	根据WebSecurityConfigurerAdapter实现类的configure()配置，决定抛出哪种异常到ExceptionTranslationFilter
+            	此处设置断点进行观察
+             */
 			InterceptorStatusToken token = super.beforeInvocation(fi);
 
 			try {
-                //调用过滤器链上的下一个过滤器
+                //调用Controller的相应方法
 				fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
 			}
 			finally {
