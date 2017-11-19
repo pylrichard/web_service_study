@@ -3,6 +3,8 @@ package com.bd.imooc.security.example.web.controller;
 import com.bd.imooc.security.example.dto.User;
 import com.bd.imooc.security.example.dto.UserQueryCondition;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,7 @@ public class UserController {
      * 没有BindingResult，传入参数不合法就不会调用Controller方法，进入Spring默认错误处理机制
      */
     @PostMapping
+    @ApiOperation(value = "创建用户")
     public User create(@Valid @RequestBody User user) {
         System.out.println(user.getId());
         System.out.println(user.getUsername());
@@ -89,7 +92,7 @@ public class UserController {
      */
     @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
-    public User getInfo(@PathVariable String id) {
+    public User getInfo(@ApiParam(value = "用户id") @PathVariable String id) {
 //        throw new UserNotExistException(id);
         System.out.println("进入getInfo服务");
         User user = new User();

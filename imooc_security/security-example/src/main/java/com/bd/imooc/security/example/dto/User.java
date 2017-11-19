@@ -2,6 +2,7 @@ package com.bd.imooc.security.example.dto;
 
 import com.bd.imooc.security.example.validator.ExampleConstraint;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Past;
@@ -16,6 +17,7 @@ public class User {
 
     private String id;
     @ExampleConstraint(message = "自定义验证参数注解")
+    @ApiModelProperty(value = "用户名")
     private String username;
     /**
      * 需要在方法参数添加注解@Valid才能生效
