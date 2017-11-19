@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
+ * 处理用户校验逻辑
+ *
  * Provides core user information.
  *
  * <p>
@@ -53,6 +55,8 @@ public interface UserDetails extends Serializable {
 	String getUsername();
 
 	/**
+	 * 判断用户是否过期
+	 *
 	 * Indicates whether the user's account has expired. An expired account cannot be
 	 * authenticated.
 	 *
@@ -62,6 +66,8 @@ public interface UserDetails extends Serializable {
 	boolean isAccountNonExpired();
 
 	/**
+	 * 判断用户是否被锁定
+	 *
 	 * Indicates whether the user is locked or unlocked. A locked user cannot be
 	 * authenticated.
 	 *
@@ -70,6 +76,8 @@ public interface UserDetails extends Serializable {
 	boolean isAccountNonLocked();
 
 	/**
+	 * 判断密码是否过期
+	 *
 	 * Indicates whether the user's credentials (password) has expired. Expired
 	 * credentials prevent authentication.
 	 *
@@ -79,6 +87,8 @@ public interface UserDetails extends Serializable {
 	boolean isCredentialsNonExpired();
 
 	/**
+	 * 判断用户是否被删除
+	 *
 	 * Indicates whether the user is enabled or disabled. A disabled user cannot be
 	 * authenticated.
 	 *
