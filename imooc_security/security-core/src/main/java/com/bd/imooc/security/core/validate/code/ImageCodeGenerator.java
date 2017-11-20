@@ -1,21 +1,29 @@
 package com.bd.imooc.security.core.validate.code;
 
+import com.bd.imooc.security.core.properties.SecurityProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class DefaultImageCodeGenerator implements ValidateCodeGenerator {
+public class ImageCodeGenerator implements ValidateCodeGenerator {
+    @Autowired
+    private SecurityProperties securityProperties;
+
     @Override
     public ImageCode generate(ServletWebRequest request) {
-        int width = 67;
-        int height = 23;
+        int width = ServletRequestUtils.getIntParameter(request.getRequest(), "width",
+                securityProperties.getCode().getImage().getWidth());
+        int height = ServletRequestUtils.getIntParameter(request.getRequest(), "height",
+                securityProperties.getCode().getImage().getHeight());
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
         Random random = new Random();
         /*
-            生成图片背景
+            生成背景条纹
          */
         g.setColor(getRandColor(200, 250));
         g.fillRect(0, 0, width, height);
@@ -29,10 +37,10 @@ public class DefaultImageCodeGenerator implements ValidateCodeGenerator {
             g.drawLine(x, y, x + xl, y + yl);
         }
         /*
-            生成4位随机数，写入图片
+            生成随机验证码
          */
         String sRand = "";
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < securityProperties.getCode().getImage().getLength(); i++) {
             String rand = String.valueOf(random.nextInt(10));
             sRand += rand;
             g.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
@@ -40,8 +48,7 @@ public class DefaultImageCodeGenerator implements ValidateCodeGenerator {
         }
         g.dispose();
 
-        //设置过期时间为60s
-        return new ImageCode(image, sRand, 60);
+        return new ImageCode(image, sRand, securityProperties.getCode().getImage().getExpireIn());
     }
 
     /**
@@ -60,5 +67,13 @@ public class DefaultImageCodeGenerator implements ValidateCodeGenerator {
         int b = fc + random.nextInt(bc - fc);
 
         return new Color(r, g, b);
+    }
+
+    public SecurityProperties getSecurityProperties() {
+        return securityProperties;
+    }
+
+    public void setSecurityProperties(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
     }
 }

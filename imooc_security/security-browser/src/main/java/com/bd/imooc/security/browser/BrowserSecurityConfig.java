@@ -33,6 +33,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
         validateCodeFilter.setAuthenticationFailureHandler(imoocAuthenticationFailureHandler);
+        validateCodeFilter.setSecurityProperties(securityProperties);
+        validateCodeFilter.afterPropertiesSet();
 
         //添加ValidateCodeFilter在UsernamePasswordAuthenticationFilter之前
         http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
