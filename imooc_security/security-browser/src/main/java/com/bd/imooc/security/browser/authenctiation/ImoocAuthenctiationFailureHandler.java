@@ -1,5 +1,6 @@
 package com.bd.imooc.security.browser.authenctiation;
 
+import com.bd.imooc.security.browser.support.SimpleResponse;
 import com.bd.imooc.security.core.properties.LoginType;
 import com.bd.imooc.security.core.properties.SecurityProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +40,8 @@ public class ImoocAuthenctiationFailureHandler extends SimpleUrlAuthenticationFa
         if (LoginType.JSON.equals(securityProperties.getBrowser().getLoginType())) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(exception));
+            //只返回错误消息
+            response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));
         } else {
             super.onAuthenticationFailure(request, response, exception);
         }
