@@ -18,6 +18,9 @@ public class ExampleUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Spring Security的DaoAuthenticationProvider.retrieveUser()中调用此API
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("登录用户名:" + username);

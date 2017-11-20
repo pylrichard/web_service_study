@@ -30,7 +30,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
-                //发起登录判断请求
+                //发起登录判断请求，此API可以自定义登录页
                 .loginPage("/authentication/require")
                 //通知UsernamePasswordAuthenticationFilter处理登录请求，默认处理/login
                 .loginProcessingUrl("/authentication/form")

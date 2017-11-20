@@ -9,6 +9,8 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -98,6 +100,14 @@ public class UserController {
         User user = new User();
         user.setUsername("pyl");
 
+        return user;
+    }
+
+    /**
+     * 获取登录用户认证信息
+     */
+    @GetMapping("/me")
+    public Object getCurrentUser(@AuthenticationPrincipal UserDetails user) {
         return user;
     }
 }

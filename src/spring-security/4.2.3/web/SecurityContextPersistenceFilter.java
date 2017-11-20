@@ -15,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
 /**
+ * 过滤器链的第一个过滤器
+ *
  * Populates the {@link SecurityContextHolder} with information obtained from the
  * configured {@link SecurityContextRepository} prior to the request and stores it back in
  * the repository once the request has completed and clearing the context holder. By
@@ -41,7 +43,6 @@ import org.springframework.web.filter.GenericFilterBean;
  * @author Luke Taylor
  * @since 3.0
  */
-//过滤器链的第一个过滤器
 public class SecurityContextPersistenceFilter extends GenericFilterBean {
 
 	static final String FILTER_APPLIED = "__spring_security_scpf_applied";

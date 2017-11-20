@@ -125,7 +125,10 @@ public abstract class AbstractUserDetailsAuthenticationProvider implements
 			cacheWasUsed = false;
 
 			try {
-                //根据UsernamePasswordAuthenticationToken获取用户的详细信息
+                /*
+                	在DaoAuthenticationProvider中实现
+                	根据UsernamePasswordAuthenticationToken获取用户的详细信息
+                 */
 				user = retrieveUser(username,
 						(UsernamePasswordAuthenticationToken) authentication);
 			}
@@ -146,9 +149,10 @@ public abstract class AbstractUserDetailsAuthenticationProvider implements
 					"retrieveUser returned null - a violation of the interface contract");
 		}
 
-        //进行密码验证
 		try {
+			//验证用户是否被锁定、是否过期、是否可用
 			preAuthenticationChecks.check(user);
+			//进行密码验证，在DaoAuthenticationProvider中实现
 			additionalAuthenticationChecks(user,
 					(UsernamePasswordAuthenticationToken) authentication);
 		}
@@ -168,6 +172,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider implements
 			}
 		}
 
+		//验证密码是否过期
 		postAuthenticationChecks.check(user);
 
 		if (!cacheWasUsed) {
@@ -180,6 +185,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider implements
 			principalToReturn = user.getUsername();
 		}
 
+		//用户认证成功
 		return createSuccessAuthentication(principalToReturn, authentication, user);
 	}
 
@@ -206,8 +212,10 @@ public abstract class AbstractUserDetailsAuthenticationProvider implements
 		// so subsequent attempts are successful even with encoded passwords.
 		// Also ensure we return the original getDetails(), so that future
 		// authentication events after cache expiry contain the details
+		//调用3个参数的构造函数
 		UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(
 				principal, authentication.getCredentials(),
+				//设置为true
 				authoritiesMapper.mapAuthorities(user.getAuthorities()));
 		result.setDetails(authentication.getDetails());
 

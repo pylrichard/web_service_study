@@ -75,6 +75,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 
 		String presentedPassword = authentication.getCredentials().toString();
 
+		//验证密码是否正确，兼容org.springframework.security.authentication.encoding.PasswordEncoder
 		if (!passwordEncoder.isPasswordValid(userDetails.getPassword(),
 				presentedPassword, salt)) {
 			logger.debug("Authentication failed: password does not match stored value");
@@ -95,8 +96,10 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 		UserDetails loadedUser;
 
 		try {
-            //调用UserDetailsService的方法获取UserDetails对象
-            //UserDetailsService自行实现，从数据库中读取用户信息进行验证
+		    /*
+            	调用UserDetailsService的方法获取UserDetails对象
+            	UserDetailsService自行实现，从数据库中读取用户信息进行验证
+            */
 			loadedUser = this.getUserDetailsService().loadUserByUsername(username);
 		}
 		catch (UsernameNotFoundException notFound) {

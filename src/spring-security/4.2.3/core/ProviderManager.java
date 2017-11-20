@@ -1,8 +1,5 @@
 package org.springframework.security.authentication;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,6 +11,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.util.Assert;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Iterates an {@link Authentication} request through a list of
@@ -139,16 +139,22 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 	 */
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
-        //此处是UsernamePasswordAuthenticationToken类
+        /*
+        	使用用户名和密码登录是UsernamePasswordAuthenticationToken类
+        	使用第三方登录是Spring Social的SocialAuthenticationToken类
+         */
 		Class<? extends Authentication> toTest = authentication.getClass();
 		AuthenticationException lastException = null;
 		Authentication result = null;
 		boolean debug = logger.isDebugEnabled();
 
-        //getProviders()返回AuthenticationProvider集合
-        //有多种验证提供器，每种验证逻辑不同，应用场景不同
-        //看哪个验证提供器支持当前Authentication子类
+		/*
+	        getProviders()返回AuthenticationProvider集合
+    	    有多种验证提供器，每种验证逻辑不同(比如用户名密码登录和微信/QQ登录)，应用场景不同
+        	看哪个验证提供器支持当前Authentication子类
+        */
 		for (AuthenticationProvider provider : getProviders()) {
+			//判断provider是否支持当前登录类型
 			if (!provider.supports(toTest)) {
 				continue;
 			}

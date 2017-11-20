@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 自定义登录失败处理
+ * 自定义登录成功处理
  */
 @Component
 public class ImoocAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -28,6 +28,9 @@ public class ImoocAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
     @Autowired
     private SecurityProperties securityProperties;
 
+    /**
+     * AbstractAuthenticationProcessingFilter.successfulAuthentication()中调用此API
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {

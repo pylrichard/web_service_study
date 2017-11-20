@@ -6,6 +6,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 
 /**
+ * class SecurityConfig extends WebSecurityConfigurerAdapter
+ * configure()配置
+ * HttpSecurity.formLogin()
+ * 访问需要认证的方法时使用
+
  * An {@link org.springframework.security.core.Authentication} implementation that is
  * designed for simple presentation of a username and password.
  * <p>
@@ -16,10 +21,6 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
  *
  * @author Ben Alex
  */
-//class SecurityConfig extends WebSecurityConfigurerAdapter
-//configure()配置
-//HttpSecurity.formLogin()
-//访问需要认证的方法时使用
 public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
@@ -40,9 +41,11 @@ public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationT
 	 *
 	 */
 	public UsernamePasswordAuthenticationToken(Object principal, Object credentials) {
+		//此时用户未通过认证，无法向父类传入认证信息
 		super(null);
 		this.principal = principal;
 		this.credentials = credentials;
+		//false表示用户传入的信息还未通过认证
 		setAuthenticated(false);
 	}
 

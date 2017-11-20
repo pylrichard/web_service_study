@@ -4,6 +4,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 
 /**
+ * 重写equals()和hashCode()，保证Authentication唯一性
+ *
  * Base implementation of {@link SecurityContext}.
  * <p>
  * Used by default by {@link SecurityContextHolder} strategies.

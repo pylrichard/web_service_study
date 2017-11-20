@@ -193,6 +193,7 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 		Authentication authResult;
 
 		try {
+		    //调用UsernamePasswordAuthenticationFilter.attemptAuthentication()
 			authResult = attemptAuthentication(request, response);
 			if (authResult == null) {
 				// return immediately as subclass has indicated that it hasn't completed
@@ -205,6 +206,7 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 			logger.error(
 					"An internal error occurred while trying to authenticate the user.",
 					failed);
+			//认证失败
 			unsuccessfulAuthentication(request, response, failed);
 
 			return;
@@ -298,10 +300,18 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 					+ authResult);
 		}
 
-        //设置认证信息
+        /*
+        	将认证信息存储到线程的SecurityContextHolder，SecurityContextHolder封装了ThreadLocal变量
+
+        	SecurityContext实现类为SecurityContextImpl，封装了Authentication
+
+        	请求是在一个线程中处理的
+        	请求发送经过的第一个过滤器链是SecurityContextPersistenceFilter，将Session中的认证信息(判断存在的话)存储到线程的SecurityContextHolder
+        	请求返回经过的最后一个过滤器链是SecurityContextPersistenceFilter，将线程的SecurityContextHolder中的认证信息存储到Session
+        	实现多个请求共享认证信息
+         */
 		SecurityContextHolder.getContext().setAuthentication(authResult);
 
-        //
 		rememberMeServices.loginSuccess(request, response, authResult);
 
 		// Fire event
@@ -310,6 +320,7 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 					authResult, this.getClass()));
 		}
 
+		//调用ImoocAuthenticationSuccessHandler.onAuthenticationSuccess()
 		successHandler.onAuthenticationSuccess(request, response, authResult);
 	}
 

@@ -72,12 +72,14 @@ public class UsernamePasswordAuthenticationFilter extends
 
 		username = username.trim();
 
+		//调用2个参数的构造函数
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
 				username, password);
 
 		// Allow subclasses to set the "details" property
 		setDetails(request, authRequest);
 
+		//调用ProviderManager.authenticate()
 		return this.getAuthenticationManager().authenticate(authRequest);
 	}
 

@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 自定义登录失败处理
+ */
 @Component
 public class ImoocAuthenctiationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
