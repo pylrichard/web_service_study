@@ -1,6 +1,6 @@
 package com.bd.imooc.security.browser.authenctiation;
 
-import com.bd.imooc.security.core.properties.LoginType;
+import com.bd.imooc.security.core.properties.LoginResponseType;
 import com.bd.imooc.security.core.properties.SecurityProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public class ImoocAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
         /*
             返回用户认证信息
          */
-        if (LoginType.JSON.equals(securityProperties.getBrowser().getLoginType())) {
+        if (LoginResponseType.JSON.equals(securityProperties.getBrowser().getLoginResponseType())) {
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(objectMapper.writeValueAsString(authentication));
         } else {

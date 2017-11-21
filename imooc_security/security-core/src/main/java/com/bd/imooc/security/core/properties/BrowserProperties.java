@@ -4,8 +4,8 @@ public class BrowserProperties {
     /**
      * 默认登录页文件名
      */
-    private String loginPage = "/imooc-signin.html";
-    private LoginType loginType = LoginType.JSON;
+    private String loginPage = SecurityConstants.DEFAULT_LOGIN_PAGE_URL;
+    private LoginResponseType loginResponseType = LoginResponseType.JSON;
     private int rememberMeSeconds = 3600;
 
     public String getLoginPage() {
@@ -16,12 +16,12 @@ public class BrowserProperties {
         this.loginPage = loginPage;
     }
 
-    public LoginType getLoginType() {
-        return loginType;
+    public LoginResponseType getLoginResponseType() {
+        return loginResponseType;
     }
 
-    public void setLoginType(LoginType loginType) {
-        this.loginType = loginType;
+    public void setLoginResponseType(LoginResponseType loginResponseType) {
+        this.loginResponseType = loginResponseType;
     }
 
     public int getRememberMeSeconds() {

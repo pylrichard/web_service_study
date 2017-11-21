@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 /**
  * 图片验证码处理器
  */
-@Component("imageCodeProcessor")
+@Component("imageValidateCodeProcessor")
 public class ImageCodeProcessor extends AbstractValidateCodeProcessor<ImageCode> {
     /**
      * 发送图形验证码，将其写到响应中

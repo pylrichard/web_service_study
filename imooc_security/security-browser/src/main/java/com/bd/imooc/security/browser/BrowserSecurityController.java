@@ -1,6 +1,7 @@
 package com.bd.imooc.security.browser;
 
 import com.bd.imooc.security.browser.support.SimpleResponse;
+import com.bd.imooc.security.core.properties.SecurityConstants;
 import com.bd.imooc.security.core.properties.SecurityProperties;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class BrowserSecurityController {
     /**
      * 当需要身份认证时，跳转到这里，进行判断是跳转到html页面，还是返回HTTP 401状态码和JSON错误信息
      */
-    @RequestMapping("/authentication/require")
+    @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SavedRequest savedRequest = requestCache.getRequest(request, response);

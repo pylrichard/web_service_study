@@ -1,25 +1,26 @@
 package com.bd.imooc.security.browser;
 
+import com.bd.imooc.security.core.authentication.AbstractChannelSecurityConfig;
+import com.bd.imooc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
+import com.bd.imooc.security.core.properties.SecurityConstants;
 import com.bd.imooc.security.core.properties.SecurityProperties;
-import com.bd.imooc.security.core.validate.code.ValidateCodeFilter;
+import com.bd.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
 
 @Configuration
-public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
+public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
     @Autowired
     private SecurityProperties securityProperties;
 
@@ -34,6 +35,13 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
+    @Autowired
+    private ValidateCodeSecurityConfig validateCodeSecurityConfig;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -54,20 +62,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
-        validateCodeFilter.setAuthenticationFailureHandler(imoocAuthenticationFailureHandler);
-        validateCodeFilter.setSecurityProperties(securityProperties);
-        validateCodeFilter.afterPropertiesSet();
+        applyPasswordAuthenticationConfig(http);
 
-        //添加ValidateCodeFilter在UsernamePasswordAuthenticationFilter之前
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin()
-                    //发起登录判断请求，此API可以自定义登录页
-                    .loginPage("/authentication/require")
-                    //通知UsernamePasswordAuthenticationFilter处理登录请求，默认处理/login
-                    .loginProcessingUrl("/authentication/form")
-                    .successHandler(imoocAuthenticationSuccessHandler)
-                    .failureHandler(imoocAuthenticationFailureHandler)
+        http.apply(validateCodeSecurityConfig)
+                .and()
+                .apply(smsCodeAuthenticationSecurityConfig)
                 .and()
                 .rememberMe()
                     .tokenRepository(persistentTokenRepository())
@@ -76,11 +75,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 //		http.httpBasic()
                 .and()
                 .authorizeRequests()
-                    //允许登录判断请求、登录页面请求、图片验证码请求通过认证，其它请求需要认证
-                    .antMatchers("/authentication/require",
-                            "/authentication/mobile",
-                            securityProperties.getBrowser().getLoginPage(),
-                            "/code/*").permitAll()
+                    .antMatchers(
+                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
+                        securityProperties.getBrowser().getLoginPage(),
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*")
+                        .permitAll()
                     .anyRequest()
                     .authenticated()
                 .and()
