@@ -1,6 +1,7 @@
 package com.bd.imooc.security.core.validate.code;
 
 import com.bd.imooc.security.core.properties.SecurityProperties;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -43,8 +44,10 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
         String[] configUrls = StringUtils.splitByWholeSeparatorPreserveAllTokens(
                                                                     securityProperties.getCode().getImage().getUrl(),
                                                             ",");
-        for (String configUrl : configUrls) {
-            urls.add(configUrl);
+        if(ArrayUtils.isNotEmpty(configUrls)) {
+            for (String configUrl : configUrls) {
+                urls.add(configUrl);
+            }
         }
         //添加登录请求
         urls.add("/authentication/form");

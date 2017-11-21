@@ -7,11 +7,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -24,9 +29,27 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationFailureHandler imoocAuthenticationFailureHandler;
 
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        /*
+            启动时创建表，只用创建一次，采取手动创建表
+            tokenRepository.setCreateTableOnStartup(true)
+        */
+
+        return tokenRepository;
     }
 
     @Override
@@ -39,21 +62,26 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         //添加ValidateCodeFilter在UsernamePasswordAuthenticationFilter之前
         http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
-                //发起登录判断请求，此API可以自定义登录页
-                .loginPage("/authentication/require")
-                //通知UsernamePasswordAuthenticationFilter处理登录请求，默认处理/login
-                .loginProcessingUrl("/authentication/form")
-                .successHandler(imoocAuthenticationSuccessHandler)
-                .failureHandler(imoocAuthenticationFailureHandler)
+                    //发起登录判断请求，此API可以自定义登录页
+                    .loginPage("/authentication/require")
+                    //通知UsernamePasswordAuthenticationFilter处理登录请求，默认处理/login
+                    .loginProcessingUrl("/authentication/form")
+                    .successHandler(imoocAuthenticationSuccessHandler)
+                    .failureHandler(imoocAuthenticationFailureHandler)
+                .and()
+                .rememberMe()
+                    .tokenRepository(persistentTokenRepository())
+                    .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
+                    .userDetailsService(userDetailsService)
 //		http.httpBasic()
                 .and()
                 .authorizeRequests()
-                //允许登录判断请求、登录页面请求、图片验证码请求通过认证，其它请求需要认证
-                .antMatchers("/authentication/require",
-                        securityProperties.getBrowser().getLoginPage(),
-                        "/code/image").permitAll()
-                .anyRequest()
-                .authenticated()
+                    //允许登录判断请求、登录页面请求、图片验证码请求通过认证，其它请求需要认证
+                    .antMatchers("/authentication/require",
+                            securityProperties.getBrowser().getLoginPage(),
+                            "/code/image").permitAll()
+                    .anyRequest()
+                    .authenticated()
                 .and()
                 //关闭跨域请求访问
                 .csrf().disable();

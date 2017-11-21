@@ -312,6 +312,7 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
          */
 		SecurityContextHolder.getContext().setAuthentication(authResult);
 
+		//登录成功后，如果开启记住我功能，保存token到DB，调用AbstractRememberMeServices.loginSuccess()
 		rememberMeServices.loginSuccess(request, response, authResult);
 
 		// Fire event
