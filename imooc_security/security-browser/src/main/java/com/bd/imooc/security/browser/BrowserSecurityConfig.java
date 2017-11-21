@@ -78,8 +78,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     //允许登录判断请求、登录页面请求、图片验证码请求通过认证，其它请求需要认证
                     .antMatchers("/authentication/require",
+                            "/authentication/mobile",
                             securityProperties.getBrowser().getLoginPage(),
-                            "/code/image").permitAll()
+                            "/code/*").permitAll()
                     .anyRequest()
                     .authenticated()
                 .and()

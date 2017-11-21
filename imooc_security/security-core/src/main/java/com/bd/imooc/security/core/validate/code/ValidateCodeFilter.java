@@ -1,6 +1,7 @@
 package com.bd.imooc.security.core.validate.code;
 
 import com.bd.imooc.security.core.properties.SecurityProperties;
+import com.bd.imooc.security.core.validate.code.img.ImageCode;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -84,7 +85,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
     private void validate(ServletWebRequest request) throws ServletRequestBindingException {
         //获取在ValidateCodeController.createCode()中写入Session的随机验证码
         ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(request,
-                ValidateCodeController.SESSION_KEY);
+                ValidateCodeProcessor.SESSION_KEY_PREFIX+"IMAGE");
         //获取用户输入的验证码
         String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "imageCode");
 
@@ -97,7 +98,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
         }
 
         if (codeInSession.isExpried()) {
-            sessionStrategy.removeAttribute(request, ValidateCodeController.SESSION_KEY);
+            sessionStrategy.removeAttribute(request, ValidateCodeProcessor.SESSION_KEY_PREFIX+"IMAGE");
             throw new ValidateCodeException("验证码已过期");
         }
 
@@ -105,7 +106,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
             throw new ValidateCodeException("验证码不匹配");
         }
 
-        sessionStrategy.removeAttribute(request, ValidateCodeController.SESSION_KEY);
+        sessionStrategy.removeAttribute(request, ValidateCodeProcessor.SESSION_KEY_PREFIX+"IMAGE");
     }
 
     public AuthenticationFailureHandler getAuthenticationFailureHandler() {

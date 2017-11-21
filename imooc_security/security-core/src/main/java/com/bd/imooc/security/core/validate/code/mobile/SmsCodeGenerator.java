@@ -1,6 +1,8 @@
-package com.bd.imooc.security.core.validate.code;
+package com.bd.imooc.security.core.validate.code.mobile;
 
 import com.bd.imooc.security.core.properties.SecurityProperties;
+import com.bd.imooc.security.core.validate.code.ValidateCode;
+import com.bd.imooc.security.core.validate.code.ValidateCodeGenerator;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

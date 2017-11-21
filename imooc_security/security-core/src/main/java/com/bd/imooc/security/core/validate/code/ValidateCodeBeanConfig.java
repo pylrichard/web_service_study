@@ -1,6 +1,7 @@
 package com.bd.imooc.security.core.validate.code;
 
 import com.bd.imooc.security.core.properties.SecurityProperties;
+import com.bd.imooc.security.core.validate.code.img.ImageCodeGenerator;
 import com.bd.imooc.security.core.validate.code.mobile.DefaultSmsCodeSender;
 import com.bd.imooc.security.core.validate.code.mobile.SmsCodeSender;
 import org.springframework.beans.factory.annotation.Autowired;
