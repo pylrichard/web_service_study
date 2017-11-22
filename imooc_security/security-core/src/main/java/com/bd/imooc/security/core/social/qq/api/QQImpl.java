@@ -6,6 +6,8 @@ import org.springframework.social.oauth2.TokenStrategy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+
 /**
  * AccessToken在AbstractOAuth2ApiBinding中处理
  *
@@ -33,12 +35,16 @@ public class QQImpl extends AbstractOAuth2ApiBinding implements QQ {
     }
 
     @Override
-    public QQUserInfo getUserInfo() throws Exception {
+    public QQUserInfo getUserInfo() {
         String url = String.format(URL_GET_USER_INFO, appId, openId);
         String result = getRestTemplate().getForObject(url, String.class);
         System.out.println(result);
 
         //将JSON字符串转换为Java对象
-        return objectMapper.readValue(result, QQUserInfo.class);
+        try {
+            return objectMapper.readValue(result, QQUserInfo.class);
+        } catch (IOException e) {
+            throw new RuntimeException("获取用户信息失败", e);
+        }
     }
 }
