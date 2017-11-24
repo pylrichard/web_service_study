@@ -57,6 +57,11 @@
     </form>
     <br>
     <h3>社交登录</h3>
-    <a href="/auth/qq">QQ登录</a>
+    <!--
+        SocialAuthenticationFilter默认处理/auth开始的请求
+        QQ授权登录的url是https://www.xxx.com/qqLogin/callback.do
+        授权成功后回调域也是https://www.xxx.com/qqLogin/callback.do
+     -->
+    <a href="/qqLogin/callback.do">QQ登录</a>
 </body>
 </html>
