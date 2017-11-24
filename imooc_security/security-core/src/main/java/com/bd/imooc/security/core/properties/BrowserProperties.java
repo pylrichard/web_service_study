@@ -1,6 +1,7 @@
 package com.bd.imooc.security.core.properties;
 
 public class BrowserProperties {
+    private String signUpUrl = "/imooc-signup.html";
     /**
      * 默认登录页文件名
      */
@@ -30,5 +31,13 @@ public class BrowserProperties {
 
     public void setRememberMeSeconds(int rememberMeSeconds) {
         this.rememberMeSeconds = rememberMeSeconds;
+    }
+
+    public String getSignUpUrl() {
+        return signUpUrl;
+    }
+
+    public void setSignUpUrl(String signUpUrl) {
+        this.signUpUrl = signUpUrl;
     }
 }

@@ -1,4 +1,4 @@
-package com.bd.imooc.security.core.social.qq;
+package com.bd.imooc.security.core.social.support;
 
 import org.springframework.social.security.SocialAuthenticationFilter;
 import org.springframework.social.security.SpringSocialConfigurer;

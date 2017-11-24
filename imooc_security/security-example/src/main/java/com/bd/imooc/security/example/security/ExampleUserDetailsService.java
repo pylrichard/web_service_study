@@ -1,4 +1,4 @@
-package com.bd.imooc.security.example.service.impl;
+package com.bd.imooc.security.example.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +12,11 @@ import org.springframework.social.security.SocialUser;
 import org.springframework.social.security.SocialUserDetails;
 import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class ExampleUserDetailsServiceImpl implements UserDetailsService, SocialUserDetailsService {
+@Transactional
+public class ExampleUserDetailsService implements UserDetailsService, SocialUserDetailsService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired

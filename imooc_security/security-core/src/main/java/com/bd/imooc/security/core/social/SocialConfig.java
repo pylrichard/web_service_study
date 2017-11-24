@@ -1,7 +1,7 @@
 package com.bd.imooc.security.core.social;
 
 import com.bd.imooc.security.core.properties.SecurityProperties;
-import com.bd.imooc.security.core.social.qq.ImoocSpringSocialConfigurer;
+import com.bd.imooc.security.core.social.support.ImoocSpringSocialConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +9,10 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.social.config.annotation.EnableSocial;
 import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
+import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
@@ -24,6 +26,9 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Autowired
     private SecurityProperties securityProperties;
 
+    @Autowired(required = false)
+    private ConnectionSignUp connectionSignUp;
+
     @Override
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
         //执行同目录下的SQL创建UserConnection表
@@ -31,6 +36,9 @@ public class SocialConfig extends SocialConfigurerAdapter {
                                                                                 connectionFactoryLocator,
                                                                                 Encryptors.noOpText());
         repository.setTablePrefix("imooc_");
+        if (connectionSignUp != null) {
+            repository.setConnectionSignUp(connectionSignUp);
+        }
 
         return repository;
     }
@@ -42,7 +50,14 @@ public class SocialConfig extends SocialConfigurerAdapter {
     public SpringSocialConfigurer imoocSocialSecurityConfig() {
         String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
         SpringSocialConfigurer configurer = new ImoocSpringSocialConfigurer(filterProcessesUrl);
+        configurer.signupUrl(securityProperties.getSocial().getSignUpUrl());
 
         return configurer;
+    }
+
+    @Bean
+    public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator) {
+        return new ProviderSignInUtils(connectionFactoryLocator,
+                getUsersConnectionRepository(connectionFactoryLocator));
     }
 }

@@ -1,36 +1,29 @@
 package org.springframework.social.security;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.social.UserIdSource;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.ProviderSignInAttempt;
 import org.springframework.social.connect.web.SessionStrategy;
-import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.security.provider.SocialAuthenticationService;
 import org.springframework.util.Assert;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Filter for handling the provider sign-in flow within the Spring Security filter chain.
@@ -317,11 +310,15 @@ public class SocialAuthenticationFilter extends AbstractAuthenticationProcessing
 		try {
 			if (!authService.getConnectionCardinality().isAuthenticatePossible()) return null;
 			token.setDetails(authenticationDetailsSource.buildDetails(request));
+			//ProviderManager中调用SocialAuthenticationProvider.authenticate()
 			Authentication success = getAuthenticationManager().authenticate(token);
 			Assert.isInstanceOf(SocialUserDetails.class, success.getPrincipal(), "unexpected principle type");
 			updateConnections(authService, token, success);			
 			return success;
 		} catch (BadCredentialsException e) {
+		    /*
+		    	SocialAuthenticationProvider.authenticate()中查询不到业务系统对应用户id，进入注册流程
+		     */
 			// connection unknown, register new user?
 			if (signupUrl != null) {
 				// store ConnectionData in session and redirect to register page
