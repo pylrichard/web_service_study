@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.bd</groupId>
-            <artifactId>security-browser</artifactId>
+            <artifactId>security_app</artifactId>
             <version>${imooc.security.version}</version>
         </dependency>
         <dependency>
