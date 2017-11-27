@@ -1,6 +1,6 @@
 package com.bd.imooc.security.browser;
 
-import com.bd.imooc.security.browser.support.SimpleResponse;
+import com.bd.imooc.security.core.support.SimpleResponse;
 import com.bd.imooc.security.core.properties.SecurityConstants;
 import com.bd.imooc.security.core.properties.SecurityProperties;
 import com.bd.imooc.security.core.social.support.SocialUserInfo;

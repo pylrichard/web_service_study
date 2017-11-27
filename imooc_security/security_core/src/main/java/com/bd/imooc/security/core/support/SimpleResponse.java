@@ -1,4 +1,4 @@
-package com.bd.imooc.security.browser.support;
+package com.bd.imooc.security.core.support;
 
 public class SimpleResponse {
     public SimpleResponse(Object content){

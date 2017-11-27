@@ -1,6 +1,6 @@
 package com.bd.imooc.security.browser.session;
 
-import com.bd.imooc.security.browser.support.SimpleResponse;
+import com.bd.imooc.security.core.support.SimpleResponse;
 import com.bd.imooc.security.core.properties.SecurityProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;

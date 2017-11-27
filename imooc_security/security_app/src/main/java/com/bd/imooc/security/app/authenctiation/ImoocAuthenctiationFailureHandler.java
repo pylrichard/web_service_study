@@ -1,8 +1,8 @@
-package com.bd.imooc.security.browser.authenctiation;
+package com.bd.imooc.security.app.authenctiation;
 
-import com.bd.imooc.security.core.support.SimpleResponse;
-import com.bd.imooc.security.core.properties.SignInResponseType;
 import com.bd.imooc.security.core.properties.SecurityProperties;
+import com.bd.imooc.security.core.properties.SignInResponseType;
+import com.bd.imooc.security.core.support.SimpleResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * 自定义登录失败处理
- */
 @Component
 public class ImoocAuthenctiationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -34,13 +31,10 @@ public class ImoocAuthenctiationFailureHandler extends SimpleUrlAuthenticationFa
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
         logger.info("登录失败");
-        /*
-            返回500状态码和异常信息
-         */
+
         if (SignInResponseType.JSON.equals(securityProperties.getBrowser().getSignInResponseType())) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType("application/json;charset=UTF-8");
-            //只返回错误消息
             response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));
         } else {
             super.onAuthenticationFailure(request, response, exception);
