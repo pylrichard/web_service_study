@@ -20,7 +20,7 @@ public interface SecurityConstants {
     /**
      * 默认登录页面
      */
-    String DEFAULT_LOGIN_PAGE_URL = "/imooc-signin.html";
+    String DEFAULT_SIGN_IN_PAGE_URL = "/imooc-signin.html";
     /**
      * 验证图片验证码时，http请求中默认的携带图片验证码信息的参数的名称
      */
@@ -37,4 +37,8 @@ public interface SecurityConstants {
      * 获取第三方用户信息的url
      */
     String DEFAULT_SOCIAL_USER_INFO_URL = "/social/user";
+    /**
+     * session失效的跳转地址
+     */
+    String DEFAULT_SESSION_INVALID_URL = "/imooc-session-invalid.html";
 }

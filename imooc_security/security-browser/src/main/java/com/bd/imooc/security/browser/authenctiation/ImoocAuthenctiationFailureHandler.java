@@ -1,7 +1,7 @@
 package com.bd.imooc.security.browser.authenctiation;
 
 import com.bd.imooc.security.browser.support.SimpleResponse;
-import com.bd.imooc.security.core.properties.LoginResponseType;
+import com.bd.imooc.security.core.properties.SignInResponseType;
 import com.bd.imooc.security.core.properties.SecurityProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class ImoocAuthenctiationFailureHandler extends SimpleUrlAuthenticationFa
         /*
             返回500状态码和异常信息
          */
-        if (LoginResponseType.JSON.equals(securityProperties.getBrowser().getLoginResponseType())) {
+        if (SignInResponseType.JSON.equals(securityProperties.getBrowser().getSignInResponseType())) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType("application/json;charset=UTF-8");
             //只返回错误消息
