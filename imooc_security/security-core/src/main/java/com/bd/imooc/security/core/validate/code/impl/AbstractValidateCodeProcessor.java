@@ -49,7 +49,11 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      * 保存校验码
      */
     private void save(ServletWebRequest request, C validateCode) {
-        sessionStrategy.setAttribute(request, getSessionKey(request), validateCode);
+        /*
+            图片验证码不需要将图片存储到Session中
+         */
+        ValidateCode code = new ValidateCode(validateCode.getCode(), validateCode.getExpireTime());
+        sessionStrategy.setAttribute(request, getSessionKey(request), code);
     }
 
     /**

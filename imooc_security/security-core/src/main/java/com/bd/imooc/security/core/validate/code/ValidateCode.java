@@ -1,8 +1,13 @@
 package com.bd.imooc.security.core.validate.code;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class ValidateCode {
+/**
+ * 实现分布式Session，ValidateCode要存储到Redis中，需要被序列化
+ */
+public class ValidateCode implements Serializable {
+    private static final long serialVersionUID = 1588203828504660915L;
     private String code;
     /**
      * 过期时间点，判断是否过期使用日期对象进行比较
