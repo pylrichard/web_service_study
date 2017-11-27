@@ -18,6 +18,10 @@ public interface SecurityConstants {
      */
     String DEFAULT_LOGIN_PROCESSING_URL_MOBILE = "/authentication/mobile";
     /**
+     * 默认的openId登录请求处理url
+     */
+    String DEFAULT_LOGIN_PROCESSING_URL_OPENID = "/authentication/openId";
+    /**
      * 默认登录页面
      */
     String DEFAULT_SIGN_IN_PAGE_URL = "/imooc-signin.html";
@@ -37,6 +41,14 @@ public interface SecurityConstants {
      * 获取第三方用户信息的url
      */
     String DEFAULT_SOCIAL_USER_INFO_URL = "/social/user";
+    /**
+     * openId参数名
+     */
+    String DEFAULT_PARAMETER_NAME_OPENID = "openId";
+    /**
+     * providerId参数名
+     */
+    String DEFAULT_PARAMETER_NAME_PROVIDERID = "providerId";
     /**
      * session失效的跳转地址
      */
