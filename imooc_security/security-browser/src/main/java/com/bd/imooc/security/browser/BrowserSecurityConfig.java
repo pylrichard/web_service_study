@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.InvalidSessionStrategy;
@@ -54,6 +55,9 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
     @Autowired
     private InvalidSessionStrategy invalidSessionStrategy;
 
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -93,6 +97,13 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
                 .expiredSessionStrategy(sessionInformationExpiredStrategy)
             .and()
             .and()
+            .logout()
+                .logoutUrl("/signOut")
+                //handler和自定义html是互斥的
+                .logoutSuccessHandler(logoutSuccessHandler)
+                //清除Cookie
+                .deleteCookies("JSESSIONID")
+                .and()
             .authorizeRequests()
                 .antMatchers(
                     SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
@@ -100,6 +111,7 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
                     securityProperties.getBrowser().getSigninPage(),
                     SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
                     securityProperties.getBrowser().getSignUpUrl(),
+                    securityProperties.getBrowser().getSignOutUrl(),
                     SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
                     SecurityConstants.DEFAULT_SESSION_INVALID_URL)
                     .permitAll()
