@@ -1,9 +1,10 @@
 package com.bd.imooc.security.browser;
 
-import com.bd.imooc.security.core.support.SimpleResponse;
 import com.bd.imooc.security.core.properties.SecurityConstants;
 import com.bd.imooc.security.core.properties.SecurityProperties;
+import com.bd.imooc.security.core.social.SocialController;
 import com.bd.imooc.security.core.social.support.SocialUserInfo;
+import com.bd.imooc.security.core.support.SimpleResponse;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
-public class BrowserSecurityController {
+public class BrowserSecurityController extends SocialController {
     private Logger logger = LoggerFactory.getLogger(getClass());
     /**
      * 缓存/authentication/require请求
@@ -61,20 +62,12 @@ public class BrowserSecurityController {
     }
 
     /**
-     * 获取第三方用户信息
+     * 用户第一次进行第三方登录时，会引导用户进行用户注册或绑定，此API用于在注册或绑定页面获取第三方用户信息
      */
-    @GetMapping("/social/user")
+    @GetMapping(SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL)
     public SocialUserInfo getSocialUserInfo(HttpServletRequest request) {
-        SocialUserInfo socialUserInfo = null;
         Connection<?> connection = providerSignInUtils.getConnectionFromSession(new ServletWebRequest(request));
-        if (connection != null) {
-            socialUserInfo = new SocialUserInfo();
-            socialUserInfo.setProviderId(connection.getKey().getProviderId());
-            socialUserInfo.setProviderUserId(connection.getKey().getProviderUserId());
-            socialUserInfo.setNickName(connection.getDisplayName());
-            socialUserInfo.setHeadImg(connection.getImageUrl());
-        }
 
-        return socialUserInfo;
+        return buildSocialUserInfo(connection);
     }
 }

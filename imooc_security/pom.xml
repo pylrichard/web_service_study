@@ -14,10 +14,10 @@
     </parent>
 
     <modules>
-        <module>security-browser</module>
-        <module>security-core</module>
+        <module>security_browser</module>
+        <module>security_core</module>
         <module>security_app</module>
-        <module>security-example</module>
+        <module>security_example</module>
     </modules>
 
     <properties>

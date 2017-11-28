@@ -1,4 +1,4 @@
-package com.bd.imooc.security.app.authenctiation.openid;
+package com.bd.imooc.security.app.authentication.openid;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

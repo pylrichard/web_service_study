@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.bd</groupId>
-            <artifactId>security-core</artifactId>
+            <artifactId>security_core</artifactId>
             <version>${imooc.security.version}</version>
         </dependency>
     </dependencies>

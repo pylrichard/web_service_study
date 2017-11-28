@@ -1,5 +1,6 @@
 package com.bd.imooc.security.example.web.controller;
 
+import com.bd.imooc.security.app.social.AppSignUpUtils;
 import com.bd.imooc.security.example.dto.User;
 import com.bd.imooc.security.example.dto.UserQueryCondition;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -27,6 +28,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     private ProviderSignInUtils providerSignInUtils;
+
+    @Autowired
+    private AppSignUpUtils appSignUpUtils;
 
     /**
      * 注解@RequestBody映射请求体到Java方法的参数
@@ -125,6 +129,6 @@ public class UserController {
             这里使用用户填写的用户名作为唯一标识来绑定服务提供商用户
         */
         String userId = user.getUsername();
-        providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
+        appSignUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
     }
 }

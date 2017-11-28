@@ -1,4 +1,4 @@
-package com.bd.imooc.security.app.authenctiation;
+package com.bd.imooc.security.app.authentication;
 
 import com.bd.imooc.security.core.properties.SecurityProperties;
 import com.bd.imooc.security.core.properties.SignInResponseType;

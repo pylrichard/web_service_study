@@ -1,6 +1,6 @@
 package com.bd.imooc.security.app;
 
-import com.bd.imooc.security.app.authenctiation.openid.OpenIdAuthenticationSecurityConfig;
+import com.bd.imooc.security.app.authentication.openid.OpenIdAuthenticationSecurityConfig;
 import com.bd.imooc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.bd.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;

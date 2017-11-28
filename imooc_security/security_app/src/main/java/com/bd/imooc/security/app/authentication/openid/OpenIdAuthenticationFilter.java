@@ -1,4 +1,4 @@
-package com.bd.imooc.security.app.authenctiation.openid;
+package com.bd.imooc.security.app.authentication.openid;
 
 import com.bd.imooc.security.core.properties.SecurityConstants;
 import org.springframework.security.authentication.AuthenticationServiceException;

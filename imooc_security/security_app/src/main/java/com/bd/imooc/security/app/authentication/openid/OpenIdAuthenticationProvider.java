@@ -1,4 +1,4 @@
-package com.bd.imooc.security.app.authenctiation.openid;
+package com.bd.imooc.security.app.authentication.openid;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
