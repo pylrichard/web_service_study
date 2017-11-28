@@ -12,7 +12,13 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Example作为认证服务器
@@ -29,6 +35,12 @@ public class ImoocAuthorizationServerConfig extends AuthorizationServerConfigure
     @Autowired
     private TokenStore tokenStore;
 
+    @Autowired(required = false)
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+
+    @Autowired(required = false)
+    private TokenEnhancer jwtTokenEnhancer;
+
     @Autowired
     private SecurityProperties securityProperties;
 
@@ -37,6 +49,16 @@ public class ImoocAuthorizationServerConfig extends AuthorizationServerConfigure
         endpoints.tokenStore(tokenStore)
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService);
+
+        if (jwtAccessTokenConverter != null && jwtTokenEnhancer != null) {
+            TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
+            List<TokenEnhancer> enhancers = new ArrayList<>();
+            enhancers.add(jwtTokenEnhancer);
+            enhancers.add(jwtAccessTokenConverter);
+            enhancerChain.setTokenEnhancers(enhancers);
+            endpoints.tokenEnhancer(enhancerChain)
+                    .accessTokenConverter(jwtAccessTokenConverter);
+        }
     }
 
     @Override
@@ -46,7 +68,7 @@ public class ImoocAuthorizationServerConfig extends AuthorizationServerConfigure
             for (OAuth2ClientProperties client : securityProperties.getOauth2().getClients()) {
                 builder.withClient(client.getClientId())
                         .secret(client.getClientSecret())
-                        //支持的授权模式
+                        //支持的授权模式，refresh_token支持在access_token失效后得到新的access_token
                         .authorizedGrantTypes("refresh_token", "authorization_code", "password")
                         //令牌有效时间
                         .accessTokenValiditySeconds(client.getAccessTokenValidateSeconds())

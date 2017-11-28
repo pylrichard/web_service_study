@@ -1,18 +1,21 @@
 package com.bd.imooc.security.example.web.controller;
 
 import com.bd.imooc.security.app.social.AppSignUpUtils;
+import com.bd.imooc.security.core.properties.SecurityProperties;
 import com.bd.imooc.security.example.dto.User;
 import com.bd.imooc.security.example.dto.UserQueryCondition;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +34,9 @@ public class UserController {
 
     @Autowired
     private AppSignUpUtils appSignUpUtils;
+
+    @Autowired
+    private SecurityProperties securityProperties;
 
     /**
      * 注解@RequestBody映射请求体到Java方法的参数
@@ -118,7 +124,17 @@ public class UserController {
      * 获取登录用户认证信息
      */
     @GetMapping("/me")
-    public Object getCurrentUser(@AuthenticationPrincipal UserDetails user) {
+    public Object getCurrentUser(Authentication user, HttpServletRequest request) throws Exception {
+        String token = StringUtils.substringAfter(request.getHeader("Authorization"), "bearer ");
+        //指定签名进行解析
+        Claims claims = Jwts.parser().setSigningKey(securityProperties.getOauth2()
+                .getJwtSigningKey()
+                .getBytes("UTF-8"))
+                .parseClaimsJws(token)
+                .getBody();
+        String company = (String) claims.get("company");
+        System.out.println(company);
+
         return user;
     }
 
