@@ -8,6 +8,7 @@ import com.bd.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -98,6 +99,7 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
                 .deleteCookies("JSESSIONID")
                 .and()
             .authorizeRequests()
+                //以下URL不需要认证
                 .antMatchers(
                     SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
                     SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
@@ -108,6 +110,9 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
                     SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
                     SecurityConstants.DEFAULT_SESSION_INVALID_URL)
                     .permitAll()
+                //以下URL和方法需要管理员权限
+                .antMatchers(HttpMethod.GET, "/user/*")
+                .hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
             .and()

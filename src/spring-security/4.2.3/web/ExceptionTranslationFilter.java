@@ -110,6 +110,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 					.getFirstThrowableOfType(AuthenticationException.class, causeChain);
 
 			if (ase == null) {
+			    //判断根异常是否是AccessDeniedException
 				ase = (AccessDeniedException) throwableAnalyzer.getFirstThrowableOfType(
 						AccessDeniedException.class, causeChain);
 			}
@@ -117,7 +118,10 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 			if (ase != null) {
 			    /*
 			    	根据不同异常进行不同处理
-			    	比如用户未登录，会跳转到登录页面进行登录，发起/login请求，输入用户名和密码后，到UsernamePasswordAuthenticationFilter进行处理
+			    	比如用户未登录，会跳转到登录页面进行登录，发起/login请求
+			    	输入用户名和密码后，到UsernamePasswordAuthenticationFilter进行处理
+
+
 			     */
 				handleSpringSecurityException(request, response, chain, ase);
 			}
@@ -163,6 +167,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 						"Access is denied (user is " + (authenticationTrustResolver.isAnonymous(authentication) ? "anonymous" : "not fully authenticated") + "); redirecting to authentication entry point",
 						exception);
 
+				//是匿名登录，引导进行身份认证
 				sendStartAuthentication(
 						request,
 						response,
@@ -175,6 +180,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 						"Access is denied (user is not anonymous); delegating to AccessDeniedHandler",
 						exception);
 
+				//返回403拒绝访问
 				accessDeniedHandler.handle(request, response,
 						(AccessDeniedException) exception);
 			}
@@ -189,6 +195,7 @@ public class ExceptionTranslationFilter extends GenericFilterBean {
 		SecurityContextHolder.getContext().setAuthentication(null);
 		requestCache.saveRequest(request, response);
 		logger.debug("Calling Authentication entry point.");
+		//跳转到WebSecurityConfigurerAdapter子类HttpSecurity.loginPage()配置的URL
 		authenticationEntryPoint.commence(request, response, reason);
 	}
 

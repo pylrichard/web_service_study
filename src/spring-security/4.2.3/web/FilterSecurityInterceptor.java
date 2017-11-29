@@ -92,6 +92,9 @@ public class FilterSecurityInterceptor extends AbstractSecurityInterceptor imple
 	}
 
 	public void invoke(FilterInvocation fi) throws IOException, ServletException {
+		/*
+			判断请求之前是否被此过滤器处理过，即FILTER_APPLIED是否有值
+		 */
 		if ((fi.getRequest() != null)
 				&& (fi.getRequest().getAttribute(FILTER_APPLIED) != null)
 				&& observeOncePerRequest) {
@@ -107,6 +110,7 @@ public class FilterSecurityInterceptor extends AbstractSecurityInterceptor imple
 
             /*
             	FilterSecurityInterceptor是过滤器链上最后一个过滤器
+            	调用AbstractSecurityInterceptor.beforeInvocation()
             	根据WebSecurityConfigurerAdapter实现类的configure()配置，决定抛出哪种异常到ExceptionTranslationFilter
             	此处设置断点进行观察
              */

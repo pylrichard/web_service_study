@@ -165,7 +165,9 @@ public abstract class AbstractSecurityInterceptor implements InitializingBean,
 		}
 	}
 
-    //调用前判断是否可以执行
+	/**
+	 * 调用REST API前判断是否可以执行
+	 */
 	protected InterceptorStatusToken beforeInvocation(Object object) {
 		Assert.notNull(object, "Object was null");
 		final boolean debug = logger.isDebugEnabled();
@@ -178,7 +180,7 @@ public abstract class AbstractSecurityInterceptor implements InitializingBean,
 							+ getSecureObjectClass());
 		}
 
-        //获取权限规则
+        //获取AbstractChannelSecurityConfig子类配置的URL权限规则，调用DefaultFilterInvocationSecurityMetadataSource.getAttributes()
 		Collection<ConfigAttribute> attributes = this.obtainSecurityMetadataSource()
 				.getAttributes(object);
 
@@ -212,22 +214,26 @@ public abstract class AbstractSecurityInterceptor implements InitializingBean,
 					object, attributes);
 		}
 
-        //获取UserDetails(Authentication.getPrincipal)，getAuthorities()返回GrantedAuthority权限
+        //获取用户认证信息，即UserDetails(Authentication.getPrincipal)，getAuthorities()返回GrantedAuthority权限
 		Authentication authenticated = authenticateIfRequired();
 
 		// Attempt authorization
 		try {
-            //进行判断
-            //authenticated包含当前用户拥有的权限
-            //object是被拦截对象，如HTTP请求、方法调用
-            //attributes代表对被拦截对象要判断的权限规则，如当前用户是否是管理员，HTTP请求是否是某个IP地址发出的
-            //此处设置断点进行观察
+			/*
+            	进行判断
+            	authenticated包含当前用户拥有的权限
+            	object是被拦截对象，如HTTP请求、方法调用
+            	attributes代表对被拦截对象要判断的权限规则，如当前用户是否是管理员，HTTP请求是否是某个IP地址发出的
+            	调用AffirmativeBased.decide()
+            	此处设置断点进行观察
+            */
 			this.accessDecisionManager.decide(authenticated, object, attributes);
 		}
 		catch (AccessDeniedException accessDeniedException) {
 			publishEvent(new AuthorizationFailureEvent(object, attributes, authenticated,
 					accessDeniedException));
 
+			//抛出异常在ExceptionTranslationFilter中被捕获
 			throw accessDeniedException;
 		}
 

@@ -46,6 +46,7 @@ public class ExampleUserDetailsService implements UserDetailsService, SocialUser
         //模拟密码加密(同一个密码每次加密得到结果不一样，使用了随机生成的salt)，用户注册时进行加密，此处是用户登录获取DB中的用户信息
         String password = passwordEncoder.encode("Pyl123456");
         logger.info("数据库密码是:" + password);
+        //AuthorityUtils根据用户权限配置赋予用户相应的权限
         return new SocialUser(userId, password,
                 true, true, true, true,
                 AuthorityUtils.commaSeparatedStringToAuthorityList("admin,ROLE_USER"));

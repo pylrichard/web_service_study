@@ -9,20 +9,12 @@ import org.springframework.security.core.Authentication;
 
 /**
  * Simple concrete implementation of
- * {@link org.springframework.security.access.AccessDecisionManager} that uses a
- * consensus-based approach.
- * <p>
- * "Consensus" here means majority-rule (ignoring abstains) rather than unanimous
- * agreement (ignoring abstains). If you require unanimity, please see
- * {@link UnanimousBased}.
+ * {@link org.springframework.security.access.AccessDecisionManager} that grants access if
+ * any <code>AccessDecisionVoter</code> returns an affirmative response.
  */
-public class ConsensusBased extends AbstractAccessDecisionManager {
-	// ~ Instance fields
-	// ================================================================================================
+public class AffirmativeBased extends AbstractAccessDecisionManager {
 
-	private boolean allowIfEqualGrantedDeniedDecisions = true;
-
-	public ConsensusBased(List<AccessDecisionVoter<? extends Object>> decisionVoters) {
+	public AffirmativeBased(List<AccessDecisionVoter<? extends Object>> decisionVoters) {
 		super(decisionVoters);
 	}
 
@@ -31,15 +23,14 @@ public class ConsensusBased extends AbstractAccessDecisionManager {
 
 	/**
 	 * This concrete implementation simply polls all configured
-	 * {@link AccessDecisionVoter}s and upon completion determines the consensus of
-	 * granted against denied responses.
-	 * <p>
-	 * If there were an equal number of grant and deny votes, the decision will be based
-	 * on the {@link #isAllowIfEqualGrantedDeniedDecisions()} property (defaults to true).
+	 * {@link AccessDecisionVoter}s and grants access if any
+	 * <code>AccessDecisionVoter</code> voted affirmatively. Denies access only if there
+	 * was a deny vote AND no affirmative votes.
 	 * <p>
 	 * If every <code>AccessDecisionVoter</code> abstained from voting, the decision will
 	 * be based on the {@link #isAllowIfAllAbstainDecisions()} property (defaults to
 	 * false).
+	 * </p>
 	 *
 	 * @param authentication the caller invoking the method
 	 * @param object the secured object
@@ -50,11 +41,17 @@ public class ConsensusBased extends AbstractAccessDecisionManager {
 	 */
 	public void decide(Authentication authentication, Object object,
 			Collection<ConfigAttribute> configAttributes) throws AccessDeniedException {
-		int grant = 0;
 		int deny = 0;
-		int abstain = 0;
 
+		/*
+			getDecisionVoters()返回WebExpressionVoter
+		 */
 		for (AccessDecisionVoter voter : getDecisionVoters()) {
+            /*
+            	执行具体的判断逻辑，object可以是HTTP请求(/book/1)
+	            configAttributes为进行判断的权限规则(hasAuthority("admin"))
+    	        此处可设置断点，进行观察
+            */
 			int result = voter.vote(authentication, object, configAttributes);
 
 			if (logger.isDebugEnabled()) {
@@ -62,10 +59,9 @@ public class ConsensusBased extends AbstractAccessDecisionManager {
 			}
 
 			switch (result) {
+            //有一个Voter通过即可
 			case AccessDecisionVoter.ACCESS_GRANTED:
-				grant++;
-
-				break;
+				return;
 
 			case AccessDecisionVoter.ACCESS_DENIED:
 				deny++;
@@ -73,42 +69,17 @@ public class ConsensusBased extends AbstractAccessDecisionManager {
 				break;
 
 			default:
-				abstain++;
-
 				break;
 			}
 		}
 
-        //比较Voter通过和拒绝的次数，通过次数多则通过
-		if (grant > deny) {
-			return;
-		}
-
-		if (deny > grant) {
+		if (deny > 0) {
+			//请求不通过抛出异常，在AbstractSecurityInterceptor.beforeInvocation()中捕获
 			throw new AccessDeniedException(messages.getMessage(
 					"AbstractAccessDecisionManager.accessDenied", "Access is denied"));
 		}
 
-		if ((grant == deny) && (grant != 0)) {
-			if (this.allowIfEqualGrantedDeniedDecisions) {
-				return;
-			}
-			else {
-				throw new AccessDeniedException(messages.getMessage(
-						"AbstractAccessDecisionManager.accessDenied", "Access is denied"));
-			}
-		}
-
 		// To get this far, every AccessDecisionVoter abstained
 		checkAllowIfAllAbstainDecisions();
-	}
-
-	public boolean isAllowIfEqualGrantedDeniedDecisions() {
-		return allowIfEqualGrantedDeniedDecisions;
-	}
-
-	public void setAllowIfEqualGrantedDeniedDecisions(
-			boolean allowIfEqualGrantedDeniedDecisions) {
-		this.allowIfEqualGrantedDeniedDecisions = allowIfEqualGrantedDeniedDecisions;
 	}
 }
