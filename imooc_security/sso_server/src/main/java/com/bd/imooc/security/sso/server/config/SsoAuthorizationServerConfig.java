@@ -1,4 +1,4 @@
-package com.bd.imooc.security.sso.server;
+package com.bd.imooc.security.sso.server.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
