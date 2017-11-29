@@ -4,20 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>imooc_security</artifactId>
+    <artifactId>security</artifactId>
     <packaging>pom</packaging>
 
     <parent>
         <artifactId>java_study</artifactId>
         <groupId>com.bd</groupId>
         <version>0.1.0</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modules>
-        <module>security_browser</module>
-        <module>security_core</module>
-        <module>security_app</module>
-        <module>security_example</module>
+        <module>../security_browser</module>
+        <module>../security_core</module>
+        <module>../security_app</module>
+        <module>../security_example</module>
     </modules>
 
     <properties>

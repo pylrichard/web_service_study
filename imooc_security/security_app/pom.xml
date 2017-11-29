@@ -7,10 +7,11 @@
     <artifactId>security_app</artifactId>
 
     <parent>
-        <artifactId>imooc_security</artifactId>
+        <artifactId>security</artifactId>
         <groupId>com.bd</groupId>
         <version>0.1.0</version>
         <!-- <relativePath>指定相对路径 -->
+        <relativePath>../security</relativePath>
     </parent>
 
     <dependencies>

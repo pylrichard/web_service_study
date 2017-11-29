@@ -7,9 +7,10 @@
     <artifactId>security_browser</artifactId>
 
     <parent>
-        <artifactId>imooc_security</artifactId>
+        <artifactId>security</artifactId>
         <groupId>com.bd</groupId>
         <version>0.1.0</version>
+        <relativePath>../security</relativePath>
     </parent>
 
     <dependencies>

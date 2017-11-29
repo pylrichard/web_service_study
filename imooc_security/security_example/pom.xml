@@ -7,9 +7,10 @@
     <artifactId>security_example</artifactId>
 
     <parent>
-        <artifactId>imooc_security</artifactId>
+        <artifactId>security</artifactId>
         <groupId>com.bd</groupId>
         <version>0.1.0</version>
+        <relativePath>../security</relativePath>
     </parent>
 
     <dependencies>
@@ -67,6 +68,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>security-example</finalName>
+        <finalName>security_example</finalName>
     </build>
 </project>

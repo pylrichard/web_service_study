@@ -20,7 +20,8 @@
         <module>imooc_mmall</module>
         <module>ace_trade</module>
         <module>roncoo_book_shop</module>
-        <module>imooc_security</module>
+        <module>imooc_security/security</module>
+        <module>imooc_security/sso</module>
     </modules>
 
     <properties>
