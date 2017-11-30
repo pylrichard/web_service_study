@@ -19,6 +19,7 @@
         <module>../security_core</module>
         <module>../security_app</module>
         <module>../security_example</module>
+        <module>../security_rbac</module>
     </modules>
 
     <properties>
