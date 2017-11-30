@@ -2,13 +2,12 @@ package com.bd.imooc.security.browser;
 
 import com.bd.imooc.security.core.authentication.AbstractChannelSecurityConfig;
 import com.bd.imooc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
-import com.bd.imooc.security.core.properties.SecurityConstants;
+import com.bd.imooc.security.core.authorize.AuthorizeConfigManager;
 import com.bd.imooc.security.core.properties.SecurityProperties;
 import com.bd.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -57,6 +56,9 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
     @Autowired
     private LogoutSuccessHandler logoutSuccessHandler;
 
+    @Autowired
+    private AuthorizeConfigManager authorizeConfigManager;
+
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
@@ -97,26 +99,10 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
                 .logoutSuccessHandler(logoutSuccessHandler)
                 //清除Cookie
                 .deleteCookies("JSESSIONID")
-                .and()
-            .authorizeRequests()
-                //以下URL不需要认证
-                .antMatchers(
-                    SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
-                    SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
-                    securityProperties.getBrowser().getSigninPage(),
-                    SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
-                    securityProperties.getBrowser().getSignUpUrl(),
-                    securityProperties.getBrowser().getSignOutUrl(),
-                    SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
-                    SecurityConstants.DEFAULT_SESSION_INVALID_URL)
-                    .permitAll()
-                //以下URL和方法需要管理员权限
-                .antMatchers(HttpMethod.GET, "/user/*")
-                .hasRole("ADMIN")
-                .anyRequest()
-                .authenticated()
             .and()
             //关闭跨域请求访问
             .csrf().disable();
+
+        authorizeConfigManager.config(http.authorizeRequests());
     }
 }

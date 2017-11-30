@@ -1,7 +1,7 @@
 package com.bd.imooc.security.browser.session;
 
-import com.bd.imooc.security.core.support.SimpleResponse;
 import com.bd.imooc.security.core.properties.SecurityProperties;
+import com.bd.imooc.security.core.support.SimpleResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class AbstractSessionStrategy {
         String targetUrl;
 
         if (StringUtils.endsWithIgnoreCase(sourceUrl, ".html")) {
-            if (StringUtils.equals(sourceUrl, securityPropertie.getBrowser().getSigninPage())
+            if (StringUtils.equals(sourceUrl, securityPropertie.getBrowser().getSignInPage())
                     || StringUtils.equals(sourceUrl, securityPropertie.getBrowser().getSignOutUrl())) {
                 targetUrl = sourceUrl;
             } else {

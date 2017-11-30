@@ -53,7 +53,7 @@ public class BrowserSecurityController extends SocialController {
             String targetUrl = savedRequest.getRedirectUrl();
             logger.info("引发跳转的请求是:" + targetUrl);
             if (StringUtils.endsWithIgnoreCase(targetUrl, ".html")) {
-                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getSigninPage());
+                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getSignInPage());
             }
         }
 

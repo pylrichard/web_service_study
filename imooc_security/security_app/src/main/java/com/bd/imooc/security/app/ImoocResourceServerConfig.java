@@ -2,6 +2,7 @@ package com.bd.imooc.security.app;
 
 import com.bd.imooc.security.app.authentication.openid.OpenIdAuthenticationSecurityConfig;
 import com.bd.imooc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
+import com.bd.imooc.security.core.authorize.AuthorizeConfigManager;
 import com.bd.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,9 @@ public class ImoocResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private OpenIdAuthenticationSecurityConfig openIdAuthenticationSecurityConfig;
 
+    @Autowired
+    private AuthorizeConfigManager authorizeConfigManager;
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.apply(validateCodeSecurityConfig)
@@ -40,5 +44,7 @@ public class ImoocResourceServerConfig extends ResourceServerConfigurerAdapter {
             .apply(openIdAuthenticationSecurityConfig)
             .and()
             .csrf().disable();
+
+        authorizeConfigManager.config(http.authorizeRequests());
     }
 }

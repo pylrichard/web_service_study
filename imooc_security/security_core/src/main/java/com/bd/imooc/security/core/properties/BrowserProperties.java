@@ -13,7 +13,7 @@ public class BrowserProperties {
     /**
      * 登录页面，当引发登录行为的url以html结尾时，会跳转到此url
      */
-    private String signinPage = SecurityConstants.DEFAULT_SIGN_IN_PAGE_URL;
+    private String signInPage = SecurityConstants.DEFAULT_SIGN_IN_PAGE_URL;
     /**
      * 登录响应的方式，默认是json
      */
@@ -28,12 +28,12 @@ public class BrowserProperties {
      */
     private String singInSuccessUrl;
 
-    public String getSigninPage() {
-        return signinPage;
+    public String getSignInPage() {
+        return signInPage;
     }
 
-    public void setSigninPage(String signinPage) {
-        this.signinPage = signinPage;
+    public void setSignInPage(String signInPage) {
+        this.signInPage = signInPage;
     }
 
     public SignInResponseType getSignInResponseType() {

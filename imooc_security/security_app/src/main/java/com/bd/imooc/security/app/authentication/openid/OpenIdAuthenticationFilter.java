@@ -20,7 +20,7 @@ public class OpenIdAuthenticationFilter extends AbstractAuthenticationProcessing
     private boolean postOnly = true;
 
     public OpenIdAuthenticationFilter() {
-        super(new AntPathRequestMatcher(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_OPENID, "POST"));
+        super(new AntPathRequestMatcher(SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_OPENID, "POST"));
     }
 
     @Override
