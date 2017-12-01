@@ -1,6 +1,12 @@
 package com.bd.imooc.security.core.properties;
 
+/**
+ * 浏览器环境配置项
+ */
 public class BrowserProperties {
+    /**
+     * session管理配置项
+     */
     private SessionProperties session = new SessionProperties();
     /**
      * 社交登录如果需要用户注册进行跳转的页面

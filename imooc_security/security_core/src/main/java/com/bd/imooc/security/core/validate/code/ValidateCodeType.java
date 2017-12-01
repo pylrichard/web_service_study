@@ -2,6 +2,9 @@ package com.bd.imooc.security.core.validate.code;
 
 import com.bd.imooc.security.core.properties.SecurityConstants;
 
+/**
+ * 校验码类型
+ */
 public enum ValidateCodeType {
     /**
      * 短信验证码

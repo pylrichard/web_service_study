@@ -1,14 +1,15 @@
 package com.bd.imooc.security.browser;
 
-import com.bd.imooc.security.core.authentication.AbstractChannelSecurityConfig;
+import com.bd.imooc.security.core.authentication.FormAuthenticationConfig;
 import com.bd.imooc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
-import com.bd.imooc.security.core.authorize.AuthorizeConfigManager;
+import com.bd.imooc.security.core.authorization.AuthorizeConfigManager;
 import com.bd.imooc.security.core.properties.SecurityProperties;
 import com.bd.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -21,8 +22,11 @@ import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
 
+/**
+ * 浏览器环境下安全配置主类
+ */
 @Configuration
-public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
+public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityProperties securityProperties;
 
@@ -59,6 +63,12 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
     @Autowired
     private AuthorizeConfigManager authorizeConfigManager;
 
+    @Autowired
+    private FormAuthenticationConfig formAuthenticationConfig;
+
+    /**
+     * 记住我功能的token存取器配置
+     */
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
@@ -73,35 +83,36 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        applyPasswordAuthenticationConfig(http);
+        formAuthenticationConfig.configure(http);
 
         http.apply(validateCodeSecurityConfig)
-            .and()
-            .apply(smsCodeAuthenticationSecurityConfig)
-            .and()
-            .apply(imoocSocialSecurityConfig)
-            .and()
-            .rememberMe()
+                .and()
+                .apply(smsCodeAuthenticationSecurityConfig)
+                .and()
+                .apply(imoocSocialSecurityConfig)
+                .and()
+                //记住我配置，如果想在记住我登录时记录日志，可以注册InteractiveAuthenticationSuccessEvent事件的监听器
+                .rememberMe()
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
                 .userDetailsService(userDetailsService)
-            .and()
-            .sessionManagement()
+                .and()
+                .sessionManagement()
                 .invalidSessionStrategy(invalidSessionStrategy)
                 .maximumSessions(securityProperties.getBrowser().getSession().getMaximumSessions())
                 .maxSessionsPreventsLogin(securityProperties.getBrowser().getSession().isMaxSessionsPreventsLogin())
                 .expiredSessionStrategy(sessionInformationExpiredStrategy)
-            .and()
-            .and()
-            .logout()
+                .and()
+                .and()
+                .logout()
                 .logoutUrl("/signOut")
                 //handler和自定义html是互斥的
                 .logoutSuccessHandler(logoutSuccessHandler)
                 //清除Cookie
                 .deleteCookies("JSESSIONID")
-            .and()
-            //关闭跨域请求访问
-            .csrf().disable();
+                .and()
+                //关闭跨域请求访问
+                .csrf().disable();
 
         authorizeConfigManager.config(http.authorizeRequests());
     }

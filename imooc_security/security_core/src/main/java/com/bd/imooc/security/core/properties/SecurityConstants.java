@@ -34,7 +34,7 @@ public interface SecurityConstants {
      */
     String DEFAULT_PARAMETER_NAME_CODE_SMS = "smsCode";
     /**
-     * 发送短信验证码 或 验证短信验证码时，传递手机号的参数的名称
+     * 发送短信验证码或验证短信验证码时，传递手机号的参数的名称
      */
     String DEFAULT_PARAMETER_NAME_MOBILE = "mobile";
     /**

@@ -13,20 +13,26 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
-/**
- * 持久化令牌到Redis
- */
 @Configuration
 public class TokenStoreConfig {
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
-
-    @Bean
+    /**
+     * 使用Redis存储token的配置，只有在imooc.security.oauth2.tokenStore配置为redis时生效
+     */
+    @Configuration
     @ConditionalOnProperty(prefix = "imooc.security.oauth2", name = "tokenStore", havingValue = "redis")
-    public TokenStore redisTokenStore() {
-        return new RedisTokenStore(redisConnectionFactory);
+    public static class RedisConfig {
+        @Autowired
+        private RedisConnectionFactory redisConnectionFactory;
+
+        @Bean
+        public TokenStore redisTokenStore() {
+            return new RedisTokenStore(redisConnectionFactory);
+        }
     }
 
+    /**
+     * 使用jwt时的配置，默认生效
+     */
     @Configuration
     //matchIfMissing表示没有imooc.security.oauth2.tokenStore时，以下配置生效
     @ConditionalOnProperty(prefix = "imooc.security.oauth2", name = "tokenStore", havingValue = "jwt", matchIfMissing = true)

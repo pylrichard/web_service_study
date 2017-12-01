@@ -1,10 +1,15 @@
 package com.bd.imooc.security.core.properties;
 
+/**
+ * 第三方登录配置项
+ */
 public class SocialProperties {
     private QQProperties qq = new QQProperties();
     private WeixinProperties weixin = new WeixinProperties();
+    /**
+     * 第三方登录功能拦截的url
+     */
     private String filterProcessesUrl = "/auth";
-    private String signUpUrl = "/imooc-signup.html";
 
     public QQProperties getQq() {
         return qq;
@@ -28,13 +33,5 @@ public class SocialProperties {
 
     public void setFilterProcessesUrl(String filterProcessesUrl) {
         this.filterProcessesUrl = filterProcessesUrl;
-    }
-
-    public String getSignUpUrl() {
-        return signUpUrl;
-    }
-
-    public void setSignUpUrl(String signUpUrl) {
-        this.signUpUrl = signUpUrl;
     }
 }

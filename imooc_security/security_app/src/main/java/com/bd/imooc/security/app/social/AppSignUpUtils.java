@@ -13,6 +13,9 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * App环境下替换providerSignInUtils，避免由于没有session导致读不到第三方用户信息的问题
+ */
 @Component
 public class AppSignUpUtils {
     @Autowired
@@ -30,7 +33,7 @@ public class AppSignUpUtils {
     }
 
     /**
-     * App实现第三方用户注册
+     * App环境下实现第三方用户注册
      */
     public void doPostSignUp(WebRequest request, String userId) {
         String key = getKey(request);

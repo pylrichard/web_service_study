@@ -27,6 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 浏览器环境下与安全相关的服务
+ */
 @RestController
 public class BrowserSecurityController extends SocialController {
     private Logger logger = LoggerFactory.getLogger(getClass());

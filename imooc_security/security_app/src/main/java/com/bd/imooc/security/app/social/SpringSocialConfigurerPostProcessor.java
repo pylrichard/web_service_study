@@ -1,6 +1,5 @@
 package com.bd.imooc.security.app.social;
 
-
 import com.bd.imooc.security.core.properties.SecurityConstants;
 import com.bd.imooc.security.core.social.support.ImoocSpringSocialConfigurer;
 import org.apache.commons.lang.StringUtils;

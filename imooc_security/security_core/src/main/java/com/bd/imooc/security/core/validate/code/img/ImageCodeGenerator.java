@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+/**
+ * 默认的图片验证码生成器
+ */
 public class ImageCodeGenerator implements ValidateCodeGenerator {
     @Autowired
     private SecurityProperties securityProperties;

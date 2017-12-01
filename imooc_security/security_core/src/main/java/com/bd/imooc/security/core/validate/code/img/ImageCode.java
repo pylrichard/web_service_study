@@ -5,6 +5,9 @@ import com.bd.imooc.security.core.validate.code.ValidateCode;
 import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 
+/**
+ * 图片验证码
+ */
 public class ImageCode extends ValidateCode {
     private static final long serialVersionUID = -6020470039852318468L;
     private BufferedImage image;

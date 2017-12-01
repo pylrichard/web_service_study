@@ -25,7 +25,7 @@ public class AbstractSessionStrategy {
      * 跳转的url
      */
     private String destinationUrl;
-    private SecurityProperties securityPropertie;
+    private SecurityProperties securityProperties;
     private ObjectMapper objectMapper = new ObjectMapper();
     /**
      * 重定向策略
@@ -36,12 +36,12 @@ public class AbstractSessionStrategy {
      */
     private boolean createNewSession = true;
 
-    public AbstractSessionStrategy(SecurityProperties securityPropertie) {
-        String invalidSessionUrl = securityPropertie.getBrowser().getSession().getSessionInvalidUrl();
+    public AbstractSessionStrategy(SecurityProperties securityProperties) {
+        String invalidSessionUrl = securityProperties.getBrowser().getSession().getSessionInvalidUrl();
         Assert.isTrue(UrlUtils.isValidRedirectUrl(invalidSessionUrl), "url must start with '/' or with 'http(s)'");
         Assert.isTrue(StringUtils.endsWithIgnoreCase(invalidSessionUrl, ".html"), "url must end with '.html'");
         this.destinationUrl = invalidSessionUrl;
-        this.securityPropertie = securityPropertie;
+        this.securityProperties = securityProperties;
     }
 
     protected void onSessionInvalid(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -55,8 +55,8 @@ public class AbstractSessionStrategy {
         String targetUrl;
 
         if (StringUtils.endsWithIgnoreCase(sourceUrl, ".html")) {
-            if (StringUtils.equals(sourceUrl, securityPropertie.getBrowser().getSignInPage())
-                    || StringUtils.equals(sourceUrl, securityPropertie.getBrowser().getSignOutUrl())) {
+            if (StringUtils.equals(sourceUrl, securityProperties.getBrowser().getSignInPage())
+                    || StringUtils.equals(sourceUrl, securityProperties.getBrowser().getSignOutUrl())) {
                 targetUrl = sourceUrl;
             } else {
                 targetUrl = destinationUrl;

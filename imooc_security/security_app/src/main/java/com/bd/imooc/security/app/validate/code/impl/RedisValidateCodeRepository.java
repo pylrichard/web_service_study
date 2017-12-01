@@ -12,6 +12,9 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 基于Redis的验证码存取器，避免由于没有session导致无法存取验证码的问题
+ */
 @Component
 public class RedisValidateCodeRepository implements ValidateCodeRepository {
     @Autowired

@@ -12,6 +12,9 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
+/**
+ * 浏览器环境扩展配置，配置在这里的bean，业务系统可以通过声明同类型或同名的bean来覆盖默认的配置
+ */
 @Configuration
 public class BrowserSecurityBeanConfig {
     @Autowired
@@ -35,6 +38,9 @@ public class BrowserSecurityBeanConfig {
         return new ImoocExpiredSessionStrategy(securityProperties);
     }
 
+    /**
+     * 退出时的处理策略配置
+     */
     @Bean
     @ConditionalOnMissingBean(LogoutSuccessHandler.class)
     public LogoutSuccessHandler logoutSuccessHandler(){

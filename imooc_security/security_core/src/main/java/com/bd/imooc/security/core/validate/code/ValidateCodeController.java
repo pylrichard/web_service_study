@@ -10,6 +10,9 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 生成校验码的请求处理器
+ */
 @RestController
 public class ValidateCodeController {
     @Autowired

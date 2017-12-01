@@ -1,4 +1,4 @@
-package com.bd.imooc.security.core.authorize;
+package com.bd.imooc.security.core.authorization;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

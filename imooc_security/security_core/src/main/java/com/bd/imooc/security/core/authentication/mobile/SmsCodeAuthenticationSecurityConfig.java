@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Component;
 
 /**
+ * 短信登录配置
  * 短信验证功能在App和Browser都会使用到
  */
 @Component

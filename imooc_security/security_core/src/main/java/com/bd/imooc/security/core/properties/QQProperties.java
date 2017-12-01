@@ -2,6 +2,9 @@ package com.bd.imooc.security.core.properties;
 
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 
+/**
+ * QQ登录配置项
+ */
 public class QQProperties extends SocialProperties {
     private String providerId = "qq";
 

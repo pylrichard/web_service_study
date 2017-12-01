@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
+ * 验证码信息封装类
+ *
  * 实现分布式Session，ValidateCode要存储到Redis中，需要被序列化
  */
 public class ValidateCode implements Serializable {

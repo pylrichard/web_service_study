@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 默认的退出成功处理器，如果设置了imooc.security.browser.signOutUrl，则跳转到配置的url
+ * 如果没配置，则返回json格式的响应
+ */
 public class ImoocLogoutSuccessHandler implements LogoutSuccessHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private String signOutSuccessUrl;

@@ -11,6 +11,9 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 短信登录过滤器
+ */
 public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private String mobileParameter = SecurityConstants.DEFAULT_PARAMETER_NAME_MOBILE;
     private boolean postOnly = true;

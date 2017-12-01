@@ -18,6 +18,9 @@ import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
 
+/**
+ * 社交登录配置主类
+ */
 @Configuration
 @EnableSocial
 public class SocialConfig extends SocialConfigurerAdapter {
@@ -37,8 +40,8 @@ public class SocialConfig extends SocialConfigurerAdapter {
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
         //执行同目录下的SQL创建UserConnection表
         JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource,
-                                                                                connectionFactoryLocator,
-                                                                                Encryptors.noOpText());
+                connectionFactoryLocator,
+                Encryptors.noOpText());
         repository.setTablePrefix("imooc_");
         if (connectionSignUp != null) {
             repository.setConnectionSignUp(connectionSignUp);
@@ -48,6 +51,8 @@ public class SocialConfig extends SocialConfigurerAdapter {
     }
 
     /**
+     * 第三方登录配置类，供浏览器或App模块引入第三方登录配置使用
+     *
      * 添加SocialAuthenticationFilter到过滤器链
      */
     @Bean
@@ -55,12 +60,15 @@ public class SocialConfig extends SocialConfigurerAdapter {
         String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
         ImoocSpringSocialConfigurer configurer = new ImoocSpringSocialConfigurer(filterProcessesUrl);
         //App/Browser注册跳转地址不同，App的SpringSocialConfigurerPostProcessor中修改
-        configurer.signupUrl(securityProperties.getSocial().getSignUpUrl());
+        configurer.signupUrl(securityProperties.getBrowser().getSignUpUrl());
         configurer.setSocialAuthenticationFilterPostProcessor(socialAuthenticationFilterPostProcessor);
 
         return configurer;
     }
 
+    /**
+     * 处理注册流程的工具类
+     */
     @Bean
     public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator) {
         return new ProviderSignInUtils(connectionFactoryLocator,

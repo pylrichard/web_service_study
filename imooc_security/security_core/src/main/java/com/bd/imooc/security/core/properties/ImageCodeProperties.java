@@ -1,5 +1,8 @@
 package com.bd.imooc.security.core.properties;
 
+/**
+ * 图片验证码配置项
+ */
 public class ImageCodeProperties extends SmsCodeProperties {
     public ImageCodeProperties() {
         //设置随机数为4位

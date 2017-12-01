@@ -1,4 +1,4 @@
-package com.bd.imooc.security.core.authorize;
+package com.bd.imooc.security.core.authorization;
 
 import com.bd.imooc.security.core.properties.SecurityConstants;
 import com.bd.imooc.security.core.properties.SecurityProperties;

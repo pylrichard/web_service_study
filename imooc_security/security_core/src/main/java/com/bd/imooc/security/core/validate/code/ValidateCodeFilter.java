@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 校验验证码的过滤器
+ *
  * OncePerRequestFilter保证过滤器只执行一次
  */
 @Component("validateCodeFilter")

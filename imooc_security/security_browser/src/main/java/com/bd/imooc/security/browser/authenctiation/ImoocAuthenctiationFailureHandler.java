@@ -1,8 +1,8 @@
 package com.bd.imooc.security.browser.authenctiation;
 
-import com.bd.imooc.security.core.support.SimpleResponse;
-import com.bd.imooc.security.core.properties.SignInResponseType;
 import com.bd.imooc.security.core.properties.SecurityProperties;
+import com.bd.imooc.security.core.properties.SignInResponseType;
+import com.bd.imooc.security.core.support.SimpleResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 自定义登录失败处理
+ * 浏览器环境下登录失败的处理器
  */
 @Component
 public class ImoocAuthenctiationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -35,10 +35,10 @@ public class ImoocAuthenctiationFailureHandler extends SimpleUrlAuthenticationFa
                                         AuthenticationException exception) throws IOException, ServletException {
         logger.info("登录失败");
         /*
-            返回500状态码和异常信息
+            返回401状态码和异常信息
          */
         if (SignInResponseType.JSON.equals(securityProperties.getBrowser().getSignInResponseType())) {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType("application/json;charset=UTF-8");
             //只返回错误消息
             response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));

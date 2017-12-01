@@ -1,6 +1,6 @@
 package com.bd.imooc.security.rbac.authorization;
 
-import com.bd.imooc.security.core.authorize.AuthorizeConfigProvider;
+import com.bd.imooc.security.core.authorization.AuthorizeConfigProvider;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

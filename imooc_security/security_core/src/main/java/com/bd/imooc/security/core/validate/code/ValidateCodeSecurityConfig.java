@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.Filter;
 
+/**
+ * 校验码相关安全配置
+ */
 @Component("validateCodeSecurityConfig")
 public class ValidateCodeSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
     @Autowired

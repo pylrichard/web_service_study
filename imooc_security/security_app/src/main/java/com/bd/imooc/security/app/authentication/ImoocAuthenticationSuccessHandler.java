@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * App环境下认证成功处理器
+ */
 @Component
 public class ImoocAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -60,7 +63,7 @@ public class ImoocAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
             第一个参数是授权模式特有参数用来创建Authentication(登录流程已创建)，此处不需要，设置为空Map
          */
         TokenRequest tokenRequest = new TokenRequest(MapUtils.EMPTY_MAP, clientId,
-                                                    clientDetails.getScope(), "custom");
+                clientDetails.getScope(), "custom");
         OAuth2Request oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
         OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
         //获取授权令牌

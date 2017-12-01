@@ -11,8 +11,8 @@ import java.io.IOException;
  * 并发登录导致session失效时，默认的处理策略
  */
 public class ImoocExpiredSessionStrategy extends AbstractSessionStrategy implements SessionInformationExpiredStrategy {
-    public ImoocExpiredSessionStrategy(SecurityProperties securityPropertie) {
-        super(securityPropertie);
+    public ImoocExpiredSessionStrategy(SecurityProperties securityProperties) {
+        super(securityProperties);
     }
 
     @Override

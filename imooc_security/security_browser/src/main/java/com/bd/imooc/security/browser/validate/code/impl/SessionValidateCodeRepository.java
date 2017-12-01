@@ -8,6 +8,9 @@ import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 
+/**
+ * 基于session的验证码存取器
+ */
 @Component
 public class SessionValidateCodeRepository implements ValidateCodeRepository {
     /**

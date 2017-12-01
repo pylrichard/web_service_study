@@ -3,6 +3,9 @@ package com.bd.imooc.security.core.social.support;
 import org.springframework.social.security.SocialAuthenticationFilter;
 import org.springframework.social.security.SpringSocialConfigurer;
 
+/**
+ * 继承默认的第三方登录配置，加入自定义的后处理逻辑
+ */
 public class ImoocSpringSocialConfigurer extends SpringSocialConfigurer {
     private String filterProcessesUrl;
     private SocialAuthenticationFilterPostProcessor socialAuthenticationFilterPostProcessor;

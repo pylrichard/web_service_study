@@ -1,4 +1,4 @@
-package com.bd.imooc.security;
+package com.bd.imooc.security.browser.authorization;
 
 import com.bd.imooc.security.core.authorization.AuthorizeConfigProvider;
 import org.springframework.core.annotation.Order;
@@ -7,17 +7,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.stereotype.Component;
 
+/**
+ * 浏览器环境默认的授权配置，对常见的静态资源，如js、css、图片等不验证身份
+ */
 @Component
-@Order(Integer.MAX_VALUE)
-public class ExampleAuthorizeConfigProvider implements AuthorizeConfigProvider {
+@Order(Integer.MIN_VALUE)
+public class BrowserAuthorizeConfigProvider implements AuthorizeConfigProvider {
     @Override
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
-        //以下URL和方法需要管理员权限
-        config.antMatchers(HttpMethod.GET, "/user/*")
-                .access("hasRole('ADMIN') and hasIpAddress('192.168.8.10')")
-                .anyRequest()
-                .access("@rbacService.hasPermission(request, authentication)");
+        config.antMatchers(HttpMethod.GET,
+                "/**/*.html",
+                "/**/*.js",
+                "/**/*.css",
+                "/**/*.jpg",
+                "/**/*.png",
+                "/**/*.gif").permitAll();
 
-        return true;
+        return false;
     }
 }
