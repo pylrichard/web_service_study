@@ -18,6 +18,6 @@ public class ExampleAuthorizeConfigProvider implements AuthorizeConfigProvider {
                 .anyRequest()
                 .access("@rbacService.hasPermission(request, authentication)");
 
-        return true;
+        return false;
     }
 }

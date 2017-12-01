@@ -27,13 +27,16 @@ public class AppSignUpUtils {
     @Autowired
     private ConnectionFactoryLocator connectionFactoryLocator;
 
+    /**
+     * 缓存第三方用户信息到Redis
+     */
     public void saveConnectionData(WebRequest request, ConnectionData connectionData) {
         //以设备id为key，第三方用户信息为value
         redisTemplate.opsForValue().set(getKey(request), connectionData, 10, TimeUnit.MINUTES);
     }
 
     /**
-     * App环境下实现第三方用户注册
+     * 将缓存的第三方用户信息与系统注册用户信息绑定
      */
     public void doPostSignUp(WebRequest request, String userId) {
         String key = getKey(request);
@@ -48,6 +51,9 @@ public class AppSignUpUtils {
         redisTemplate.delete(key);
     }
 
+    /**
+     * 获取Redis key
+     */
     private String getKey(WebRequest request) {
         String deviceId = request.getHeader("deviceId");
         if (StringUtils.isBlank(deviceId)) {
