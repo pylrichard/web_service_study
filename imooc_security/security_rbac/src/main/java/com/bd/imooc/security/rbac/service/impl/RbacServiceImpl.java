@@ -25,6 +25,10 @@ public class RbacServiceImpl implements RbacService {
                 //读取用户所拥有权限的所有URL
                 Set<String> urls = ((Admin) principal).getUrls();
                 for (String url : urls) {
+                    /*
+                        配置的url形式是/user/*，请求的url形式是/user/1
+                        不能使用String.equals()，使用AntPathMatcher进行模式匹配
+                     */
                     if (antPathMatcher.match(url, request.getRequestURI())) {
                         hasPermission = true;
                         break;

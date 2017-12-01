@@ -9,6 +9,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 /**
  * Example应用的包路径为com.bd.imooc，才能加载认证授权模块(com.bd.imooc.security)
  * 如果包路径为com.bd.imooc.xxx，则无法加载
+ * scanBasePackages = com.bd.imooc.xxx指定加载包路径
  */
 @SpringBootApplication
 @RestController

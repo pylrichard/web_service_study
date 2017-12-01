@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 需要控制权限的资源，以业务人员能看懂的name呈现，实际关联到一个或多个url
- * <p>
+ * 资源表，存储需要控制权限的资源信息，实际关联到一个或多个url，由开发人员维护
  * 树形结构
  */
 @Entity

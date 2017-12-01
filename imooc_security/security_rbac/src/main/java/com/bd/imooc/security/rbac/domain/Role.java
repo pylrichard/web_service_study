@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 角色信息
+ * 角色表，由业务人员维护
  */
 @Entity
 public class Role {

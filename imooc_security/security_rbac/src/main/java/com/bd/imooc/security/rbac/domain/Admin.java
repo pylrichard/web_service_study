@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * 管理员(用户)
+ * 用户表，由业务人员维护
  */
 @Entity
 public class Admin implements UserDetails {
@@ -39,7 +39,7 @@ public class Admin implements UserDetails {
      */
     private String password;
     /**
-     * 用户的所有角色
+     * 用户的所有角色，一对多，前端控制可以选择一个角色还是多个角色
      */
     @OneToMany(mappedBy = "admin", cascade = CascadeType.REMOVE)
     private Set<RoleAdmin> roles = new HashSet<>();
@@ -119,6 +119,7 @@ public class Admin implements UserDetails {
 
     public Set<String> getUrls() {
         init(urls);
+        //lambda表达式
         forEachResource(resource -> urls.addAll(resource.getUrls()));
         return urls;
     }
@@ -131,6 +132,9 @@ public class Admin implements UserDetails {
         }
     }
 
+    /**
+     *
+     */
     private void forEachResource(Consumer<Resource> consumer) {
         for (RoleAdmin role : roles) {
             for (RoleResource resource : role.getRole().getResources()) {

@@ -35,6 +35,7 @@ public class QueryResultConverter {
             }
 
         }
+
         return infos;
     }
 

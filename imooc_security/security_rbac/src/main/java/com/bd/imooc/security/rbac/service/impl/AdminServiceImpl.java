@@ -38,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
     public AdminInfo create(AdminInfo adminInfo) {
         Admin admin = new Admin();
         BeanUtils.copyProperties(adminInfo, admin);
-        admin.setPassword(passwordEncoder.encode("123456"));
+        admin.setPassword(passwordEncoder.encode("Pyl123456"));
         adminRepository.save(admin);
         adminInfo.setId(admin.getId());
         createRoleAdmin(adminInfo, admin);

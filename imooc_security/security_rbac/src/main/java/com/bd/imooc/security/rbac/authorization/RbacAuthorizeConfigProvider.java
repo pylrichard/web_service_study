@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.stereotype.Component;
 
 @Component
+//anyRequest()配置会被之后的配置覆盖，此处需要最终生效
 @Order(Integer.MAX_VALUE)
 public class RbacAuthorizeConfigProvider implements AuthorizeConfigProvider {
     @Override
@@ -20,6 +21,7 @@ public class RbacAuthorizeConfigProvider implements AuthorizeConfigProvider {
                         "/resource")
                 .authenticated()
                 .anyRequest()
+                //连接Spring Security和security_rbac权限模块，进行url权限认证
                 .access("@rbacService.hasPermission(request, authentication)");
 
         return true;
