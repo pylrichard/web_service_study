@@ -11,6 +11,10 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
     <context:annotation-config/>
 
+    <mvc:interceptors>
+        <bean class="com.bd.imooc.permission.rbac.common.HttpInterceptor"/>
+    </mvc:interceptors>
+
     <!-- 启动注解驱动的Spring MVC功能 -->
     <mvc:annotation-driven/>
 
@@ -25,6 +29,8 @@
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
 
     <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+
+    <bean class="com.bd.imooc.permission.rbac.common.ApplicationContextHelper" lazy-init="false"/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/"/>
