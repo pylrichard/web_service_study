@@ -15,6 +15,9 @@
         <bean class="com.bd.imooc.permission.rbac.common.HttpInterceptor"/>
     </mvc:interceptors>
 
+    <!-- 加载js -->
+    <!--<mvc:resources location="/js/" mapping="/js/**"/>-->
+
     <!-- 启动注解驱动的Spring MVC功能 -->
     <mvc:annotation-driven/>
 
