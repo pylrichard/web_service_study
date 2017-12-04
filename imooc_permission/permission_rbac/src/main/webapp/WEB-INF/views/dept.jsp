@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>部门管理</title>
+    <jsp:include page="/common/common.jsp"/>
+    <jsp:include page="/common/page.jsp"/>
 </head>
 <body>
 <script type="application/javascript">
@@ -166,12 +168,13 @@
         }
 
         /**
-         * 加载部门用户列表
+         * 使用列表分页插件加载部门用户列表
          */
         function loadUserList(deptId) {
             var pageSize = $("#pageSize").val();
             var url = "/sys/user/page.json?deptId=" + deptId;
             var pageNo = $("#userPage .pageNo").val() || 1;
+            //发起ajax请求
             $.ajax({
                 url: url,
                 data: {
@@ -184,6 +187,9 @@
             })
         }
 
+        /**
+         * 渲染用户列表和分页信息
+         */
         function renderUserListAndPage(result, url) {
             if (result.ret) {
                 if (result.data.total > 0) {
@@ -218,12 +224,18 @@
                 }
                 var pageSize = $("#pageSize").val();
                 var pageNo = $("#userPage .pageNo").val() || 1;
-                renderPage(url, result.data.total, pageNo, pageSize, result.data.total > 0 ? result.data.data.length : 0, "userPage", renderUserListAndPage);
+                //调用列表分页插件渲染分页列表
+                renderPage(url, result.data.total, pageNo, pageSize,
+                    result.data.total > 0 ? result.data.data.length : 0,
+                    "userPage", renderUserListAndPage);
             } else {
                 showMessage("获取部门下用户列表", result.msg, false);
             }
         }
 
+        /**
+         * 绑定用户添加按钮点击事件
+         */
         $(".user-add").click(function () {
             $("#dialog-user-form").dialog({
                 model: true,
@@ -252,6 +264,9 @@
             });
         });
 
+        /**
+         * 绑定用户编辑按钮点击事件
+         */
         function bindUserClick() {
             $(".user-acl").click(function (e) {
                 e.preventDefault();
@@ -274,6 +289,7 @@
             $(".user-edit").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+                //获取用户id
                 var userId = $(this).attr("data-id");
                 $("#dialog-user-form").dialog({
                     model: true,
@@ -284,7 +300,7 @@
                         recursiveRenderDeptSelect(deptList, 1);
                         $("#userForm")[0].reset();
                         $("#deptSelectId").html(optionStr);
-
+                        //获取用户信息
                         var targetUser = userMap[userId];
                         if (targetUser) {
                             $("#deptSelectId").val(targetUser.deptId);
@@ -301,6 +317,7 @@
                             e.preventDefault();
                             updateUser(false, function (data) {
                                 $("#dialog-user-form").dialog("close");
+                                //关闭用户信息编辑窗口后更新用户列表
                                 loadUserList(lastClickDeptId);
                             }, function (data) {
                                 showMessage("更新用户", data.msg, false);
@@ -368,6 +385,9 @@
             }
         }
 
+        /**
+         * 新增/更新用户信息
+         */
         function updateUser(isCreate, successCallback, failCallback) {
             $.ajax({
                 url: isCreate ? "/sys/user/save.json" : "/sys/user/update.json",

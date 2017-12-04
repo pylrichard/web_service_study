@@ -38,6 +38,9 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
         removeThreadLocalInfo();
     }
 
+    /**
+     * 删除线程缓存中的用户信息和请求信息
+     */
     public void removeThreadLocalInfo() {
         RequestHolder.remove();
     }

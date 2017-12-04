@@ -1,7 +1,7 @@
 package com.bd.imooc.permission.rbac.dao;
 
-import com.mmall.beans.PageQuery;
-import com.mmall.model.SysUser;
+import com.bd.imooc.permission.rbac.beans.PageQuery;
+import com.bd.imooc.permission.rbac.model.SysUser;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -164,59 +164,59 @@
   </update>
 
     <select id="findByKeyword" parameterType="string" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_user
-        WHERE telephone = #{keyword}
-        OR mail = #{keyword}
+        from sys_user
+        where telephone = #{keyword}
+        or mail = #{keyword}
     </select>
 
     <select id="countByMail" parameterType="map" resultType="int">
-        SELECT count(1)
-        FROM sys_user
-        WHERE mail = #{mail}
+        select count(1)
+        from sys_user
+        where mail = #{mail}
         <if test="id != null">
-            AND id != #{id}
+            and id != #{id}
         </if>
     </select>
 
     <select id="countByTelephone" parameterType="map" resultType="int">
-        SELECT count(1)
-        FROM sys_user
-        WHERE telephone = #{telephone}
+        select count(1)
+        from sys_user
+        where telephone = #{telephone}
         <if test="id != null">
-            AND id != #{id}
+            and id != #{id}
         </if>
     </select>
 
     <select id="countByDeptId" parameterType="int" resultType="int">
-    SELECT count(1)
-    FROM sys_user
-    WHERE dept_id = #{deptId}
-  </select>
+        select count(1)
+        from sys_user
+        where dept_id = #{deptId}
+    </select>
 
     <select id="getPageByDeptId" parameterType="map" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_user
-        WHERE dept_id = #{deptId}
-        ORDER BY username ASC
-        LIMIT #{page.offset}, #{page.pageSize}
+        from sys_user
+        where dept_id = #{deptId}
+        order by username asc
+        limit #{page.offset}, #{page.pageSize}
     </select>
 
     <select id="getByIdList" parameterType="map" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_user
-        WHERE id IN
+        from sys_user
+        where id in
         <foreach collection="idList" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
     </select>
 
     <select id="getAll" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_user
+        from sys_user
     </select>
 </mapper>
