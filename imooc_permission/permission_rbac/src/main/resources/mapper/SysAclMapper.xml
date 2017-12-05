@@ -202,25 +202,25 @@
     </select>
 
     <select id="getAll" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_acl
+        from sys_acl
     </select>
 
     <select id="getByIdList" parameterType="map" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_acl
-        WHERE id IN
+        from sys_acl
+        where id in
         <foreach collection="idList" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
     </select>
 
     <select id="getByUrl" parameterType="string" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_acl
-        WHERE url = #{url} <!-- url is not null and url != '' and  #{url} REGEXP url-->
+        from sys_acl
+        where url = #{url}
     </select>
 </mapper>

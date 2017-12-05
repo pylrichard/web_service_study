@@ -10,8 +10,8 @@
         <result column="operate_ip" property="operateIp" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, role_id, user_id, operator, operate_time, operate_ip
-  </sql>
+        id, role_id, user_id, operator, operate_time, operate_ip
+    </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -21,7 +21,7 @@
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sys_role_user
     where id = #{id,jdbcType=INTEGER}
-  </delete>
+    </delete>
     <insert id="insert" parameterType="com.bd.imooc.permission.rbac.model.SysRoleUser">
     insert into sys_role_user (id, role_id, user_id, 
       operator, operate_time, operate_ip
@@ -29,7 +29,7 @@
     values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
       #{operator,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR}
       )
-  </insert>
+    </insert>
     <insert id="insertSelective" parameterType="com.bd.imooc.permission.rbac.model.SysRoleUser">
         insert into sys_role_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -102,24 +102,24 @@
       operate_time = #{operateTime,jdbcType=TIMESTAMP},
       operate_ip = #{operateIp,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
-  </update>
+    </update>
 
     <select id="getRoleIdListByUserId" parameterType="map" resultType="int">
-    SELECT role_id
-    FROM sys_role_user
-    WHERE user_id = #{userId}
-  </select>
+        select role_id
+        from sys_role_user
+        where user_id = #{userId}
+    </select>
 
     <select id="getUserIdListByRoleId" parameterType="map" resultType="int">
-    SELECT user_id
-    FROM sys_role_user
-    WHERE role_id = #{roleId}
-  </select>
+        select user_id
+        from sys_role_user
+        where role_id = #{roleId}
+    </select>
 
     <delete id="deleteByRoleId" parameterType="int">
-    DELETE FROM sys_role_user
-    WHERE role_id = #{roleId}
-  </delete>
+        delete from sys_role_user
+        where role_id = #{roleId}
+    </delete>
 
     <insert id="batchInsert" parameterType="map">
         insert into sys_role_user (role_id, user_id, operator, operate_time, operate_ip)
@@ -131,9 +131,9 @@
     </insert>
 
     <select id="getUserIdListByRoleIdList" parameterType="map" resultType="int">
-        SELECT user_id
-        FROM sys_role_user
-        WHERE role_id IN
+        select user_id
+        from sys_role_user
+        where role_id in
         <foreach collection="roleIdList" item="roleId" open="(" close=")" separator=",">
             #{roleId}
         </foreach>

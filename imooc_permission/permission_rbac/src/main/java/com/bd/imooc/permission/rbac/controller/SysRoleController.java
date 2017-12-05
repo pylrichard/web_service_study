@@ -3,9 +3,7 @@ package com.bd.imooc.permission.rbac.controller;
 import com.bd.imooc.permission.rbac.common.JsonData;
 import com.bd.imooc.permission.rbac.model.SysUser;
 import com.bd.imooc.permission.rbac.param.RoleParam;
-import com.bd.imooc.permission.rbac.service.SysRoleService;
-import com.bd.imooc.permission.rbac.service.SysTreeService;
-import com.bd.imooc.permission.rbac.service.SysUserService;
+import com.bd.imooc.permission.rbac.service.*;
 import com.bd.imooc.permission.rbac.util.StringUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -69,6 +67,7 @@ public class SysRoleController {
                                @RequestParam(value = "aclIds", required = false, defaultValue = "") String aclIds) {
         List<Integer> aclIdList = StringUtil.splitToListInt(aclIds);
         sysRoleAclService.changeRoleAcls(roleId, aclIdList);
+
         return JsonData.success();
     }
 
@@ -77,6 +76,7 @@ public class SysRoleController {
                                 @RequestParam(value = "userIds", required = false, defaultValue = "") String userIds) {
         List<Integer> userIdList = StringUtil.splitToListInt(userIds);
         sysRoleUserService.changeRoleUsers(roleId, userIdList);
+
         return JsonData.success();
     }
 
@@ -85,17 +85,16 @@ public class SysRoleController {
         List<SysUser> selectedUserList = sysRoleUserService.getListByRoleId(roleId);
         List<SysUser> allUserList = sysUserService.getAll();
         List<SysUser> unselectedUserList = Lists.newArrayList();
-
         Set<Integer> selectedUserIdSet = selectedUserList.stream().map(sysUser -> sysUser.getId()).collect(Collectors.toSet());
         for (SysUser sysUser : allUserList) {
             if (sysUser.getStatus() == 1 && !selectedUserIdSet.contains(sysUser.getId())) {
                 unselectedUserList.add(sysUser);
             }
         }
-        //selectedUserList = selectedUserList.stream().filter(sysUser -> sysUser.getStatus() != 1).collect(Collectors.toList());
         Map<String, List<SysUser>> map = Maps.newHashMap();
         map.put("selected", selectedUserList);
         map.put("unselected", unselectedUserList);
+
         return JsonData.success(map);
     }
 }

@@ -1,9 +1,9 @@
 package com.bd.imooc.permission.rbac.dao;
 
-import com.mmall.beans.PageQuery;
-import com.mmall.dto.SearchLogDto;
-import com.mmall.model.SysLog;
-import com.mmall.model.SysLogWithBLOBs;
+import com.bd.imooc.permission.rbac.beans.PageQuery;
+import com.bd.imooc.permission.rbac.dto.SearchLogDto;
+import com.bd.imooc.permission.rbac.model.SysLog;
+import com.bd.imooc.permission.rbac.model.SysLogWithBLOBs;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

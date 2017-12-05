@@ -11,7 +11,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, role_id, acl_id, operator, operate_time, operate_ip
-  </sql>
+    </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -21,7 +21,7 @@
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sys_role_acl
     where id = #{id,jdbcType=INTEGER}
-  </delete>
+    </delete>
     <insert id="insert" parameterType="com.bd.imooc.permission.rbac.model.SysRoleAcl">
     insert into sys_role_acl (id, role_id, acl_id, 
       operator, operate_time, operate_ip
@@ -29,7 +29,7 @@
     values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{aclId,jdbcType=INTEGER}, 
       #{operator,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR}
       )
-  </insert>
+    </insert>
     <insert id="insertSelective" parameterType="com.bd.imooc.permission.rbac.model.SysRoleAcl">
         insert into sys_role_acl
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -102,21 +102,21 @@
       operate_time = #{operateTime,jdbcType=TIMESTAMP},
       operate_ip = #{operateIp,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
-  </update>
+    </update>
 
     <select id="getAclIdListByRoleIdList" parameterType="map" resultType="int">
-        SELECT acl_id
-        FROM sys_role_acl
-        WHERE role_id in
+        select acl_id
+        from sys_role_acl
+        where role_id in
         <foreach collection="roleIdList" item="roleId" open="(" close=")" separator=",">
             #{roleId}
         </foreach>
     </select>
 
     <delete id="deleteByRoleId" parameterType="int">
-    DELETE FROM sys_role_acl
-    WHERE role_id = #{roleId}
-  </delete>
+        delete from sys_role_acl
+        where role_id = #{roleId}
+    </delete>
 
     <insert id="batchInsert" parameterType="map">
         insert into sys_role_acl (role_id, acl_id, operator, operate_time, operate_ip)
@@ -127,8 +127,8 @@
     </insert>
 
     <select id="getRoleIdListByAclId" parameterType="int" resultType="int">
-    SELECT role_id
-    FROM sys_role_acl
-    WHERE acl_id = #{aclId}
-  </select>
+        select role_id
+        from sys_role_acl
+        where acl_id = #{aclId}
+    </select>
 </mapper>

@@ -43,18 +43,19 @@ public class SysTreeService {
             dto.setChecked(true);
             aclDtoList.add(dto);
         }
+
         return aclListToTree(aclDtoList);
     }
 
     public List<AclModuleLevelDto> roleTree(int roleId) {
-        //当前用户已分配的权限点
+        //当前用户分配的权限点
         List<SysAcl> userAclList = sysCoreService.getCurrentUserAclList();
         //当前角色分配的权限点
         List<SysAcl> roleAclList = sysCoreService.getRoleAclList(roleId);
-        //当前系统所有权限点
         List<AclDto> aclDtoList = Lists.newArrayList();
         Set<Integer> userAclIdSet = userAclList.stream().map(sysAcl -> sysAcl.getId()).collect(Collectors.toSet());
         Set<Integer> roleAclIdSet = roleAclList.stream().map(sysAcl -> sysAcl.getId()).collect(Collectors.toSet());
+        //当前系统所有权限点
         List<SysAcl> allAclList = sysAclMapper.getAll();
         for (SysAcl acl : allAclList) {
             AclDto dto = AclDto.adapt(acl);
@@ -86,6 +87,9 @@ public class SysTreeService {
         return aclModuleLevelList;
     }
 
+    /**
+     * 绑定权限模块和权限点
+     */
     public void bindAclsWithOrder(List<AclModuleLevelDto> aclModuleLevelList,
                                   Multimap<Integer, AclDto> moduleIdAclMap) {
         if (CollectionUtils.isEmpty(aclModuleLevelList)) {

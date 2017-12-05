@@ -10,6 +10,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//根据id判断是否相同
 @EqualsAndHashCode(of = {"id"})
 public class SysAcl {
     private Integer id;

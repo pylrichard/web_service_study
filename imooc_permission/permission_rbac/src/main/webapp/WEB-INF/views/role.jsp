@@ -3,15 +3,6 @@
 <head>
     <title>角色</title>
     <jsp:include page="/common/common.jsp"/>
-    <style type="text/css">
-        .bootstrap-duallistbox-container .moveall, .bootstrap-duallistbox-container .removeall {
-            width: 50%;
-        }
-
-        .bootstrap-duallistbox-container .move, .bootstrap-duallistbox-container .remove {
-            width: 49%;
-        }
-    </style>
 </head>
 <body class="no-skin" youdao="bind" style="background: white">
 <input id="gritter-light" checked="" type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -165,7 +156,7 @@
             check: {
                 enable: true,
                 chkDisabledInherit: true,
-                chkboxType: {"Y": "ps", "N": "ps"}, //auto check 父节点 子节点
+                chkboxType: {"Y": "ps", "N": "ps"},
                 autoCheckTrigger: true
             },
             data: {
@@ -179,7 +170,8 @@
             }
         };
 
-        function onClickTreeNode(e, treeId, treeNode) { // 绑定单击事件
+        //绑定单击事件
+        function onClickTreeNode(e, treeId, treeNode) {
             var zTree = $.fn.zTree.getZTreeObj("roleAclTree");
             zTree.expandNode(treeNode);
         }
@@ -303,7 +295,6 @@
         }
 
         function recursivePrepareTreeData(aclModuleList) {
-            // prepare nodeMap
             if (aclModuleList && aclModuleList.length > 0) {
                 $(aclModuleList).each(function (i, aclModule) {
                     var hasChecked = false;
@@ -330,17 +321,17 @@
                             name: aclModule.name,
                             open: hasChecked
                         };
-                        var tempAclModule = nodeMap[modulePrefix + aclModule.id];
-                        while (hasChecked && tempAclModule) {
-                            if (tempAclModule) {
-                                nodeMap[tempAclModule.id] = {
-                                    id: tempAclModule.id,
-                                    pId: tempAclModule.pId,
-                                    name: tempAclModule.name,
+                        var curAclModule = nodeMap[modulePrefix + aclModule.id];
+                        while (hasChecked && curAclModule) {
+                            if (curAclModule) {
+                                nodeMap[curAclModule.id] = {
+                                    id: curAclModule.id,
+                                    pId: curAclModule.pId,
+                                    name: curAclModule.name,
                                     open: true
                                 }
                             }
-                            tempAclModule = nodeMap[tempAclModule.pId];
+                            curAclModule = nodeMap[curAclModule.pId];
                         }
                     }
                     recursivePrepareTreeData(aclModule.aclModuleList);
@@ -375,7 +366,7 @@
         $(".saveRoleAcl").click(function (e) {
             e.preventDefault();
             if (lastRoleId == -1) {
-                showMessage("保存角色与权限点的关系", "请现在左侧选择需要操作的角色", false);
+                showMessage("保存角色与权限点的关系", "先在左侧选择需要操作的角色", false);
                 return;
             }
             $.ajax({
