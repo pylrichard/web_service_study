@@ -179,14 +179,14 @@
     </select>
 
     <select id="getAllAclModule" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_acl_module
+        from sys_acl_module
     </select>
 
     <select id="countByParentId" parameterType="int" resultType="int">
-    SELECT count(1)
-    FROM sys_acl_module
-    WHERE parent_id = #{aclModuleId}
-  </select>
+        select count(1)
+        from sys_acl_module
+        where parent_id = #{aclModuleId}
+    </select>
 </mapper>
