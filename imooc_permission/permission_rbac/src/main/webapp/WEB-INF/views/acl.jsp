@@ -543,7 +543,9 @@
                 }
                 var pageSize = $("#pageSize").val();
                 var pageNo = $("#aclPage .pageNo").val() || 1;
-                renderPage(url, result.data.total, pageNo, pageSize, result.data.total > 0 ? result.data.data.length : 0, "aclPage", renderAclListAndPage);
+                renderPage(url, result.data.total,
+                    pageNo, pageSize, result.data.total > 0 ? result.data.data.length : 0,
+                    "aclPage", renderAclListAndPage);
             } else {
                 showMessage("获取权限点列表", result.msg, false);
             }
