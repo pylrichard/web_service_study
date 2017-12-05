@@ -128,25 +128,25 @@
   </update>
 
     <select id="getAll" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_role
+        from sys_role
     </select>
 
     <select id="countByName" parameterType="map" resultType="int">
-        SELECT count(1)
-        FROM sys_role
-        WHERE name = #{name}
+        select count(1)
+        from sys_role
+        where name = #{name}
         <if test="id != null">
-            AND id != #{id}
+            and id != #{id}
         </if>
     </select>
 
     <select id="getByIdList" parameterType="map" resultMap="BaseResultMap">
-        SELECT
+        select
         <include refid="Base_Column_List"/>
-        FROM sys_role
-        WHERE id IN
+        from sys_role
+        where id in
         <foreach collection="idList" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>

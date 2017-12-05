@@ -1,6 +1,6 @@
 package com.bd.imooc.permission.rbac.dao;
 
-import com.mmall.model.SysRole;
+import com.bd.imooc.permission.rbac.model.SysRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
