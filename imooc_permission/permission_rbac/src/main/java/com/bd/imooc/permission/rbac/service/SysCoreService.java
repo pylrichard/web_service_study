@@ -127,7 +127,8 @@ public class SysCoreService {
         if (StringUtils.isBlank(cacheValue)) {
             List<SysAcl> aclList = getCurrentUserAclList();
             if (CollectionUtils.isNotEmpty(aclList)) {
-                sysCacheService.saveCache(JsonMapper.obj2String(aclList), 600, CacheKeyConstants.USER_ACLS, String.valueOf(userId));
+                sysCacheService.saveCache(JsonMapper.obj2String(aclList), 600,
+                        CacheKeyConstants.USER_ACLS, String.valueOf(userId));
             }
             return aclList;
         }
