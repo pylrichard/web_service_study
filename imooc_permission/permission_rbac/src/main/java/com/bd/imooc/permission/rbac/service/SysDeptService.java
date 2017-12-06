@@ -55,9 +55,10 @@ public class SysDeptService {
         }
         SysDept before = sysDeptMapper.selectByPrimaryKey(param.getId());
         Preconditions.checkNotNull(before, "待更新的部门不存在");
-        SysDept after = SysDept.builder().id(param.getId())
+        SysDept after = SysDept.builder()
                 .name(param.getName()).parentId(param.getParentId())
                 .seq(param.getSeq()).remark(param.getRemark()).build();
+        after.setId(param.getId());
         after.setLevel(LevelUtil.calculateLevel(getLevel(param.getParentId()), param.getParentId()));
         after.setOperator(RequestHolder.getCurrentUser().getUsername());
         after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));

@@ -17,10 +17,10 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, type, target_id, operator, operate_time, operate_ip, status
-  </sql>
+    </sql>
     <sql id="Blob_Column_List">
     old_value, new_value
-  </sql>
+    </sql>
     <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -32,7 +32,7 @@
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sys_log
     where id = #{id,jdbcType=INTEGER}
-  </delete>
+    </delete>
     <insert id="insert" parameterType="com.bd.imooc.permission.rbac.model.SysLogWithBLOBs">
     insert into sys_log (id, type, target_id, 
       operator, operate_time, operate_ip, 
@@ -42,7 +42,7 @@
       #{operator,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR}, 
       #{status,jdbcType=INTEGER}, #{oldValue,jdbcType=LONGVARCHAR}, #{newValue,jdbcType=LONGVARCHAR}
       )
-  </insert>
+    </insert>
     <insert id="insertSelective" parameterType="com.bd.imooc.permission.rbac.model.SysLogWithBLOBs">
         insert into sys_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -145,7 +145,7 @@
       old_value = #{oldValue,jdbcType=LONGVARCHAR},
       new_value = #{newValue,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
-  </update>
+    </update>
     <update id="updateByPrimaryKey" parameterType="com.bd.imooc.permission.rbac.model.SysLog">
     update sys_log
     set type = #{type,jdbcType=INTEGER},
@@ -155,42 +155,42 @@
       operate_ip = #{operateIp,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
-  </update>
+    </update>
 
     <select id="countBySearchDto" parameterType="map" resultType="int">
-        SELECT count(1)
-        FROM sys_log
+        select count(1)
+        from sys_log
         <include refid="queryConditions"/>
     </select>
 
     <select id="getPageListBySearchDto" parameterType="map" resultMap="ResultMapWithBLOBs">
-        SELECT<include refid="Base_Column_List"/>,
+        select<include refid="Base_Column_List"/>,
         <include refid="Blob_Column_List"/>
-        FROM sys_log
+        from sys_log
         <include refid="queryConditions"/>
-        ORDER BY operate_time DESC
+        order by operate_time desc
         limit #{page.offset}, #{page.pageSize}
     </select>
 
     <sql id="queryConditions">
         <where>
             <if test="dto.type != null">
-                AND type = #{dto.type}
+                and type = #{dto.type}
             </if>
             <if test="dto.beforeSeg != null and dto.beforeSeg != ''">
-                AND old_value like #{dto.beforeSeg}
+                and old_value like #{dto.beforeSeg}
             </if>
             <if test="dto.afterSeg != null and dto.afterSeg != ''">
-                AND new_value like #{dto.afterSeg}
+                and new_value like #{dto.afterSeg}
             </if>
             <if test="dto.operator != null and dto.operator != ''">
-                AND operator like #{dto.operator}
+                and operator like #{dto.operator}
             </if>
             <if test="dto.fromTime != null">
-                AND operate_time &gt;= #{dto.fromTime}
+                and operate_time &gt;= #{dto.fromTime}
             </if>
             <if test="dto.toTime != null">
-                AND operate_time &lt;= #{dto.toTime}
+                and operate_time &lt;= #{dto.toTime}
             </if>
         </where>
     </sql>

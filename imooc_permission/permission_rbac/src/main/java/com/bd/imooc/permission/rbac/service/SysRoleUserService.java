@@ -1,15 +1,11 @@
 package com.bd.imooc.permission.rbac.service;
 
-import com.bd.imooc.permission.rbac.beans.LogType;
 import com.bd.imooc.permission.rbac.common.RequestHolder;
-import com.bd.imooc.permission.rbac.dao.SysLogMapper;
 import com.bd.imooc.permission.rbac.dao.SysRoleUserMapper;
 import com.bd.imooc.permission.rbac.dao.SysUserMapper;
-import com.bd.imooc.permission.rbac.model.SysLogWithBLOBs;
 import com.bd.imooc.permission.rbac.model.SysRoleUser;
 import com.bd.imooc.permission.rbac.model.SysUser;
 import com.bd.imooc.permission.rbac.util.IpUtil;
-import com.bd.imooc.permission.rbac.util.JsonMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
@@ -28,7 +24,7 @@ public class SysRoleUserService {
     @Resource
     private SysUserMapper sysUserMapper;
     @Resource
-    private SysLogMapper sysLogMapper;
+    private SysLogService sysLogService;
 
     public List<SysUser> getListByRoleId(int roleId) {
         List<Integer> userIdList = sysRoleUserMapper.getUserIdListByRoleId(roleId);
@@ -50,7 +46,7 @@ public class SysRoleUserService {
             }
         }
         updateRoleUsers(roleId, userIdList);
-        saveRoleUserLog(roleId, originUserIdList, userIdList);
+        sysLogService.saveRoleUserLog(roleId, originUserIdList, userIdList);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -68,18 +64,5 @@ public class SysRoleUserService {
             roleUserList.add(roleUser);
         }
         sysRoleUserMapper.batchInsert(roleUserList);
-    }
-
-    private void saveRoleUserLog(int roleId, List<Integer> before, List<Integer> after) {
-        SysLogWithBLOBs sysLog = new SysLogWithBLOBs();
-        sysLog.setType(LogType.TYPE_ROLE_USER);
-        sysLog.setTargetId(roleId);
-        sysLog.setOldValue(before == null ? "" : JsonMapper.obj2String(before));
-        sysLog.setNewValue(after == null ? "" : JsonMapper.obj2String(after));
-        sysLog.setOperator(RequestHolder.getCurrentUser().getUsername());
-        sysLog.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
-        sysLog.setOperateTime(new Date());
-        sysLog.setStatus(1);
-        sysLogMapper.insertSelective(sysLog);
     }
 }

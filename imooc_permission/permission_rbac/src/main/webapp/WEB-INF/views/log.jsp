@@ -16,6 +16,7 @@
         </small>
     </h1>
 </div>
+
 <div class="main-content-inner">
     <div class="col-sm-12">
         <div class="col-xs-12">
@@ -116,9 +117,6 @@
     </td>
 </tr>
 {{/logList}}
-
-
-
 </script>
 
 <script type="text/javascript">
@@ -234,7 +232,8 @@
         function bindLogClick() {
             $(".log-edit").click(function (e) {
                 e.preventDefault();
-                var logId = $(this).attr("data-id"); // 选中的log id
+                //选中的log id
+                var logId = $(this).attr("data-id");
                 console.log(logId);
                 if (confirm("确定要还原这个操作吗?")) {
                     $.ajax({
@@ -257,13 +256,13 @@
 
         Date.prototype.Format = function (fmt) { //author: meizz
             var o = {
-                "M+": this.getMonth() + 1, //月份
-                "d+": this.getDate(), //日
-                "h+": this.getHours(), //小时
-                "m+": this.getMinutes(), //分
-                "s+": this.getSeconds(), //秒
-                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-                "S": this.getMilliseconds() //毫秒
+                "M+": this.getMonth() + 1,
+                "d+": this.getDate(),
+                "h+": this.getHours(),
+                "m+": this.getMinutes(),
+                "s+": this.getSeconds(),
+                "q+": Math.floor((this.getMonth() + 3) / 3),
+                "S": this.getMilliseconds()
             };
             if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
             for (var k in o)
@@ -275,46 +274,34 @@
             var reg = null,
                 formatted = '',
                 pad = 0,
-                PADDING = '    '; // one can also use '\t' or a different number of spaces
+                PADDING = '    ';
 
-            // optional settings
             options = options || {};
-            // remove newline where '{' or '[' follows ':'
             options.newlineAfterColonIfBeforeBraceOrBracket = (options.newlineAfterColonIfBeforeBraceOrBracket === true) ? true : false;
-            // use a space after a colon
             options.spaceAfterColon = (options.spaceAfterColon === false) ? false : true;
 
-            // begin formatting...
             if (typeof json !== 'string') {
-                // make sure we start with the JSON as a string
                 json = JSON.stringify(json);
             } else {
-                // is already a string, so parse and re-stringify in order to remove extra whitespace
                 json = JSON.parse(json);
                 json = JSON.stringify(json);
             }
 
-            // add newline before and after curly braces
             reg = /([\{\}])/g;
             json = json.replace(reg, '\r\n$1\r\n');
 
-            // add newline before and after square brackets
             reg = /([\[\]])/g;
             json = json.replace(reg, '\r\n$1\r\n');
 
-            // add newline after comma
             reg = /(\,)/g;
             json = json.replace(reg, '$1\r\n');
 
-            // remove multiple newlines
             reg = /(\r\n\r\n)/g;
             json = json.replace(reg, '\r\n');
 
-            // remove newlines before commas
             reg = /\r\n\,/g;
             json = json.replace(reg, ',');
 
-            // optional formatting...
             if (!options.newlineAfterColonIfBeforeBraceOrBracket) {
                 reg = /\:\r\n\{/g;
                 json = json.replace(reg, ':{');

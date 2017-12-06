@@ -56,9 +56,10 @@ public class SysAclModuleService {
         }
         SysAclModule before = sysAclModuleMapper.selectByPrimaryKey(param.getId());
         Preconditions.checkNotNull(before, "待更新的权限模块不存在");
-        SysAclModule after = SysAclModule.builder().id(param.getId()).name(param.getName())
+        SysAclModule after = SysAclModule.builder().name(param.getName())
                 .parentId(param.getParentId()).seq(param.getSeq())
                 .status(param.getStatus()).remark(param.getRemark()).build();
+        after.setId(param.getId());
         after.setLevel(LevelUtil.calculateLevel(getLevel(param.getParentId()), param.getParentId()));
         after.setOperator(RequestHolder.getCurrentUser().getUsername());
         after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));

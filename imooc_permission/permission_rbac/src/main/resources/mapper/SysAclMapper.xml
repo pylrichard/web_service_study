@@ -18,7 +18,7 @@
     <sql id="Base_Column_List">
     id, code, name, acl_module_id, url, type, status, seq, remark, operator, operate_time, 
     operate_ip
-  </sql>
+    </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -28,7 +28,7 @@
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sys_acl
     where id = #{id,jdbcType=INTEGER}
-  </delete>
+    </delete>
     <insert id="insert" parameterType="com.bd.imooc.permission.rbac.model.SysAcl">
     insert into sys_acl (id, code, name, 
       acl_module_id, url, type, 
@@ -40,7 +40,8 @@
       #{status,jdbcType=INTEGER}, #{seq,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
       #{operator,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR}
       )
-  </insert>
+    </insert>
+    <!-- keyProperty="id" useGeneratedKeys="true"> 返回主键 -->
     <insert id="insertSelective" parameterType="com.bd.imooc.permission.rbac.model.SysAcl" keyProperty="id"
             useGeneratedKeys="true">
         insert into sys_acl

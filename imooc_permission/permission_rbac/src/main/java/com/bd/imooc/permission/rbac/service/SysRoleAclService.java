@@ -1,13 +1,9 @@
 package com.bd.imooc.permission.rbac.service;
 
-import com.bd.imooc.permission.rbac.beans.LogType;
 import com.bd.imooc.permission.rbac.common.RequestHolder;
-import com.bd.imooc.permission.rbac.dao.SysLogMapper;
 import com.bd.imooc.permission.rbac.dao.SysRoleAclMapper;
-import com.bd.imooc.permission.rbac.model.SysLogWithBLOBs;
 import com.bd.imooc.permission.rbac.model.SysRoleAcl;
 import com.bd.imooc.permission.rbac.util.IpUtil;
-import com.bd.imooc.permission.rbac.util.JsonMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
@@ -24,7 +20,7 @@ public class SysRoleAclService {
     @Resource
     private SysRoleAclMapper sysRoleAclMapper;
     @Resource
-    private SysLogMapper sysLogMapper;
+    private SysLogService sysLogService;
 
     public void changeRoleAcls(Integer roleId, List<Integer> aclIdList) {
         List<Integer> originAclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(Lists.newArrayList(roleId));
@@ -37,7 +33,7 @@ public class SysRoleAclService {
             }
         }
         updateRoleAcls(roleId, aclIdList);
-        saveRoleAclLog(roleId, originAclIdList, aclIdList);
+        sysLogService.saveRoleAclLog(roleId, originAclIdList, aclIdList);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -55,18 +51,5 @@ public class SysRoleAclService {
             roleAclList.add(roleAcl);
         }
         sysRoleAclMapper.batchInsert(roleAclList);
-    }
-
-    private void saveRoleAclLog(int roleId, List<Integer> before, List<Integer> after) {
-        SysLogWithBLOBs sysLog = new SysLogWithBLOBs();
-        sysLog.setType(LogType.TYPE_ROLE_ACL);
-        sysLog.setTargetId(roleId);
-        sysLog.setOldValue(before == null ? "" : JsonMapper.obj2String(before));
-        sysLog.setNewValue(after == null ? "" : JsonMapper.obj2String(after));
-        sysLog.setOperator(RequestHolder.getCurrentUser().getUsername());
-        sysLog.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
-        sysLog.setOperateTime(new Date());
-        sysLog.setStatus(1);
-        sysLogMapper.insertSelective(sysLog);
     }
 }

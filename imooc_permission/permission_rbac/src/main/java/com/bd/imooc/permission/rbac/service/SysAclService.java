@@ -55,10 +55,11 @@ public class SysAclService {
         }
         SysAcl before = sysAclMapper.selectByPrimaryKey(param.getId());
         Preconditions.checkNotNull(before, "待更新的权限点不存在");
-        SysAcl after = SysAcl.builder().id(param.getId()).name(param.getName())
+        SysAcl after = SysAcl.builder().name(param.getName())
                 .aclModuleId(param.getAclModuleId()).url(param.getUrl())
                 .type(param.getType()).status(param.getStatus()).seq(param.getSeq())
                 .remark(param.getRemark()).build();
+        after.setId(param.getId());
         after.setOperator(RequestHolder.getCurrentUser().getUsername());
         after.setOperateTime(new Date());
         after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));

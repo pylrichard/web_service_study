@@ -63,10 +63,11 @@ public class SysUserService {
         }
         SysUser before = sysUserMapper.selectByPrimaryKey(param.getId());
         Preconditions.checkNotNull(before, "待更新的用户不存在");
-        SysUser after = SysUser.builder().id(param.getId()).username(param.getUsername())
+        SysUser after = SysUser.builder().username(param.getUsername())
                 .telephone(param.getTelephone()).mail(param.getMail())
                 .deptId(param.getDeptId()).status(param.getStatus())
                 .remark(param.getRemark()).build();
+        after.setId(param.getId());
         after.setOperator(RequestHolder.getCurrentUser().getUsername());
         after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         after.setOperateTime(new Date());

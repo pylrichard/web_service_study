@@ -56,9 +56,10 @@ public class SysRoleService {
         }
         SysRole before = sysRoleMapper.selectByPrimaryKey(param.getId());
         Preconditions.checkNotNull(before, "待更新的角色不存在");
-        SysRole after = SysRole.builder().id(param.getId()).name(param.getName())
+        SysRole after = SysRole.builder().name(param.getName())
                 .status(param.getStatus()).type(param.getType())
                 .remark(param.getRemark()).build();
+        after.setId(param.getId());
         after.setOperator(RequestHolder.getCurrentUser().getUsername());
         after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         after.setOperateTime(new Date());
