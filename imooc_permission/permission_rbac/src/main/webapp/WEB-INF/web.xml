@@ -86,7 +86,7 @@
         <url-pattern>/admin/*</url-pattern>
     </filter-mapping>
 
-    <!-- 拦截权限控制请求 -->
+    <!-- 拦截权限控制请求，在loginFilter之后 -->
     <filter>
         <filter-name>aclControlFilter</filter-name>
         <filter-class>com.bd.imooc.permission.rbac.filter.AclControlFilter</filter-class>
@@ -95,6 +95,7 @@
             <param-value>true</param-value>
         </init-param>
         <init-param>
+            <!-- AclControlFilter.init()中使用 -->
             <param-name>exclusionUrls</param-name>
             <param-value>/sys/user/noAuth.page,/login.page</param-value>
         </init-param>

@@ -83,6 +83,9 @@ public class SysCoreService {
         return false;
     }
 
+    /**
+     * 判断是否拥有访问url的权限
+     */
     public boolean hasUrlAcl(String url) {
         if (isSuperAdmin()) {
             return true;
@@ -93,22 +96,28 @@ public class SysCoreService {
         }
         List<SysAcl> userAclList = getCurrentUserAclListFromCache();
         Set<Integer> userAclIdSet = userAclList.stream().map(acl -> acl.getId()).collect(Collectors.toSet());
+        //是否拥有有效权限点
         boolean hasValidAcl = false;
-        //只要有一个权限点有权限，就认为有访问权限
+        /*
+            只要有一个权限点有权限，就认为有访问权限
+         */
         for (SysAcl acl : aclList) {
-            //判断一个用户是否具有某个权限点的访问权限
             if (acl == null || acl.getStatus() != 1) {
+                //权限点无效
                 continue;
             }
             hasValidAcl = true;
+            //判断用户拥有的权限点是否包含要访问的有效权限点
             if (userAclIdSet.contains(acl.getId())) {
                 return true;
             }
         }
+        //没有有效的权限点
         if (!hasValidAcl) {
             return true;
         }
 
+        //用户没有要访问的有效权限点的访问权限
         return false;
     }
 

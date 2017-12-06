@@ -222,5 +222,7 @@
         <include refid="Base_Column_List"/>
         from sys_acl
         where url = #{url}
+        -- url如果是动态生成的，要进行正则匹配
+        <!-- url is not null and url != '' and  #{url} REGEXP url -->
     </select>
 </mapper>
