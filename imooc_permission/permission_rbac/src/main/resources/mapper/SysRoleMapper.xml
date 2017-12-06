@@ -125,7 +125,7 @@
       operate_time = #{operateTime,jdbcType=TIMESTAMP},
       operate_ip = #{operateIp,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
-  </update>
+    </update>
 
     <select id="getAll" resultMap="BaseResultMap">
         select

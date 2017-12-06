@@ -79,6 +79,7 @@ public class SysRoleService {
         if (CollectionUtils.isEmpty(roleIdList)) {
             return Lists.newArrayList();
         }
+
         return sysRoleMapper.getByIdList(roleIdList);
     }
 
@@ -87,6 +88,7 @@ public class SysRoleService {
         if (CollectionUtils.isEmpty(roleIdList)) {
             return Lists.newArrayList();
         }
+
         return sysRoleMapper.getByIdList(roleIdList);
     }
 
@@ -99,6 +101,7 @@ public class SysRoleService {
         if (CollectionUtils.isEmpty(userIdList)) {
             return Lists.newArrayList();
         }
+
         return sysUserMapper.getByIdList(userIdList);
     }
 }

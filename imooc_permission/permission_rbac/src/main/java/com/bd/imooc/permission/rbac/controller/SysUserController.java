@@ -54,6 +54,9 @@ public class SysUserController {
         return JsonData.success(result);
     }
 
+    /**
+     * 获取用户拥有的角色和权限
+     */
     @GetMapping("/acls.json")
     public JsonData acls(@RequestParam("userId") int userId) {
         Map<String, Object> map = Maps.newHashMap();

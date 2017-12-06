@@ -45,6 +45,9 @@ public class SysAclController {
         return JsonData.success(sysAclService.getPageByAclModuleId(aclModuleId, pageQuery));
     }
 
+    /**
+     * 获取权限分配的角色和用户
+     */
     @GetMapping("acls.json")
     public JsonData acls(@RequestParam("aclId") int aclId) {
         Map<String, Object> map = Maps.newHashMap();

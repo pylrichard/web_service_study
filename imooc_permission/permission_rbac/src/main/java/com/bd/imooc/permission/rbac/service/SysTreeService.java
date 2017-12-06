@@ -34,6 +34,9 @@ public class SysTreeService {
     @Resource
     private SysAclMapper sysAclMapper;
 
+    /**
+     * 获取用户权限树形结构
+     */
     public List<AclModuleLevelDto> userAclTree(int userId) {
         List<SysAcl> userAclList = sysCoreService.getUserAclList(userId);
         List<AclDto> aclDtoList = Lists.newArrayList();
@@ -47,6 +50,9 @@ public class SysTreeService {
         return aclListToTree(aclDtoList);
     }
 
+    /**
+     * 获取角色权限树形结构
+     */
     public List<AclModuleLevelDto> roleTree(int roleId) {
         //当前用户分配的权限点
         List<SysAcl> userAclList = sysCoreService.getCurrentUserAclList();
