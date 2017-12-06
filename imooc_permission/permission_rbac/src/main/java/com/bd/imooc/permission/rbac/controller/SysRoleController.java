@@ -57,6 +57,9 @@ public class SysRoleController {
         return JsonData.success(sysRoleService.getAll());
     }
 
+    /**
+     * 获取角色与权限信息
+     */
     @GetMapping("/roleTree.json")
     public JsonData roleTree(@RequestParam("roleId") int roleId) {
         return JsonData.success(sysTreeService.roleTree(roleId));
@@ -80,6 +83,9 @@ public class SysRoleController {
         return JsonData.success();
     }
 
+    /**
+     * 获取角色与用户信息
+     */
     @GetMapping("/users.json")
     public JsonData users(@RequestParam("roleId") int roleId) {
         List<SysUser> selectedUserList = sysRoleUserService.getListByRoleId(roleId);
@@ -91,6 +97,7 @@ public class SysRoleController {
                 unselectedUserList.add(sysUser);
             }
         }
+        selectedUserList = selectedUserList.stream().filter(sysUser -> sysUser.getStatus() != 1).collect(Collectors.toList());
         Map<String, List<SysUser>> map = Maps.newHashMap();
         map.put("selected", selectedUserList);
         map.put("unselected", unselectedUserList);

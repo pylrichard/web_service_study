@@ -406,6 +406,9 @@
             })
         }
 
+        /**
+         * 角色和权限与角色和用户Tab切换
+         */
         $("#roleTab a[data-toggle='tab']").on("shown.bs.tab", function (e) {
             if (lastRoleId == -1) {
                 showMessage("加载角色关系", "请先在左侧选择操作的角色", false);
@@ -420,6 +423,9 @@
             }
         });
 
+        /**
+         * 获取角色和用户信息
+         */
         function loadRoleUser(selectedRoleId) {
             $.ajax({
                 url: "/sys/role/users.json",
@@ -450,6 +456,9 @@
             });
         }
 
+        /**
+         * 保存角色和用户信息
+         */
         $(".saveRoleUser").click(function (e) {
             e.preventDefault();
             if (lastRoleId == -1) {
@@ -460,6 +469,7 @@
                 url: "/sys/role/changeUsers.json",
                 data: {
                     roleId: lastRoleId,
+                    //注意处理空值
                     userIds: $("#roleUserList").val() ? $("#roleUserList").val().join(",") : ''
                 },
                 type: 'POST',

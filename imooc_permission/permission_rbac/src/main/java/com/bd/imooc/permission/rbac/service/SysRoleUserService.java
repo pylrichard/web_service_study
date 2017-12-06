@@ -35,6 +35,7 @@ public class SysRoleUserService {
         if (CollectionUtils.isEmpty(userIdList)) {
             return Lists.newArrayList();
         }
+
         return sysUserMapper.getByIdList(userIdList);
     }
 
@@ -52,17 +53,18 @@ public class SysRoleUserService {
         saveRoleUserLog(roleId, originUserIdList, userIdList);
     }
 
-    @Transactional
-    private void updateRoleUsers(int roleId, List<Integer> userIdList) {
+    @Transactional(rollbackFor = Exception.class)
+    public void updateRoleUsers(int roleId, List<Integer> userIdList) {
         sysRoleUserMapper.deleteByRoleId(roleId);
-
         if (CollectionUtils.isEmpty(userIdList)) {
             return;
         }
         List<SysRoleUser> roleUserList = Lists.newArrayList();
         for (Integer userId : userIdList) {
-            SysRoleUser roleUser = SysRoleUser.builder().roleId(roleId).userId(userId).operator(RequestHolder.getCurrentUser().getUsername())
-                    .operateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest())).operateTime(new Date()).build();
+            SysRoleUser roleUser = SysRoleUser.builder().roleId(roleId).userId(userId)
+                    .operator(RequestHolder.getCurrentUser().getUsername())
+                    .operateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()))
+                    .operateTime(new Date()).build();
             roleUserList.add(roleUser);
         }
         sysRoleUserMapper.batchInsert(roleUserList);
