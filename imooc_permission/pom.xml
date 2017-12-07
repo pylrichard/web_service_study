@@ -15,5 +15,6 @@
 
     <modules>
         <module>permission_rbac</module>
+        <module>permission_security</module>
     </modules>
 </project>
