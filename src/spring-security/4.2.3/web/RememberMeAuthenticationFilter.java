@@ -79,7 +79,7 @@ public class RememberMeAuthenticationFilter extends GenericFilterBean implements
 		HttpServletResponse response = (HttpServletResponse) res;
 
 		if (SecurityContextHolder.getContext().getAuthentication() == null) {
-		    //调用AbstractRememberMeServices.autoLogin()
+		    //调用AbstractRememberMeServices.autoLogin()，如果没有进行认证，执行自动登录
 			Authentication rememberMeAuth = rememberMeServices.autoLogin(request,
 					response);
 

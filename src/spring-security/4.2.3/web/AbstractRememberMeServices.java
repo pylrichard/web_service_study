@@ -60,6 +60,7 @@ public abstract class AbstractRememberMeServices implements RememberMeServices,
 	private UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
 	private AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
 
+    //cookie名称
 	private String cookieName = SPRING_SECURITY_REMEMBER_ME_COOKIE_KEY;
 	private String cookieDomain;
 	private String parameter = DEFAULT_PARAMETER;
@@ -94,6 +95,7 @@ public abstract class AbstractRememberMeServices implements RememberMeServices,
 	 */
 	public final Authentication autoLogin(HttpServletRequest request,
 			HttpServletResponse response) {
+        //判断是否有名称为remember-me的cookie
 		String rememberMeCookie = extractRememberMeCookie(request);
 
 		if (rememberMeCookie == null) {
@@ -111,8 +113,9 @@ public abstract class AbstractRememberMeServices implements RememberMeServices,
 		UserDetails user = null;
 
 		try {
+            //对cookie进行解码得到用户信息
 			String[] cookieTokens = decodeCookie(rememberMeCookie);
-			//调用PersistentTokenBasedRememberMeServices.processAutoLoginCookie()
+            //调用PersistentTokenBasedRememberMeServices.processAutoLoginCookie()
 			user = processAutoLoginCookie(cookieTokens, request, response);
 			userDetailsChecker.check(user);
 
@@ -157,6 +160,7 @@ public abstract class AbstractRememberMeServices implements RememberMeServices,
 			return null;
 		}
 
+        //遍历所有的cookie
 		for (Cookie cookie : cookies) {
 			if (cookieName.equals(cookie.getName())) {
 				return cookie.getValue();
@@ -271,13 +275,13 @@ public abstract class AbstractRememberMeServices implements RememberMeServices,
 	 */
 	public final void loginSuccess(HttpServletRequest request,
 			HttpServletResponse response, Authentication successfulAuthentication) {
-
+        //判断request的参数是否包含remember-me
 		if (!rememberMeRequested(request, parameter)) {
 			logger.debug("Remember-me login not requested.");
 			return;
 		}
 
-		//调用PersistentTokenBasedRememberMeServices.onLoginSuccess()
+        //参数包含remember-me，调用PersistentTokenBasedRememberMeServices.onLoginSuccess()
 		onLoginSuccess(request, response, successfulAuthentication);
 	}
 
@@ -308,6 +312,7 @@ public abstract class AbstractRememberMeServices implements RememberMeServices,
 
 		String paramValue = request.getParameter(parameter);
 
+        //判断request的remember-me参数是否为true/on/yes/1
 		if (paramValue != null) {
 			if (paramValue.equalsIgnoreCase("true") || paramValue.equalsIgnoreCase("on")
 					|| paramValue.equalsIgnoreCase("yes") || paramValue.equals("1")) {
