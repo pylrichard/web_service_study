@@ -29,6 +29,7 @@
         <!-- 注意Spring Boot与Spring的版本匹配，否则编译会报错，避免出现2个版本的Spring -->
         <spring.version>4.3.12.RELEASE</spring.version>
         <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
+        <shiro.version>1.2.3</shiro.version>
         <es.version>5.6.2</es.version>
         <junit.version>4.12</junit.version>
         <mysql-connector.version>5.1.44</mysql-connector.version>
@@ -37,6 +38,7 @@
         <druid.version>1.1.3</druid.version>
         <rocketmq.version>4.0.0-incubating</rocketmq.version>
         <commons-lang3.version>3.5</commons-lang3.version>
+        <lombok.version>1.16.18</lombok.version>
     </properties>
 
     <dependencies>
