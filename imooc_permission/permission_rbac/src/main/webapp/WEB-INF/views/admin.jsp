@@ -53,9 +53,7 @@
                 </li>
             </ul>
         </div>
-
     </div>
-
 </div>
 
 <div class="main-container" id="main-container">

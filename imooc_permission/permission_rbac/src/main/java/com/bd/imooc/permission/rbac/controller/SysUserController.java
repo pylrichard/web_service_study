@@ -35,20 +35,20 @@ public class SysUserController {
 
     @GetMapping("/save.json")
     public JsonData saveUser(UserParam param) {
-        sysUserService.save(param);
+        sysUserService.saveUser(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/update.json")
     public JsonData updateUser(UserParam param) {
-        sysUserService.update(param);
+        sysUserService.updateUser(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/page.json")
-    public JsonData page(@RequestParam("deptId") int deptId, PageQuery pageQuery) {
+    public JsonData getPageByDeptId(@RequestParam("deptId") int deptId, PageQuery pageQuery) {
         PageResult<SysUser> result = sysUserService.getPageByDeptId(deptId, pageQuery);
 
         return JsonData.success(result);
@@ -58,7 +58,7 @@ public class SysUserController {
      * 获取用户拥有的角色和权限
      */
     @GetMapping("/acls.json")
-    public JsonData acls(@RequestParam("userId") int userId) {
+    public JsonData getUserRoleAndAcls(@RequestParam("userId") int userId) {
         Map<String, Object> map = Maps.newHashMap();
         map.put("acls", sysTreeService.userAclTree(userId));
         map.put("roles", sysRoleService.getRoleListByUserId(userId));

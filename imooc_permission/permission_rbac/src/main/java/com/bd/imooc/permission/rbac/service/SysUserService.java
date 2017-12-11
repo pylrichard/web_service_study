@@ -28,7 +28,7 @@ public class SysUserService {
     /**
      * 新增用户
      */
-    public void save(UserParam param) {
+    public void saveUser(UserParam param) {
         BeanValidator.check(param);
         if (checkTelephoneExist(param.getTelephone(), param.getId())) {
             throw new ParamException("手机号已被占用");
@@ -53,7 +53,7 @@ public class SysUserService {
     /**
      * 更新用户信息
      */
-    public void update(UserParam param) {
+    public void updateUser(UserParam param) {
         BeanValidator.check(param);
         if (checkTelephoneExist(param.getTelephone(), param.getId())) {
             throw new ParamException("手机号已被占用");

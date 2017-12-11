@@ -23,6 +23,9 @@ public class UserController {
     @Resource
     private SysUserService sysUserService;
 
+    /**
+     * 在admin.jsp中触发
+     */
     @RequestMapping("/logout.page")
     public void logout(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
@@ -31,24 +34,27 @@ public class UserController {
         response.sendRedirect(path);
     }
 
+    /**
+     * 在signin.jsp中触发
+     */
     @RequestMapping("/login.page")
     public void login(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        String username = request.getParameter("username");
+        String userName = request.getParameter("username");
         String password = request.getParameter("password");
         //根据手机号或者邮箱名查询用户
-        SysUser sysUser = sysUserService.findByKeyword(username);
+        SysUser sysUser = sysUserService.findByKeyword(userName);
         String errorMsg = "";
         //保存跳转到登录页面的url
         String ret = request.getParameter("ret");
-        if (StringUtils.isBlank(username)) {
+        if (StringUtils.isBlank(userName)) {
             errorMsg = "用户名不可以为空";
         } else if (StringUtils.isBlank(password)) {
             errorMsg = "密码不可以为空";
         } else if (sysUser == null) {
             errorMsg = "查询不到指定的用户";
         } else if (!sysUser.getPassword().equals(MD5Util.encrypt(password))) {
-            errorMsg = "用户名或密码错误";
+            errorMsg = "密码错误";
         } else if (sysUser.getStatus() != 1) {
             errorMsg = "用户已被冻结，请联系管理员";
         } else {
@@ -59,11 +65,12 @@ public class UserController {
             if (StringUtils.isNotBlank(ret)) {
                 response.sendRedirect(ret);
             } else {
+                //跳转到管理员页面
                 response.sendRedirect("/admin/index.page");
             }
         }
         request.setAttribute("error", errorMsg);
-        request.setAttribute("username", username);
+        request.setAttribute("username", userName);
         if (StringUtils.isNotBlank(ret)) {
             request.setAttribute("ret", ret);
         }
