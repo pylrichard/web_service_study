@@ -81,7 +81,7 @@ public class SysTreeService {
         if (CollectionUtils.isEmpty(aclDtoList)) {
             return Lists.newArrayList();
         }
-        List<AclModuleLevelDto> aclModuleLevelList = aclModuleTree();
+        List<AclModuleLevelDto> aclModuleLevelList = createAclModuleTree();
         Multimap<Integer, AclDto> moduleIdAclMap = ArrayListMultimap.create();
         for (AclDto acl : aclDtoList) {
             if (acl.getStatus() == 1) {
@@ -114,24 +114,20 @@ public class SysTreeService {
     /**
      * 创建权限模块树形结构
      */
-    public List<AclModuleLevelDto> aclModuleTree() {
+    public List<AclModuleLevelDto> createAclModuleTree() {
         List<SysAclModule> aclModuleList = sysAclModuleMapper.getAllAclModule();
         List<AclModuleLevelDto> dtoList = Lists.newArrayList();
         for (SysAclModule aclModule : aclModuleList) {
             dtoList.add(AclModuleLevelDto.adapt(aclModule));
         }
 
-        return aclModuleListToTree(dtoList);
+        return transformAclModuleListToTree(dtoList);
     }
 
-    public List<AclModuleLevelDto> aclModuleListToTree(List<AclModuleLevelDto> dtoList) {
+    public List<AclModuleLevelDto> transformAclModuleListToTree(List<AclModuleLevelDto> dtoList) {
         if (CollectionUtils.isEmpty(dtoList)) {
             return Lists.newArrayList();
         }
-        /*
-            key为level，value为[aclmodule1, aclmodule2, ...]
-            格式类似于Map<String, List<Object>>
-         */
         Multimap<String, AclModuleLevelDto> levelAclModuleMap = ArrayListMultimap.create();
         List<AclModuleLevelDto> rootList = Lists.newArrayList();
         for (AclModuleLevelDto dto : dtoList) {
@@ -141,13 +137,13 @@ public class SysTreeService {
             }
         }
         Collections.sort(rootList, aclModuleSeqComparator);
-        transformAclModuleTree(rootList, LevelUtil.ROOT, levelAclModuleMap);
+        recursiveCreateAclModuleTree(rootList, LevelUtil.ROOT, levelAclModuleMap);
 
         return rootList;
     }
 
-    public void transformAclModuleTree(List<AclModuleLevelDto> dtoList, String level,
-                                       Multimap<String, AclModuleLevelDto> levelAclModuleMap) {
+    public void recursiveCreateAclModuleTree(List<AclModuleLevelDto> dtoList, String level,
+                                             Multimap<String, AclModuleLevelDto> levelAclModuleMap) {
         for (int i = 0; i < dtoList.size(); i++) {
             AclModuleLevelDto dto = dtoList.get(i);
             String nextLevel = LevelUtil.calculateLevel(level, dto.getId());
@@ -155,7 +151,7 @@ public class SysTreeService {
             if (CollectionUtils.isNotEmpty(aclModuleList)) {
                 Collections.sort(aclModuleList, aclModuleSeqComparator);
                 dto.setAclModuleList(aclModuleList);
-                transformAclModuleTree(aclModuleList, nextLevel, levelAclModuleMap);
+                recursiveCreateAclModuleTree(aclModuleList, nextLevel, levelAclModuleMap);
             }
         }
     }

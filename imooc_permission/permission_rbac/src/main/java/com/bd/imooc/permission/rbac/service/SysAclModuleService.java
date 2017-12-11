@@ -30,7 +30,7 @@ public class SysAclModuleService {
     /**
      * 新增权限
      */
-    public void save(AclModuleParam param) {
+    public void saveAclModule(AclModuleParam param) {
         BeanValidator.check(param);
         if (checkExist(param.getParentId(), param.getName(), param.getId())) {
             throw new ParamException("同一层级下存在相同名称的权限模块");
@@ -49,7 +49,7 @@ public class SysAclModuleService {
     /**
      * 更新权限信息
      */
-    public void update(AclModuleParam param) {
+    public void updateAclModule(AclModuleParam param) {
         BeanValidator.check(param);
         if (checkExist(param.getParentId(), param.getName(), param.getId())) {
             throw new ParamException("同一层级下存在相同名称的权限模块");
@@ -72,7 +72,7 @@ public class SysAclModuleService {
     public void updateWithChild(SysAclModule before, SysAclModule after) {
         String newLevelPrefix = after.getLevel();
         String oldLevelPrefix = before.getLevel();
-        if (!after.getLevel().equals(before.getLevel())) {
+        if (!newLevelPrefix.equals(oldLevelPrefix)) {
             List<SysAclModule> aclModuleList = sysAclModuleMapper.getChildAclModuleListByLevel(before.getLevel());
             if (CollectionUtils.isNotEmpty(aclModuleList)) {
                 for (SysAclModule aclModule : aclModuleList) {
@@ -91,8 +91,8 @@ public class SysAclModuleService {
     /**
      * 检查权限模块名称是否存在
      */
-    private boolean checkExist(Integer parentId, String aclModuleName, Integer deptId) {
-        return sysAclModuleMapper.countByNameAndParentId(parentId, aclModuleName, deptId) > 0;
+    private boolean checkExist(Integer parentId, String aclModuleName, Integer id) {
+        return sysAclModuleMapper.countByNameAndParentId(parentId, aclModuleName, id) > 0;
     }
 
     private String getLevel(Integer aclModuleId) {
@@ -104,7 +104,7 @@ public class SysAclModuleService {
         return aclModule.getLevel();
     }
 
-    public void delete(int aclModuleId) {
+    public void deleteAclModule(int aclModuleId) {
         SysAclModule aclModule = sysAclModuleMapper.selectByPrimaryKey(aclModuleId);
         Preconditions.checkNotNull(aclModule, "待删除的权限模块不存在，无法删除");
         if (sysAclModuleMapper.countByParentId(aclModule.getId()) > 0) {

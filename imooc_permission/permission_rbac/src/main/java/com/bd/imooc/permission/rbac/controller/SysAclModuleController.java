@@ -27,26 +27,26 @@ public class SysAclModuleController {
 
     @GetMapping("/save.json")
     public JsonData saveAclModule(AclModuleParam param) {
-        sysAclModuleService.save(param);
+        sysAclModuleService.saveAclModule(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/update.json")
     public JsonData updateAclModule(AclModuleParam param) {
-        sysAclModuleService.update(param);
+        sysAclModuleService.updateAclModule(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/tree.json")
-    public JsonData tree() {
-        return JsonData.success(sysTreeService.aclModuleTree());
+    public JsonData createAclModuleTree() {
+        return JsonData.success(sysTreeService.createAclModuleTree());
     }
 
     @GetMapping("/delete.json")
-    public JsonData delete(@RequestParam("id") int id) {
-        sysAclModuleService.delete(id);
+    public JsonData deleteAclModule(@RequestParam("id") int id) {
+        sysAclModuleService.deleteAclModule(id);
 
         return JsonData.success();
     }
