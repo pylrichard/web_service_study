@@ -163,21 +163,21 @@ public class SysTreeService {
     /**
      * 创建部门树形结构
      */
-    public List<DeptLevelDto> deptTree() {
+    public List<DeptLevelDto> createDeptTree() {
         List<SysDept> deptList = sysDeptMapper.getAllDept();
-
         List<DeptLevelDto> dtoList = Lists.newArrayList();
         for (SysDept dept : deptList) {
             DeptLevelDto dto = DeptLevelDto.adapt(dept);
             dtoList.add(dto);
         }
-        return deptListToTree(dtoList);
+
+        return transformDeptListToTree(dtoList);
     }
 
     /**
      * 转换部门列表为树形结构
      */
-    private List<DeptLevelDto> deptListToTree(List<DeptLevelDto> deptLevelList) {
+    private List<DeptLevelDto> transformDeptListToTree(List<DeptLevelDto> deptLevelList) {
         if (CollectionUtils.isEmpty(deptLevelList)) {
             return Lists.newArrayList();
         }
@@ -189,40 +189,37 @@ public class SysTreeService {
         List<DeptLevelDto> rootList = Lists.newArrayList();
         for (DeptLevelDto dto : deptLevelList) {
             levelDeptMap.put(dto.getLevel(), dto);
-            //当前部门是顶层部门
+            //当前部门是顶层部门，见doc/使用字符串解决数据库递归查询问题/2.png
             if (LevelUtil.ROOT.equals(dto.getLevel())) {
                 rootList.add(dto);
             }
         }
         //按照seq从小到大排序
         Collections.sort(rootList, deptSeqComparator);
-        transformDeptTree(rootList, LevelUtil.ROOT, levelDeptMap);
+        recursiveCreateDeptTree(rootList, LevelUtil.ROOT, levelDeptMap);
 
         return rootList;
     }
 
     /**
      * 递归生成部门树形结构
-     * levelDeptMap中的数据格式为
-     * 父level:0->0.1,0.2,...
-     * 子level:0.1->0.1.x,...
-     * 子level:0.2->0.2.x,...
      */
-    public void transformDeptTree(List<DeptLevelDto> deptLevelList, String level,
-                                  Multimap<String, DeptLevelDto> levelDeptMap) {
-        //遍历该层部门列表
+    public void recursiveCreateDeptTree(List<DeptLevelDto> deptLevelList, String level,
+                                        Multimap<String, DeptLevelDto> levelDeptMap) {
+        //遍历当前层级部门列表
         for (int i = 0; i < deptLevelList.size(); i++) {
             DeptLevelDto deptLevelDto = deptLevelList.get(i);
+            //见doc/使用字符串解决数据库递归查询问题/2.png
             String nextLevel = LevelUtil.calculateLevel(level, deptLevelDto.getId());
-            //获取下一层级部门列表，deptList数据格式为0.1,0.2,...
+            //获取下一层级部门列表，比如nextLevel = 0.1，则deptList是level = 0.1的子部门列表
             List<DeptLevelDto> deptList = (List<DeptLevelDto>) levelDeptMap.get(nextLevel);
             if (CollectionUtils.isNotEmpty(deptList)) {
-                //排序
+                //按照seq进行排序
                 Collections.sort(deptList, deptSeqComparator);
                 //设置下一层级部门列表
                 deptLevelDto.setDeptList(deptList);
                 //递归到下一层处理
-                transformDeptTree(deptList, nextLevel, levelDeptMap);
+                recursiveCreateDeptTree(deptList, nextLevel, levelDeptMap);
             }
         }
     }

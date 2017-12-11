@@ -30,7 +30,7 @@ public class SysDeptService {
     /**
      * 新增部门信息
      */
-    public void save(DeptParam param) {
+    public void saveDept(DeptParam param) {
         BeanValidator.check(param);
         if (checkExist(param.getParentId(), param.getName(), param.getId())) {
             throw new ParamException("同一层级下存在相同名称的部门");
@@ -48,7 +48,7 @@ public class SysDeptService {
     /**
      * 更新部门信息
      */
-    public void update(DeptParam param) {
+    public void updateDept(DeptParam param) {
         BeanValidator.check(param);
         if (checkExist(param.getParentId(), param.getName(), param.getId())) {
             throw new ParamException("同一层级下存在相同名称的部门");
@@ -70,7 +70,7 @@ public class SysDeptService {
     /**
      * 删除部门信息
      */
-    public void delete(int deptId) {
+    public void deleteDept(int deptId) {
         SysDept dept = sysDeptMapper.selectByPrimaryKey(deptId);
         Preconditions.checkNotNull(dept, "待删除的部门不存在，无法删除");
         if (sysDeptMapper.countByParentId(dept.getId()) > 0) {
@@ -88,13 +88,13 @@ public class SysDeptService {
     @Transactional(rollbackFor = Exception.class)
     public void updateWithChild(SysDept before, SysDept after) {
         /*
-            获取部门层级前缀
+            获取当前部门层级
          */
         String newLevelPrefix = after.getLevel();
         String oldLevelPrefix = before.getLevel();
-        //前缀更新时才需要更新子部门信息
-        if (!after.getLevel().equals(before.getLevel())) {
-            //获取当前层级的子部门
+        //当前部门层级更新时才需要更新子部门信息
+        if (!newLevelPrefix.equals(oldLevelPrefix)) {
+            //获取当前层级的子部门列表，因为有level字段所以不用递归查询
             List<SysDept> deptList = sysDeptMapper.getChildDeptListByLevel(before.getLevel());
             if (CollectionUtils.isNotEmpty(deptList)) {
                 /*

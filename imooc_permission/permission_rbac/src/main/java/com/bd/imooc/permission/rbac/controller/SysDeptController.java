@@ -30,28 +30,28 @@ public class SysDeptController {
 
     @GetMapping("/save.json")
     public JsonData saveDept(DeptParam param) {
-        sysDeptService.save(param);
+        sysDeptService.saveDept(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/tree.json")
-    public JsonData tree() {
-        List<DeptLevelDto> dtoList = sysTreeService.deptTree();
+    public JsonData createDeptTree() {
+        List<DeptLevelDto> dtoList = sysTreeService.createDeptTree();
 
         return JsonData.success(dtoList);
     }
 
     @GetMapping("/update.json")
     public JsonData updateDept(DeptParam param) {
-        sysDeptService.update(param);
+        sysDeptService.updateDept(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/delete.json")
-    public JsonData delete(@RequestParam("id") int id) {
-        sysDeptService.delete(id);
+    public JsonData deleteDept(@RequestParam("id") int id) {
+        sysDeptService.deleteDept(id);
 
         return JsonData.success();
     }

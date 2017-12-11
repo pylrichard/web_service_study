@@ -17,7 +17,7 @@ public class IpUtil {
             compile("(2[5][0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\.(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\.(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\.(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})");
 
     /**
-     * 取外网ip
+     * 获取外网ip
      */
     public static String getRemoteIp(HttpServletRequest request) {
         String ip = request.getHeader("x-real-ip");
@@ -83,7 +83,7 @@ public class IpUtil {
     }
 
     /**
-     * 判断获取的ip是否是一个符合规则ip
+     * 判断获取的ip是否符合规则
      */
     public static boolean isValidIP(String ip) {
         if (StringUtils.isEmpty(ip)) {

@@ -21,6 +21,7 @@ public class ApplicationContextHelper implements ApplicationContextAware {
         if (applicationContext == null) {
             return null;
         }
+
         return applicationContext.getBean(clazz);
     }
 
@@ -28,6 +29,7 @@ public class ApplicationContextHelper implements ApplicationContextAware {
         if (applicationContext == null) {
             return null;
         }
+
         return applicationContext.getBean(name, clazz);
     }
 }

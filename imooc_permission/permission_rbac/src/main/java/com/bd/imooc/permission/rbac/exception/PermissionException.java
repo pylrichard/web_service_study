@@ -1,7 +1,6 @@
 package com.bd.imooc.permission.rbac.exception;
 
 public class PermissionException extends RuntimeException {
-
     public PermissionException() {
         super();
     }
