@@ -37,7 +37,7 @@ public class SysTreeService {
     /**
      * 获取用户权限树形结构
      */
-    public List<AclModuleLevelDto> userAclTree(int userId) {
+    public List<AclModuleLevelDto> createUserAclTree(int userId) {
         List<SysAcl> userAclList = sysCoreService.getUserAclList(userId);
         List<AclDto> aclDtoList = Lists.newArrayList();
         for (SysAcl acl : userAclList) {

@@ -58,9 +58,9 @@ public class SysUserController {
      * 获取用户拥有的角色和权限
      */
     @GetMapping("/acls.json")
-    public JsonData getUserRoleAndAcls(@RequestParam("userId") int userId) {
+    public JsonData getUserRolesAndAcls(@RequestParam("userId") int userId) {
         Map<String, Object> map = Maps.newHashMap();
-        map.put("acls", sysTreeService.userAclTree(userId));
+        map.put("acls", sysTreeService.createUserAclTree(userId));
         map.put("roles", sysRoleService.getRoleListByUserId(userId));
 
         return JsonData.success(map);
