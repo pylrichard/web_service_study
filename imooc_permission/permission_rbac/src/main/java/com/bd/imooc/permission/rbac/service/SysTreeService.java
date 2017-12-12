@@ -47,13 +47,13 @@ public class SysTreeService {
             aclDtoList.add(dto);
         }
 
-        return aclListToTree(aclDtoList);
+        return transformAclListToTree(aclDtoList);
     }
 
     /**
      * 获取角色权限树形结构
      */
-    public List<AclModuleLevelDto> roleTree(int roleId) {
+    public List<AclModuleLevelDto> createRoleAclTree(int roleId) {
         //当前用户分配的权限点
         List<SysAcl> userAclList = sysCoreService.getCurrentUserAclList();
         //当前角色分配的权限点
@@ -74,10 +74,10 @@ public class SysTreeService {
             aclDtoList.add(dto);
         }
 
-        return aclListToTree(aclDtoList);
+        return transformAclListToTree(aclDtoList);
     }
 
-    public List<AclModuleLevelDto> aclListToTree(List<AclDto> aclDtoList) {
+    public List<AclModuleLevelDto> transformAclListToTree(List<AclDto> aclDtoList) {
         if (CollectionUtils.isEmpty(aclDtoList)) {
             return Lists.newArrayList();
         }
@@ -88,7 +88,7 @@ public class SysTreeService {
                 moduleIdAclMap.put(acl.getAclModuleId(), acl);
             }
         }
-        bindAclsWithOrder(aclModuleLevelList, moduleIdAclMap);
+        recursiveBindAclsWithOrder(aclModuleLevelList, moduleIdAclMap);
 
         return aclModuleLevelList;
     }
@@ -96,8 +96,8 @@ public class SysTreeService {
     /**
      * 绑定权限模块和权限点
      */
-    public void bindAclsWithOrder(List<AclModuleLevelDto> aclModuleLevelList,
-                                  Multimap<Integer, AclDto> moduleIdAclMap) {
+    public void recursiveBindAclsWithOrder(List<AclModuleLevelDto> aclModuleLevelList,
+                                           Multimap<Integer, AclDto> moduleIdAclMap) {
         if (CollectionUtils.isEmpty(aclModuleLevelList)) {
             return;
         }
@@ -107,7 +107,7 @@ public class SysTreeService {
                 Collections.sort(aclDtoList, aclSeqComparator);
                 dto.setAclList(aclDtoList);
             }
-            bindAclsWithOrder(dto.getAclModuleList(), moduleIdAclMap);
+            recursiveBindAclsWithOrder(dto.getAclModuleList(), moduleIdAclMap);
         }
     }
 

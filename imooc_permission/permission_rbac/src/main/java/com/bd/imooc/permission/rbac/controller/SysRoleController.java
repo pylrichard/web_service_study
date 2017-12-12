@@ -40,20 +40,20 @@ public class SysRoleController {
 
     @GetMapping("/save.json")
     public JsonData saveRole(RoleParam param) {
-        sysRoleService.save(param);
+        sysRoleService.saveRole(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/update.json")
     public JsonData updateRole(RoleParam param) {
-        sysRoleService.update(param);
+        sysRoleService.updateRole(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/list.json")
-    public JsonData list() {
+    public JsonData getAll() {
         return JsonData.success(sysRoleService.getAll());
     }
 
@@ -61,13 +61,13 @@ public class SysRoleController {
      * 获取角色与权限信息
      */
     @GetMapping("/roleTree.json")
-    public JsonData roleTree(@RequestParam("roleId") int roleId) {
-        return JsonData.success(sysTreeService.roleTree(roleId));
+    public JsonData createRoleAclTree(@RequestParam("roleId") int roleId) {
+        return JsonData.success(sysTreeService.createRoleAclTree(roleId));
     }
 
     @GetMapping("/changeAcls.json")
-    public JsonData changeAcls(@RequestParam("roleId") int roleId,
-                               @RequestParam(value = "aclIds", required = false, defaultValue = "") String aclIds) {
+    public JsonData changeRoleAcls(@RequestParam("roleId") int roleId,
+                                   @RequestParam(value = "aclIds", required = false, defaultValue = "") String aclIds) {
         List<Integer> aclIdList = StringUtil.splitToListInt(aclIds);
         sysRoleAclService.changeRoleAcls(roleId, aclIdList);
 
@@ -75,8 +75,8 @@ public class SysRoleController {
     }
 
     @GetMapping("/changeUsers.json")
-    public JsonData changeUsers(@RequestParam("roleId") int roleId,
-                                @RequestParam(value = "userIds", required = false, defaultValue = "") String userIds) {
+    public JsonData changeRoleUsers(@RequestParam("roleId") int roleId,
+                                    @RequestParam(value = "userIds", required = false, defaultValue = "") String userIds) {
         List<Integer> userIdList = StringUtil.splitToListInt(userIds);
         sysRoleUserService.changeRoleUsers(roleId, userIdList);
 

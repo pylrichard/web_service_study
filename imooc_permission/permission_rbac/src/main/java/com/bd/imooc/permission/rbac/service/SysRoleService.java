@@ -34,7 +34,7 @@ public class SysRoleService {
     @Resource
     private SysLogService sysLogService;
 
-    public void save(RoleParam param) {
+    public void saveRole(RoleParam param) {
         BeanValidator.check(param);
         if (checkExist(param.getName(), param.getId())) {
             throw new ParamException("角色名称已经存在");
@@ -49,7 +49,7 @@ public class SysRoleService {
         sysLogService.saveRoleLog(null, role);
     }
 
-    public void update(RoleParam param) {
+    public void updateRole(RoleParam param) {
         BeanValidator.check(param);
         if (checkExist(param.getName(), param.getId())) {
             throw new ParamException("角色名称已经存在");
