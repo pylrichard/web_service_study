@@ -87,7 +87,7 @@ public class SysRoleController {
      * 获取角色与用户信息
      */
     @GetMapping("/users.json")
-    public JsonData users(@RequestParam("roleId") int roleId) {
+    public JsonData getUsers(@RequestParam("roleId") int roleId) {
         List<SysUser> selectedUserList = sysRoleUserService.getListByRoleId(roleId);
         List<SysUser> allUserList = sysUserService.getAll();
         List<SysUser> unselectedUserList = Lists.newArrayList();

@@ -94,7 +94,7 @@ public class SysTreeService {
     }
 
     /**
-     * 绑定权限模块和权限点
+     * 递归绑定权限模块和权限点
      */
     public void recursiveBindAclsWithOrder(List<AclModuleLevelDto> aclModuleLevelList,
                                            Multimap<Integer, AclDto> moduleIdAclMap) {

@@ -5,9 +5,9 @@ import com.bd.imooc.permission.rbac.dao.SysRoleUserMapper;
 import com.bd.imooc.permission.rbac.dao.SysUserMapper;
 import com.bd.imooc.permission.rbac.model.SysRoleUser;
 import com.bd.imooc.permission.rbac.model.SysUser;
+import com.bd.imooc.permission.rbac.util.CollectionUtil;
 import com.bd.imooc.permission.rbac.util.IpUtil;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class SysRoleUserService {
@@ -35,15 +34,16 @@ public class SysRoleUserService {
         return sysUserMapper.getByIdList(userIdList);
     }
 
+    /**
+     * 修改角色对应的用户
+     */
     public void changeRoleUsers(int roleId, List<Integer> userIdList) {
         List<Integer> originUserIdList = sysRoleUserMapper.getUserIdListByRoleId(roleId);
-        if (originUserIdList.size() == userIdList.size()) {
-            Set<Integer> originUserIdSet = Sets.newHashSet(originUserIdList);
-            Set<Integer> userIdSet = Sets.newHashSet(userIdList);
-            originUserIdSet.removeAll(userIdSet);
-            if (CollectionUtils.isEmpty(originUserIdSet)) {
-                return;
-            }
+        /*
+            如果角色对应的用户没有被修改，直接返回
+         */
+        if (!CollectionUtil.isModified(originUserIdList, userIdList)) {
+            return;
         }
         updateRoleUsers(roleId, userIdList);
         sysLogService.saveRoleUserLog(roleId, originUserIdList, userIdList);
