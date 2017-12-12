@@ -28,7 +28,7 @@ public class SysAclService {
     /**
      * 新增权限点
      */
-    public void save(AclParam param) {
+    public void saveAclModule(AclParam param) {
         BeanValidator.check(param);
         if (checkExist(param.getAclModuleId(), param.getName(), param.getId())) {
             throw new ParamException("当前权限模块下面存在相同名称的权限点");
@@ -48,7 +48,7 @@ public class SysAclService {
     /**
      * 更新权限点
      */
-    public void update(AclParam param) {
+    public void updateAclModule(AclParam param) {
         BeanValidator.check(param);
         if (checkExist(param.getAclModuleId(), param.getName(), param.getId())) {
             throw new ParamException("当前权限模块下面存在相同名称的权限点");

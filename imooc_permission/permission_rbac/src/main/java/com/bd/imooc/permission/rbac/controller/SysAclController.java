@@ -28,20 +28,20 @@ public class SysAclController {
 
     @GetMapping("/save.json")
     public JsonData saveAclModule(AclParam param) {
-        sysAclService.save(param);
+        sysAclService.saveAclModule(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/update.json")
     public JsonData updateAclModule(AclParam param) {
-        sysAclService.update(param);
+        sysAclService.updateAclModule(param);
 
         return JsonData.success();
     }
 
     @GetMapping("/page.json")
-    public JsonData list(@RequestParam("aclModuleId") Integer aclModuleId, PageQuery pageQuery) {
+    public JsonData getPageByAclModuleId(@RequestParam("aclModuleId") Integer aclModuleId, PageQuery pageQuery) {
         return JsonData.success(sysAclService.getPageByAclModuleId(aclModuleId, pageQuery));
     }
 
@@ -49,7 +49,7 @@ public class SysAclController {
      * 获取权限分配的角色和用户
      */
     @GetMapping("acls.json")
-    public JsonData acls(@RequestParam("aclId") int aclId) {
+    public JsonData getAclsRolesAndUsers(@RequestParam("aclId") int aclId) {
         Map<String, Object> map = Maps.newHashMap();
         List<SysRole> roleList = sysRoleService.getRoleListByAclId(aclId);
         map.put("roles", roleList);
