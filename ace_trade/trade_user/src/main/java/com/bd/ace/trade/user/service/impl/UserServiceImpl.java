@@ -91,7 +91,6 @@ public class UserServiceImpl implements IUserService {
             }
             tradeUserMapper.addUserMoney(tradeUser);
         }
-
         /*
             用户余额日志表插入记录
          */

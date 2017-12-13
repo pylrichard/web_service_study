@@ -42,7 +42,7 @@ public class GoodsServiceImpl implements IGoodsService {
         return queryGoodsRes;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public ReduceGoodsNumberRes reduceGoodsNumber(ReduceGoodsNumberReq reduceGoodsNumberReq) {
         ReduceGoodsNumberRes reduceGoodsNumberRes = new ReduceGoodsNumberRes();

@@ -1,10 +1,6 @@
 package com.bd.ace.trade.goods.mq.processor;
 
-import org.apache.rocketmq.common.message.MessageExt;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.alibaba.fastjson.JSON;
 import com.bd.ace.trade.common.constant.MqEnums;
 import com.bd.ace.trade.common.protocol.goods.AddGoodsNumberReq;
 import com.bd.ace.trade.common.protocol.mq.CancelOrderMq;
@@ -12,9 +8,12 @@ import com.bd.ace.trade.common.rocketmq.IMessageProcessor;
 import com.bd.ace.trade.dao.entity.TradeMqConsumerLog;
 import com.bd.ace.trade.dao.entity.TradeMqConsumerLogExample;
 import com.bd.ace.trade.dao.entity.TradeMqConsumerLogKey;
-import com.bd.ace.trade.goods.service.IGoodsService;
 import com.bd.ace.trade.dao.mapper.TradeMqConsumerLogMapper;
-import com.alibaba.fastjson.JSON;
+import com.bd.ace.trade.goods.service.IGoodsService;
+import org.apache.rocketmq.common.message.MessageExt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CancelOrderProcessor implements IMessageProcessor {
     public static final Logger logger = LoggerFactory.getLogger(CancelOrderProcessor.class);
@@ -35,12 +34,10 @@ public class CancelOrderProcessor implements IMessageProcessor {
             String tags = messageExt.getTags();
             String keys = messageExt.getKeys();
             logger.info("goods CancelOrderProcessor receive message:" + body);
-
             TradeMqConsumerLogKey key = new TradeMqConsumerLogKey();
             key.setGroupName(groupName);
             key.setMsgKey(keys);
             key.setMsgTag(tags);
-
             mqConsumerLog = this.tradeMqConsumerLogMapper.selectByPrimaryKey(key);
             //消息已存在于MQ消费者日志表
             if (mqConsumerLog != null) {
@@ -105,7 +102,6 @@ public class CancelOrderProcessor implements IMessageProcessor {
                     return false;
                 }
             }
-
             /*
                 添加商品库存
              */
@@ -115,7 +111,6 @@ public class CancelOrderProcessor implements IMessageProcessor {
             addGoodsNumberReq.setGoodsNumber(cancelOrderMq.getGoodsNumber());
             addGoodsNumberReq.setOrderId(cancelOrderMq.getOrderId());
             goodsService.addGoodsNumber(addGoodsNumberReq);
-
             /*
                 更新消息处理成功
              */

@@ -1,13 +1,10 @@
 package com.bd.ace.trade.common.protocol.goods;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class QueryGoodsReq {
     private Integer goodsId;
-
-    public Integer getGoodsId() {
-        return goodsId;
-    }
-
-    public void setGoodsId(Integer goodsId) {
-        this.goodsId = goodsId;
-    }
 }

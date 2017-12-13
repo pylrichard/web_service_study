@@ -38,7 +38,7 @@ public class CouponServiceImpl implements ICouponService {
         return queryCouponRes;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public ChangeCouponStatusRes changeCouponStatus(ChangeCouponStatusReq changeCouponStatusReq) {
         ChangeCouponStatusRes changeCouponStatusRes = new ChangeCouponStatusRes();

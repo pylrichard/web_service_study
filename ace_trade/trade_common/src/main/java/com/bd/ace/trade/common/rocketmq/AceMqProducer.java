@@ -1,6 +1,8 @@
 package com.bd.ace.trade.common.rocketmq;
 
+import com.bd.ace.trade.common.constant.MqEnums;
 import com.bd.ace.trade.common.exception.AceMqException;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -9,31 +11,22 @@ import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bd.ace.trade.common.constant.MqEnums;
-
+/**
+ * trade_order\src\main\resources\xml\spring-rocketmq-producer.xml
+ * trade_pay\src\main\resources\xml\spring-rocketmq-producer.xml
+ * 中声明为bean
+ */
+@Setter
 public class AceMqProducer {
 	public static final Logger logger = LoggerFactory.getLogger(AceMqProducer.class);
 	private DefaultMQProducer producer;
-	private String groupName;
+    /**
+     * spring-rocketmq-producer.xml中声明
+     */
+    private String groupName;
 	private String namesrvAddr;
 	private int maxMessageSize = 1024 * 1024 * 4;
 	private int sendMsgTimeout = 10000;
-
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-
-	public void setNamesrvAddr(String namesrvAddr) {
-		this.namesrvAddr = namesrvAddr;
-	}
-
-	public void setMaxMessageSize(int maxMessageSize) {
-		this.maxMessageSize = maxMessageSize;
-	}
-
-	public void setSendMsgTimeout(int sendMsgTimeout) {
-		this.sendMsgTimeout = sendMsgTimeout;
-	}
 
 	public void init() throws AceMqException {
 		if (StringUtils.isBlank(this.groupName)) {

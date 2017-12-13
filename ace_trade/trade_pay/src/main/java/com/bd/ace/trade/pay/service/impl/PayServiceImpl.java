@@ -73,7 +73,7 @@ public class PayServiceImpl implements IPayService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public CallbackPaymentRes callbackPayment(CallbackPaymentReq callbackPaymentReq) {
         CallbackPaymentRes callbackPaymentRes = new CallbackPaymentRes();
         callbackPaymentRes.setRetCode(TradeEnums.RetEnum.SUCCESS.getCode());

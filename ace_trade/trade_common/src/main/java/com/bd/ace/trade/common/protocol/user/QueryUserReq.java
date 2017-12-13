@@ -1,18 +1,12 @@
 package com.bd.ace.trade.common.protocol.user;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class QueryUserReq {
-	private Integer userId;
-
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
-
-	@Override
-	public String toString() {
-		return "QueryUserReq [userId=" + userId + "]";
-	}
+    private Integer userId;
 }

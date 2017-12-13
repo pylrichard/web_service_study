@@ -51,7 +51,7 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private AceMqProducer aceMqProducer;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public ConfirmOrderRes confirmOrder(ConfirmOrderReq confirmOrderReq) {
         ConfirmOrderRes confirmOrderRes = new ConfirmOrderRes();
@@ -63,7 +63,7 @@ public class OrderServiceImpl implements IOrderService {
             //验证订单请求和商品信息
             checkConfirmOrderReq(confirmOrderReq, queryGoodsRes);
             //创建不可见订单
-            String orderId = saveNoConfirmOrder(confirmOrderReq);
+            String orderId = createNoConfirmOrder(confirmOrderReq);
             //调用远程服务，扣优惠券和库存，如果调用成功，更改订单状态为可见，失败则发送消息到MQ，取消订单
             callRemoteService(confirmOrderReq, orderId);
             confirmOrderRes.setOrderId(orderId);
@@ -106,7 +106,6 @@ public class OrderServiceImpl implements IOrderService {
                     throw new Exception("扣用户余额失败");
                 }
             }
-
             /*
                 调用商品库存服务，扣库存
              */
@@ -120,7 +119,10 @@ public class OrderServiceImpl implements IOrderService {
                 throw new Exception("扣库存失败");
             }
             /*
-                修改订单状态
+                TODO 调用支付服务，支付订单需支付金额
+             */
+            /*
+                以上服务调用都成功则修改订单状态
              */
             TradeOrder tradeOrder = new TradeOrder();
             tradeOrder.setOrderId(orderId);
@@ -146,10 +148,9 @@ public class OrderServiceImpl implements IOrderService {
             } catch (AceMqException e) {}
             throw new RuntimeException(ex.getMessage());
         }
-
     }
 
-    private String saveNoConfirmOrder(ConfirmOrderReq confirmOrderReq) throws Exception {
+    private String createNoConfirmOrder(ConfirmOrderReq confirmOrderReq) throws Exception {
         TradeOrder tradeOrder = new TradeOrder();
         //生成全局唯一订单号
         tradeOrder.setOrderId(IdGenerator.generateId());
@@ -203,11 +204,11 @@ public class OrderServiceImpl implements IOrderService {
          */
         if (confirmOrderReq.getMoneyPaid() != null) {
             //验证要使用余额
-            int r = confirmOrderReq.getMoneyPaid().compareTo(BigDecimal.ZERO);
-            if (-1 == r) {
+            int result = confirmOrderReq.getMoneyPaid().compareTo(BigDecimal.ZERO);
+            if (-1 == result) {
                 throw new Exception("余额无效");
             }
-            if (1 == r) {
+            if (1 == result) {
                 QueryUserReq queryUserReq = new QueryUserReq();
                 queryUserReq.setUserId(confirmOrderReq.getUserId());
                 //查询用户余额
@@ -224,7 +225,7 @@ public class OrderServiceImpl implements IOrderService {
         } else {
             tradeOrder.setMoneyPaid(BigDecimal.ZERO);
         }
-        //计算支付金额
+        //计算订单需支付金额
         BigDecimal payAmount = orderAmount.subtract(tradeOrder.getMoneyPaid().subtract(tradeOrder.getCouponPaid()));
         tradeOrder.setPayAmount(payAmount);
         tradeOrder.setCreateTime(new Date());
@@ -278,7 +279,7 @@ public class OrderServiceImpl implements IOrderService {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public ChangeOrderStatusRes changeOrderStatus(ChangeOrderStatusReq changeOrderStatusReq) {
         TradeOrder tradeOrder = new TradeOrder();
