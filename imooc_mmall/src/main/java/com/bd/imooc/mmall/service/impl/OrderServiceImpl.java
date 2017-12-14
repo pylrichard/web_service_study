@@ -82,7 +82,6 @@ public class OrderServiceImpl implements OrderService {
     public ServerResponse createOrder(Integer userId, Integer shippingId) {
         //从购物车中获取商品数据
         List<Cart> cartList = cartMapper.selectCheckedCartByUserId(userId);
-
         /*
             根据订单明细计算订单总价
          */
@@ -90,9 +89,8 @@ public class OrderServiceImpl implements OrderService {
         if (!serverResponse.isSuccess()) {
             return serverResponse;
         }
-        List<OrderItem> orderItemList = (List<OrderItem>)serverResponse.getData();
+        List<OrderItem> orderItemList = (List<OrderItem>) serverResponse.getData();
         BigDecimal payment = this.getOrderTotalPrice(orderItemList);
-
         //生成订单
         Order order = this.assembleOrder(userId, shippingId, payment);
         if (order == null) {
@@ -106,7 +104,6 @@ public class OrderServiceImpl implements OrderService {
         }
         //批量插入订单明细
         orderItemMapper.batchInsert(orderItemList);
-
         //成功生成订单，减少商品库存
         this.reduceProductStock(orderItemList);
         //清空购物车
@@ -139,14 +136,13 @@ public class OrderServiceImpl implements OrderService {
         }
         /*
             设置时间
-         */ 
+         */
         orderVo.setPaymentTime(DateTimeUtil.dateToStr(order.getPaymentTime()));
         orderVo.setSendTime(DateTimeUtil.dateToStr(order.getSendTime()));
         orderVo.setEndTime(DateTimeUtil.dateToStr(order.getEndTime()));
         orderVo.setCreateTime(DateTimeUtil.dateToStr(order.getCreateTime()));
         orderVo.setCloseTime(DateTimeUtil.dateToStr(order.getCloseTime()));
         orderVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
-
         List<OrderItemVo> orderItemVoList = Lists.newArrayList();
         for (OrderItem orderItem : orderItemList) {
             OrderItemVo orderItemVo = assembleOrderItemVo(orderItem);
@@ -255,7 +251,6 @@ public class OrderServiceImpl implements OrderService {
         if (CollectionUtils.isEmpty(cartList)) {
             return ServerResponse.createByErrorMessage("购物车为空");
         }
-
         /*
             校验购物车的数据，包括商品的状态和数量
          */
@@ -265,28 +260,29 @@ public class OrderServiceImpl implements OrderService {
             if (Const.ProductStatusEnum.ON_SALE.getCode() != product.getStatus()) {
                 return ServerResponse.createByErrorMessage("商品" + product.getName() + "不是在线销售状态");
             }
-
             //校验库存
             if (cartItem.getQuantity() > product.getStock()) {
                 return ServerResponse.createByErrorMessage("商品" + product.getName() + "库存不足");
             }
-
             orderItem.setUserId(userId);
             orderItem.setProductId(product.getId());
             orderItem.setProductName(product.getName());
             orderItem.setProductImage(product.getMainImage());
             orderItem.setCurrentUnitPrice(product.getPrice());
             orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setTotalPrice(BigDecimalUtil.mul(product.getPrice().doubleValue(),cartItem.getQuantity()));
+            orderItem.setTotalPrice(BigDecimalUtil.mul(product.getPrice().doubleValue(), cartItem.getQuantity()));
             orderItemList.add(orderItem);
         }
 
         return ServerResponse.createBySuccess(orderItemList);
     }
 
+    /**
+     * 取消订单
+     */
     @Override
     public ServerResponse<String> cancelOrder(Integer userId, Long orderNo) {
-        Order order  = orderMapper.selectByUserIdAndOrderNo(userId, orderNo);
+        Order order = orderMapper.selectByUserIdAndOrderNo(userId, orderNo);
         if (order == null) {
             return ServerResponse.createByErrorMessage("该用户此订单不存在");
         }
@@ -296,7 +292,7 @@ public class OrderServiceImpl implements OrderService {
         }
         /*
             修改订单状态为取消
-         */ 
+         */
         Order updateOrder = new Order();
         updateOrder.setId(order.getId());
         updateOrder.setStatus(Const.OrderStatusEnum.CANCELED.getCode());
@@ -320,11 +316,11 @@ public class OrderServiceImpl implements OrderService {
         if (!serverResponse.isSuccess()) {
             return serverResponse;
         }
-        List<OrderItem> orderItemList = (List<OrderItem>)serverResponse.getData();
+        List<OrderItem> orderItemList = (List<OrderItem>) serverResponse.getData();
         List<OrderItemVo> orderItemVoList = Lists.newArrayList();
         /*
             计算订单总价
-         */ 
+         */
         BigDecimal payment = new BigDecimal("0");
         for (OrderItem orderItem : orderItemList) {
             payment = BigDecimalUtil.add(payment.doubleValue(), orderItem.getTotalPrice().doubleValue());
@@ -350,7 +346,7 @@ public class OrderServiceImpl implements OrderService {
             return ServerResponse.createBySuccess(orderVo);
         }
 
-        return  ServerResponse.createByErrorMessage("没有找到该订单");
+        return ServerResponse.createByErrorMessage("没有找到该订单");
     }
 
     /**
@@ -425,7 +421,6 @@ public class OrderServiceImpl implements OrderService {
         if (order != null) {
             List<OrderItem> orderItemList = orderItemMapper.getByOrderNo(orderNo);
             OrderVo orderVo = assembleOrderVo(order, orderItemList);
-
             PageInfo pageResult = new PageInfo(Lists.newArrayList(order));
             pageResult.setList(Lists.newArrayList(orderVo));
 
@@ -440,7 +435,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public ServerResponse<String> sendOrderGoods(Long orderNo) {
-        Order order= orderMapper.selectByOrderNo(orderNo);
+        Order order = orderMapper.selectByOrderNo(orderNo);
         if (order != null) {
             if (order.getStatus() == Const.OrderStatusEnum.PAID.getCode()) {
                 order.setStatus(Const.OrderStatusEnum.SHIPPED.getCode());
@@ -454,15 +449,19 @@ public class OrderServiceImpl implements OrderService {
         return ServerResponse.createByErrorMessage("订单不存在");
     }
 
+    /**
+     * 支付接口对应方法
+     */
+
     @Override
     public ServerResponse pay(Long orderNo, Integer userId, String path) {
+        //存放订单号和二维码图片路径
         Map<String, String> resultMap = Maps.newHashMap();
         Order order = orderMapper.selectByUserIdAndOrderNo(userId, orderNo);
         if (order == null) {
             return ServerResponse.createByErrorMessage("用户没有该订单");
         }
         resultMap.put("orderNo", String.valueOf(order.getOrderNo()));
-
         /*
             创建支付订单
          */
@@ -472,79 +471,64 @@ public class OrderServiceImpl implements OrderService {
             需保证商户系统端不能重复，建议通过数据库sequence生成
          */
         String outTradeNo = order.getOrderNo().toString();
-
         //必填 订单标题
         String subject = new StringBuilder().append("happymmall扫码支付，订单号:").append(outTradeNo).toString();
-
         /*
             必填 订单总金额，单位为元，不能超过1亿元
             如果同时传入了"打折金额"，"不可打折金额"，"订单总金额"三者，必须满足如下条件:
             订单总金额 = 打折金额 + 不可打折金额
          */
         String totalAmount = order.getPayment().toString();
-
         /*
             可选 订单不可打折金额，可以配合商家平台配置折扣活动，如酒水不参与打折，则将对应金额填写至此字段
             如果该值未传入，但传入了"订单总金额"，"打折金额"，则该值默认为"订单总金额 - 打折金额"
         */
         String undiscountableAmount = "0";
-
         /*
             卖家支付宝账号id，用于支持一个签约账号下付款到不同的收款账号(付款到sellerId对应的支付宝账号)
             如果该字段为空，则默认为与支付宝签约的商户pid，就是appid对应的pid
         */
         String sellerId = "";
-
         //订单描述，对商品进行详细描述，比如购买商品共15.00元
         String body = new StringBuilder().append("订单").append(outTradeNo).append("购买商品共").append(totalAmount).append("元").toString();
-
         //商户操作员编号，添加此参数可以为商户操作员做销售统计
         String operatorId = "test_operator_id";
-
         //必填 商户门店编号，通过门店号和商家后台可以精准配置到门店的折扣信息
         String storeId = "test_store_id";
-
         //业务扩展参数，可添加由支付宝分配的系统商编号(通过setSysServiceProviderId())
         ExtendParams extendParams = new ExtendParams();
         extendParams.setSysServiceProviderId("2088100200300400500");
-
         //支付超时，定义为120分钟
         String timeoutExpress = "120m";
-
         //商品明细列表，需填写购买商品详细信息
         List<GoodsDetail> goodsDetailList = new ArrayList<>();
-
         /*
             创建订单明细
          */
         List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(orderNo, userId);
         for (OrderItem orderItem : orderItemList) {
             GoodsDetail goods = GoodsDetail.newInstance(orderItem.getProductId().toString(),
-                                                    orderItem.getProductName(),
-                                                    BigDecimalUtil.mul(orderItem.getCurrentUnitPrice().doubleValue(),
-                                                            new Double(100).doubleValue()).longValue(),
-                                                    orderItem.getQuantity());
+                    orderItem.getProductName(),
+                    BigDecimalUtil.mul(orderItem.getCurrentUnitPrice().doubleValue(),
+                            new Double(100).doubleValue()).longValue(),
+                    orderItem.getQuantity());
             goodsDetailList.add(goods);
         }
-
         //创建扫码支付请求builder，设置请求参数
         AlipayTradePrecreateRequestBuilder builder = new AlipayTradePrecreateRequestBuilder()
                 .setSubject(subject).setTotalAmount(totalAmount).setOutTradeNo(outTradeNo)
                 .setUndiscountableAmount(undiscountableAmount).setSellerId(sellerId).setBody(body)
                 .setOperatorId(operatorId).setStoreId(storeId).setExtendParams(extendParams)
                 .setTimeoutExpress(timeoutExpress)
-                //支付宝服务器主动通知商户服务器里指定的页面http路径
+                //支付宝服务主动通知商户服务里指定的页面http路径
                 .setNotifyUrl(PropertiesUtil.getProperty("alipay.callback.url"))
                 .setGoodsDetailList(goodsDetailList);
-
         AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
         switch (result.getTradeStatus()) {
             case SUCCESS:
                 logger.info("支付宝预下单成功");
-
                 AlipayTradePrecreateResponse response = result.getResponse();
                 dumpResponse(response);
-
                 /*
                     创建二维码
                  */
@@ -565,7 +549,6 @@ public class OrderServiceImpl implements OrderService {
                 logger.info("qrPath:" + qrPath);
                 String qrUrl = PropertiesUtil.getProperty("ftp.server.http.prefix") + targetFile.getName();
                 resultMap.put("qrUrl", qrUrl);
-
                 return ServerResponse.createBySuccess(resultMap);
             case FAILED:
                 logger.error("支付宝预下单失败!!!");

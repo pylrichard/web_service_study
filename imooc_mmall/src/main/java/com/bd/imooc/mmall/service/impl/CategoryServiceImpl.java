@@ -1,11 +1,11 @@
 package com.bd.imooc.mmall.service.impl;
 
 import com.bd.imooc.mmall.common.ServerResponse;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.bd.imooc.mmall.dao.CategoryMapper;
 import com.bd.imooc.mmall.pojo.Category;
 import com.bd.imooc.mmall.service.CategoryService;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,13 +28,11 @@ public class CategoryServiceImpl implements CategoryService {
         if (parentId == null || StringUtils.isBlank(categoryName)) {
             return ServerResponse.createByErrorMessage("添加品类参数错误");
         }
-
         Category category = new Category();
         category.setName(categoryName);
         category.setParentId(parentId);
         //分类是可用的
         category.setStatus(true);
-
         int rowCount = categoryMapper.insert(category);
         if (rowCount > 0) {
             return ServerResponse.createBySuccess("添加品类成功");
@@ -51,7 +49,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         category.setId(categoryId);
         category.setName(categoryName);
-
         int rowCount = categoryMapper.updateByPrimaryKeySelective(category);
         if (rowCount > 0) {
             return ServerResponse.createBySuccess("更新品类名字成功");
@@ -101,6 +98,7 @@ public class CategoryServiceImpl implements CategoryService {
         /*
             查找子节点，递归算法一定要有退出条件
             MyBatis方法没有查询到结果不会返回null，故此处没有判断null
+            TODO 如果节点层级较深，递归开销较大，可参考permission_rbac中获取子部门的解决方案
          */
         List<Category> categoryList = categoryMapper.selectCategoryChildrenByParentId(categoryId);
         for (Category categoryItem : categoryList) {

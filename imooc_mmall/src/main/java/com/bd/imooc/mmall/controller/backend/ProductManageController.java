@@ -1,15 +1,15 @@
 package com.bd.imooc.mmall.controller.backend;
 
 import com.bd.imooc.mmall.common.Const;
+import com.bd.imooc.mmall.common.ResponseCode;
 import com.bd.imooc.mmall.common.ServerResponse;
 import com.bd.imooc.mmall.pojo.Product;
-import com.bd.imooc.mmall.service.FileService;
-import com.bd.imooc.mmall.util.PropertiesUtil;
-import com.google.common.collect.Maps;
-import com.bd.imooc.mmall.common.ResponseCode;
 import com.bd.imooc.mmall.pojo.User;
+import com.bd.imooc.mmall.service.FileService;
 import com.bd.imooc.mmall.service.ProductService;
 import com.bd.imooc.mmall.service.UserService;
+import com.bd.imooc.mmall.util.PropertiesUtil;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +37,7 @@ public class ProductManageController {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                            "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return productService.addOrUpdateProduct(product);
@@ -51,7 +51,7 @@ public class ProductManageController {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                                "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return productService.setSaleStatus(productId, status);
@@ -60,12 +60,12 @@ public class ProductManageController {
         }
     }
 
-    @RequestMapping("detail.do")
+    @RequestMapping("get_detail.do")
     public ServerResponse getDetail(HttpSession session, Integer productId) {
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                            "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return productService.manageProductDetail(productId);
@@ -74,13 +74,13 @@ public class ProductManageController {
         }
     }
 
-    @RequestMapping("list.do")
-    public ServerResponse getList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1")int pageNum,
-                                  @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+    @RequestMapping("get_list.do")
+    public ServerResponse getList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                            "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return productService.getProductList(pageNum, pageSize);
@@ -91,12 +91,15 @@ public class ProductManageController {
 
     @RequestMapping("search.do")
     public ServerResponse searchProduct(HttpSession session, String productName, Integer productId,
-                                        @RequestParam(value = "pageNum", defaultValue = "1")int pageNum,
-                                        @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+                                        @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                        @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        /*
+            TODO 使用注解判断用户是否登录
+         */
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                            "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return productService.searchProduct(productName, productId, pageNum, pageSize);
@@ -106,18 +109,17 @@ public class ProductManageController {
     }
 
     @RequestMapping("upload.do")
-    public ServerResponse upload(HttpSession session, @RequestParam(value = "upload_file", required = false)MultipartFile file,
+    public ServerResponse upload(HttpSession session, @RequestParam(value = "upload_file", required = false) MultipartFile file,
                                  HttpServletRequest request) {
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                            "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             String path = request.getSession().getServletContext().getRealPath("upload");
             String targetFileName = fileService.upload(file, path);
             String url = PropertiesUtil.getProperty("ftp.server.http.prefix") + targetFileName;
-
             Map fileMap = Maps.newHashMap();
             fileMap.put("uri", targetFileName);
             fileMap.put("url", url);
@@ -129,20 +131,19 @@ public class ProductManageController {
     }
 
     @RequestMapping("richtext_img_upload.do")
-    public Map richtextImgUpload(HttpSession session, @RequestParam(value = "upload_file", required = false)MultipartFile file,
+    public Map richtextImgUpload(HttpSession session, @RequestParam(value = "upload_file", required = false) MultipartFile file,
                                  HttpServletRequest request, HttpServletResponse response) {
         Map resultMap = Maps.newHashMap();
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             resultMap.put("success", false);
             resultMap.put("msg", "请登录管理员");
 
             return resultMap;
         }
-
         if (userService.checkAdminRole(user).isSuccess()) {
             String path = request.getSession().getServletContext().getRealPath("upload");
-            String targetFileName = fileService.upload(file,path);
+            String targetFileName = fileService.upload(file, path);
             if (StringUtils.isBlank(targetFileName)) {
                 resultMap.put("success", false);
                 resultMap.put("msg", "上传失败");

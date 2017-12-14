@@ -1,8 +1,8 @@
 package com.bd.imooc.mmall.service.impl;
 
-import com.google.common.collect.Lists;
 import com.bd.imooc.mmall.service.FileService;
 import com.bd.imooc.mmall.util.FTPUtil;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,6 @@ public class FileServiceImpl implements FileService {
             fileDir.mkdirs();
         }
         File targetFile = new File(path, uploadFileName);
-
         try {
             file.transferTo(targetFile);
             FTPUtil.uploadFile(Lists.newArrayList(targetFile));

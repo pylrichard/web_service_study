@@ -2,11 +2,11 @@ package com.bd.imooc.mmall.service.impl;
 
 import com.bd.imooc.mmall.common.ServerResponse;
 import com.bd.imooc.mmall.dao.ShippingMapper;
+import com.bd.imooc.mmall.pojo.Shipping;
 import com.bd.imooc.mmall.service.ShippingService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
-import com.bd.imooc.mmall.pojo.Shipping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class ShippingServiceImpl implements ShippingService {
     private ShippingMapper shippingMapper;
 
     @Override
-    public ServerResponse add(Integer userId, Shipping shipping) {
+    public ServerResponse addShipping(Integer userId, Shipping shipping) {
         shipping.setUserId(userId);
         int rowCount = shippingMapper.insert(shipping);
         if (rowCount > 0) {
@@ -37,7 +37,7 @@ public class ShippingServiceImpl implements ShippingService {
     }
 
     @Override
-    public ServerResponse<String> del(Integer userId, Integer shippingId) {
+    public ServerResponse<String> deleteShipping(Integer userId, Integer shippingId) {
         //绑定用户id和地址id，避免横向越权
         int rowCount = shippingMapper.deleteByShippingIdUserId(userId, shippingId);
         if (rowCount > 0) {
@@ -48,7 +48,7 @@ public class ShippingServiceImpl implements ShippingService {
     }
 
     @Override
-    public ServerResponse update(Integer userId, Shipping shipping) {
+    public ServerResponse updateShipping(Integer userId, Shipping shipping) {
         //设置为登录用户id，避免横向越权
         shipping.setUserId(userId);
         int rowCount = shippingMapper.updateByShipping(shipping);
@@ -60,7 +60,7 @@ public class ShippingServiceImpl implements ShippingService {
     }
 
     @Override
-    public ServerResponse<Shipping> select(Integer userId, Integer shippingId) {
+    public ServerResponse<Shipping> selectShipping(Integer userId, Integer shippingId) {
         Shipping shipping = shippingMapper.selectByShippingIdUserId(userId, shippingId);
         if (shipping == null) {
             return ServerResponse.createByErrorMessage("无法查询到该地址");
@@ -70,7 +70,7 @@ public class ShippingServiceImpl implements ShippingService {
     }
 
     @Override
-    public ServerResponse<PageInfo> list(Integer userId, int pageNum, int pageSize) {
+    public ServerResponse<PageInfo> getShippingList(Integer userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         List<Shipping> shippingList = shippingMapper.selectByUserId(userId);
         PageInfo pageInfo = new PageInfo(shippingList);

@@ -28,6 +28,9 @@ import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * TODO 参考imooc_mmall的OrderServiceImpl.pay()/alipayCallback()
+ */
 public class PayServiceImpl implements IPayService {
     private static final Logger logger = LoggerFactory.getLogger(PayServiceImpl.class);
 
@@ -122,8 +125,8 @@ public class PayServiceImpl implements IPayService {
                     public void run() {
                         try {
                             SendResult sendResult = aceMqProducer.sendMessage(MqEnums.TopicEnum.PAY_PAID,
-                                                                            paidMq.getPayId(),
-                                                                            JSON.toJSONString(paidMq));
+                                    paidMq.getPayId(),
+                                    JSON.toJSONString(paidMq));
                             logger.info("支付成功发送消息:" + sendResult);
                             if (sendResult.getSendStatus().equals(SendStatus.SEND_OK)) {
                                 tradeMqProducerLogMapper.deleteByPrimaryKey(mqProducerLog.getId());

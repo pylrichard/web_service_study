@@ -4,12 +4,12 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.demo.trade.config.Configs;
 import com.bd.imooc.mmall.common.Const;
-import com.google.common.collect.Maps;
 import com.bd.imooc.mmall.common.ResponseCode;
 import com.bd.imooc.mmall.common.ServerResponse;
 import com.bd.imooc.mmall.pojo.User;
 import com.bd.imooc.mmall.service.OrderService;
 import com.bd.imooc.mmall.service.impl.OrderServiceImpl;
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,6 @@ public class OrderController {
         return orderService.createOrder(user.getId(), shippingId);
     }
 
-
     @RequestMapping("cancel.do")
     public ServerResponse cancelOrder(HttpSession session, Long orderNo) {
         User user = (User)session.getAttribute(Const.CURRENT_USER);
@@ -52,7 +51,6 @@ public class OrderController {
 
         return orderService.cancelOrder(user.getId(), orderNo);
     }
-
 
     @RequestMapping("get_cart_checked_product_detail.do")
     public ServerResponse getCartCheckedProductDetail(HttpSession session) {
@@ -106,6 +104,9 @@ public class OrderController {
      */
     @RequestMapping("alipay_callback.do")
     public Object alipayCallback(HttpServletRequest request) {
+        /*
+            解析响应参数存放在HashMap
+         */
         Map<String, String> params = Maps.newHashMap();
         Map requestParams = request.getParameterMap();
         for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
@@ -117,8 +118,8 @@ public class OrderController {
             }
             params.put(name, valueStr);
         }
-        logger.info("支付宝回调，sign:{}，trade_status:{}，参数:{}", params.get("sign"), params.get("trade_status"), params.toString());
-
+        logger.info("支付宝回调，sign:{}，trade_status:{}，参数:{}", params.get("sign"),
+                params.get("trade_status"), params.toString());
         /*
             验证回调请求是否是支付宝发出的，避免重复通知
          */
@@ -129,7 +130,6 @@ public class OrderController {
              */
             boolean alipayRSACheckedV2 = AlipaySignature.rsaCheckV2(params, Configs.getAlipayPublicKey(),
                                                             "utf-8", Configs.getSignType());
-
             if (!alipayRSACheckedV2) {
                 return ServerResponse.createByErrorMessage("非法请求，验证不通过");
             }
@@ -152,7 +152,6 @@ public class OrderController {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
                                                         ResponseCode.NEED_LOGIN.getDesc());
         }
-
         ServerResponse serverResponse = orderService.queryOrderPayStatus(user.getId(), orderNo);
         if (serverResponse.isSuccess()) {
             return ServerResponse.createBySuccess(true);

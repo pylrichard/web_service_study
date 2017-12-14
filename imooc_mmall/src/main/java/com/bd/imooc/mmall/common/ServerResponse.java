@@ -1,5 +1,6 @@
 package com.bd.imooc.mmall.common;
 
+import lombok.Getter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * JsonSerialize.Inclusion.NON_NULL保证序列化json时，value是null的对象不会被保存
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@Getter
 public class ServerResponse<T> implements Serializable {
     private int status;
     private String msg;
@@ -41,18 +43,6 @@ public class ServerResponse<T> implements Serializable {
     @JsonIgnore
     public boolean isSuccess(){
         return this.status == ResponseCode.SUCCESS.getCode();
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public T getData() {
-        return data;
     }
 
     public static <T> ServerResponse<T> createBySuccess() {

@@ -1,11 +1,9 @@
 package com.bd.imooc.mmall.service.impl;
 
 import com.bd.imooc.mmall.common.Const;
-import com.bd.imooc.mmall.dao.CartMapper;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.bd.imooc.mmall.common.ResponseCode;
 import com.bd.imooc.mmall.common.ServerResponse;
+import com.bd.imooc.mmall.dao.CartMapper;
 import com.bd.imooc.mmall.dao.ProductMapper;
 import com.bd.imooc.mmall.pojo.Cart;
 import com.bd.imooc.mmall.pojo.Product;
@@ -14,6 +12,8 @@ import com.bd.imooc.mmall.util.BigDecimalUtil;
 import com.bd.imooc.mmall.util.PropertiesUtil;
 import com.bd.imooc.mmall.vo.CartProductVo;
 import com.bd.imooc.mmall.vo.CartVo;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,12 +29,11 @@ public class CartServiceImpl implements CartService {
     private CartMapper cartMapper;
 
     @Override
-    public ServerResponse<CartVo> add(Integer userId, Integer productId, Integer count) {
+    public ServerResponse<CartVo> addProduct(Integer userId, Integer productId, Integer count) {
         if (productId == null || count == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),
-                                                            ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+                    ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-
         //查询用户购物车中对应的商品
         Cart cart = cartMapper.selectCartByUserIdProductId(userId, productId);
         if (cart == null) {
@@ -52,11 +51,11 @@ public class CartServiceImpl implements CartService {
             cartMapper.updateByPrimaryKeySelective(cart);
         }
 
-        return this.list(userId);
+        return this.getCartProductList(userId);
     }
 
     @Override
-    public ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count) {
+    public ServerResponse<CartVo> updateProduct(Integer userId, Integer productId, Integer count) {
         if (productId == null || count == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),
                     ResponseCode.ILLEGAL_ARGUMENT.getDesc());
@@ -67,7 +66,7 @@ public class CartServiceImpl implements CartService {
         }
         cartMapper.updateByPrimaryKey(cart);
 
-        return this.list(userId);
+        return this.getCartProductList(userId);
     }
 
     @Override
@@ -78,16 +77,16 @@ public class CartServiceImpl implements CartService {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),
                     ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-        cartMapper.deleteByUserIdProductIds(userId,productList);
+        cartMapper.deleteByUserIdProductIds(userId, productList);
 
-        return this.list(userId);
+        return this.getCartProductList(userId);
     }
 
     @Override
     public ServerResponse<CartVo> selectOrUnSelect(Integer userId, Integer productId, Integer checked) {
         cartMapper.checkedOrUncheckedProduct(userId, productId, checked);
 
-        return this.list(userId);
+        return this.getCartProductList(userId);
     }
 
     @Override
@@ -99,28 +98,23 @@ public class CartServiceImpl implements CartService {
         return ServerResponse.createBySuccess(cartMapper.selectCartProductCount(userId));
     }
 
+    /**
+     * TODO 与ace_trade的下单流程结合
+     */
     @Override
-    public ServerResponse<CartVo> list(Integer userId) {
-        CartVo cartVo = this.getCartVoLimit(userId);
-
-        return ServerResponse.createBySuccess(cartVo);
-    }
-
-    private CartVo getCartVoLimit(Integer userId) {
+    public ServerResponse<CartVo> getCartProductList(Integer userId) {
         CartVo cartVo = new CartVo();
+        //获取用户购物车中的商品概要信息
         List<Cart> cartList = cartMapper.selectCartByUserId(userId);
         List<CartProductVo> cartProductVoList = Lists.newArrayList();
-
         BigDecimal cartTotalPrice = new BigDecimal("0");
-
         if (CollectionUtils.isNotEmpty(cartList)) {
             for (Cart cartItem : cartList) {
                 CartProductVo cartProductVo = new CartProductVo();
                 cartProductVo.setId(cartItem.getId());
                 cartProductVo.setUserId(userId);
                 cartProductVo.setProductId(cartItem.getProductId());
-
-                //查询商品信息
+                //查询商品详细信息
                 Product product = productMapper.selectByPrimaryKey(cartItem.getProductId());
                 if (product != null) {
                     cartProductVo.setProductMainImage(product.getMainImage());
@@ -150,10 +144,9 @@ public class CartServiceImpl implements CartService {
                     cartProductVo.setQuantity(buyLimitCount);
                     //计算商品总价
                     cartProductVo.setProductTotalPrice(BigDecimalUtil.mul(product.getPrice().doubleValue(),
-                                                        cartProductVo.getQuantity()));
+                            cartProductVo.getQuantity()));
                     cartProductVo.setProductChecked(cartItem.getChecked());
                 }
-
                 if (cartItem.getChecked() == Const.Cart.CHECKED) {
                     //如果已经勾选，添加到购物车总价
                     cartTotalPrice = BigDecimalUtil.add(cartTotalPrice.doubleValue(),
@@ -167,7 +160,7 @@ public class CartServiceImpl implements CartService {
         cartVo.setAllChecked(this.getAllCheckedStatus(userId));
         cartVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
 
-        return cartVo;
+        return ServerResponse.createBySuccess(cartVo);
     }
 
     private boolean getAllCheckedStatus(Integer userId) {

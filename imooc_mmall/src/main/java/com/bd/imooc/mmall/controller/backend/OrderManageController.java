@@ -1,13 +1,13 @@
 package com.bd.imooc.mmall.controller.backend;
 
 import com.bd.imooc.mmall.common.Const;
+import com.bd.imooc.mmall.common.ResponseCode;
 import com.bd.imooc.mmall.common.ServerResponse;
+import com.bd.imooc.mmall.pojo.User;
+import com.bd.imooc.mmall.service.OrderService;
 import com.bd.imooc.mmall.service.UserService;
 import com.bd.imooc.mmall.vo.OrderVo;
 import com.github.pagehelper.PageInfo;
-import com.bd.imooc.mmall.common.ResponseCode;
-import com.bd.imooc.mmall.pojo.User;
-import com.bd.imooc.mmall.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,12 +24,12 @@ public class OrderManageController {
     private OrderService orderService;
 
     @RequestMapping("get_all_order.do")
-    public ServerResponse<PageInfo> getAllOrder(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1")int pageNum,
-                                                @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<PageInfo> getAllOrder(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                                @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                            "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return orderService.getAllOrder(pageNum, pageSize);
@@ -40,10 +40,10 @@ public class OrderManageController {
 
     @RequestMapping("get_order_detail.do")
     public ServerResponse<OrderVo> getOrderDetail(HttpSession session, Long orderNo) {
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                            "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return orderService.getOrderDetail(orderNo);
@@ -54,12 +54,12 @@ public class OrderManageController {
 
     @RequestMapping("search_order.do")
     public ServerResponse<PageInfo> searchOrder(HttpSession session, Long orderNo,
-                                                @RequestParam(value = "pageNum", defaultValue = "1")int pageNum,
-                                                @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+                                                @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                                @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                            "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return orderService.searchOrder(orderNo, pageNum, pageSize);
@@ -70,10 +70,10 @@ public class OrderManageController {
 
     @RequestMapping("send_order_goods.do")
     public ServerResponse<String> sendOrderGoods(HttpSession session, Long orderNo) {
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
-                                            "用户未登录，请登录管理员");
+                    "用户未登录，请登录管理员");
         }
         if (userService.checkAdminRole(user).isSuccess()) {
             return orderService.sendOrderGoods(orderNo);
