@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -36,7 +38,12 @@ public class BookController {
         System.out.println(pageable.getPageSize());
         //排序规则
         System.out.println(pageable.getSort());
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication);
+        if (authentication != null) {
+            //打印用户认证信息
+            System.out.println(authentication.getPrincipal());
+        }
         List<BookInfo> bookInfos = new ArrayList<>();
         bookInfos.add(new BookInfo());
         bookInfos.add(new BookInfo());
@@ -58,6 +65,11 @@ public class BookController {
     @JsonView(BookInfo.BookDetailView.class)
     @ApiOperation("获取图书详细信息")
     public DeferredResult<BookInfo> getInfo(@ApiParam("图书id") @PathVariable Long id) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication);
+        if (authentication != null) {
+            System.out.println(authentication.getPrincipal());
+        }
         long startTime = System.currentTimeMillis();
         String name = Thread.currentThread().getName();
         System.out.println("Tomcat thread " + name + " begin");
