@@ -6,15 +6,25 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService adminUserDetailService;
+    @Autowired
+    private AuthenticationSuccessHandler bookShopAuthenticationSuccessHandler;
+    @Autowired
+    private AuthenticationFailureHandler bookShopAuthenticationFailureHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(adminUserDetailService);
+        auth.userDetailsService(adminUserDetailService)
+                //指定密码编码器
+                .passwordEncoder(new BCryptPasswordEncoder());
+        ;
     }
 
     @Override
@@ -25,10 +35,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         */
         http.httpBasic()
                 .and()
-                //验证请求
-                //antMatchers("/book/*") 以/book开头的请求所有用户都可以访问
-                //antMatchers(HttpMethod.GET) 所有GET请求都可以访问
-                .authorizeRequests().antMatchers("/book").permitAll()
+                //formLogin()把UsernamePasswordAuthenticationFilter添加到过滤器链中
+                .formLogin()
+                //自定义登录页面
+                .loginPage("/login.html")
+                //login.html中不使用login作为action名称
+                .loginProcessingUrl("/auth")
+                /*
+                    username和password是Spring Security中UsernamePasswordAuthenticationFilter默认的字段
+                    使用自定义用户名和密码字段名
+                */
+                .usernameParameter("user")
+                .passwordParameter("pass")
+                .successHandler(bookShopAuthenticationSuccessHandler)
+                .failureHandler(bookShopAuthenticationFailureHandler)
+                .and()
+                .csrf().disable()
+                /*
+                    验证请求
+                    antMatchers("/book/*") 以/book开头的请求所有用户都可以访问
+                    antMatchers(HttpMethod.GET) 所有GET请求都可以访问
+                    将/login.html添加为不需要认证，防止进入死循环
+                */
+                .authorizeRequests().antMatchers("/book", "/login.html", "/auth").permitAll()
                 //其它请求都需要验证
                 .anyRequest().authenticated();
     }
