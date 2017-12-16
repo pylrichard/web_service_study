@@ -92,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 */
                 .authorizeRequests()
                 .antMatchers("/book", "/login.html", "/auth", "/session.html").permitAll()
-                //其它请求都需要验证
-                .anyRequest().authenticated();
+                //其它请求都需要管理员权限
+                .anyRequest().access("hasAuthority('admin')");
     }
 }
