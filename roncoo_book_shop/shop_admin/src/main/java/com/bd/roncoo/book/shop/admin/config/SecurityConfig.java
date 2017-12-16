@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import javax.sql.DataSource;
 
@@ -79,15 +80,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //设置token有效时长
                 .tokenValiditySeconds(60)
                 .and()
-                //同一时间只允许服务器上存在1个session，如果在另外的IP地址登录，要么从当前session注销，要么不允许登录
+                /*
+                    浏览器的Cookie里保存Session Id，根据Id在服务器保存的众多Session中找到对应的Session
+                    实现一个用户的多个请求共享一个Session
+                    同一时间只允许服务器上存在1个session，如果在另外的IP地址登录，要么从当前session注销，要么不允许登录
+                */
                 .sessionManagement()
+                //防止Session固定攻击，登录成功后改变Session Id
+                .sessionFixation().changeSessionId()
                 //application.properties设置session有效时长server.session.timeout = 10
                 .invalidSessionUrl("/session.html")
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(true)
                 .and()
                 .and()
-                .csrf().disable()
+                //防止跨站请求伪造
+                .csrf()
+                //将Token写入Cookie，在客户端通过JS从Cookie中读取Token，通过Ajax发送给服务器进行认证
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
                 /*
                     验证请求
                     antMatchers("/book/*") 以/book开头的请求所有用户都可以访问
