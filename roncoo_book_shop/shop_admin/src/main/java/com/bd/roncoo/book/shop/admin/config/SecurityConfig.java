@@ -1,6 +1,8 @@
 package com.bd.roncoo.book.shop.admin.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,7 +11,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
+import javax.sql.DataSource;
+
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
@@ -18,6 +25,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationSuccessHandler bookShopAuthenticationSuccessHandler;
     @Autowired
     private AuthenticationFailureHandler bookShopAuthenticationFailureHandler;
+    @Autowired
+    private DataSource dataSource;
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        /*
+            persistent_logins表只需要创建一次即可
+            tokenRepository.setCreateTableOnStartup(true)
+        */
+        tokenRepository.setDataSource(dataSource);
+
+        return tokenRepository;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -49,6 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("pass")
                 .successHandler(bookShopAuthenticationSuccessHandler)
                 .failureHandler(bookShopAuthenticationFailureHandler)
+                .and()
+                .rememberMe().tokenRepository(persistentTokenRepository())
+                //设置token有效时长
+                .tokenValiditySeconds(60)
                 .and()
                 .csrf().disable()
                 /*
