@@ -2,11 +2,14 @@ package com.bd.roncoo.book.shop.admin.controller;
 
 import com.bd.roncoo.book.shop.common.dto.BookCondition;
 import com.bd.roncoo.book.shop.common.dto.BookInfo;
+import com.bd.roncoo.book.shop.common.service.BookService;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
@@ -23,6 +26,8 @@ import java.util.concurrent.ConcurrentMap;
 @RequestMapping("/book")
 public class BookController {
     private ConcurrentMap<Long, DeferredResult<BookInfo>> map = new ConcurrentHashMap<>();
+    @Autowired
+    private BookService bookService;
 
     /**
      * 将查询参数封装在BookCondition，分页查询请求由前端传入
@@ -64,7 +69,19 @@ public class BookController {
     //BookInfo.content在调用getInfo()时才显示
     @JsonView(BookInfo.BookDetailView.class)
     @ApiOperation("获取图书详细信息")
+    /*
+        需要与AdminUserDetailsServiceImpl.loadUserByUsername中配置的权限一致
+        Dubbo分布式服务下Service方法权限判断不可用，调用方法的后台服务与Session所在线程的Web服务不在同一台服务器上
+        此机制只能在Web服务使用，依赖于SecurityContext，从ThreadLocal的Session读取得到SecurityContext
+        一般在Web服务配置HTTP请求权限判断
+    */
+    @PreAuthorize("hasAuthority('admin')")
     public DeferredResult<BookInfo> getInfo(@ApiParam("图书id") @PathVariable Long id) throws Exception {
+        /*
+            此处设置断点进行观察，可以执行至此，说明HTTP请求通过了权限判断
+            此处判断方法权限
+        */
+        bookService.getInfo(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication);
         if (authentication != null) {

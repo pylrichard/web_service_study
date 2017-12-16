@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,7 +18,10 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import javax.sql.DataSource;
 
 @Configuration
+//HTTP请求权限判断
 @EnableWebSecurity
+//方法调用权限判断
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService adminUserDetailService;
@@ -89,6 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     antMatchers("/book/*") 以/book开头的请求所有用户都可以访问
                     antMatchers(HttpMethod.GET) 所有GET请求都可以访问
                     将/login.html添加为不需要认证，防止进入死循环
+                    authorizeRequests.accessDecisionManager()设置ConsensusBased等，默认是AffirmativeBased
                 */
                 .authorizeRequests()
                 .antMatchers("/book", "/login.html", "/auth", "/session.html").permitAll()
