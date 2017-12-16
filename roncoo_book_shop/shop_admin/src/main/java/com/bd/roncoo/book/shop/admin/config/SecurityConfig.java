@@ -97,7 +97,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 */
                 .authorizeRequests()
                 .antMatchers("/book", "/login.html", "/auth", "/session.html").permitAll()
+                //在代码中配置权限非常麻烦，也不灵活，修改代码都需要重启服务
+//				.antMatchers("/book/*").access("hasRole('a') or hasRole('b')")
                 //其它请求都需要管理员权限
-                .anyRequest().access("hasAuthority('admin')");
+                .anyRequest().access("@bookSecurity.check(authentication, request)");
     }
 }
