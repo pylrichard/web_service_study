@@ -75,6 +75,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //设置token有效时长
                 .tokenValiditySeconds(60)
                 .and()
+                //同一时间只允许服务器上存在1个session，如果在另外的IP地址登录，要么从当前session注销，要么不允许登录
+                .sessionManagement()
+                //application.properties设置session有效时长server.session.timeout = 10
+                .invalidSessionUrl("/session.html")
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(true)
+                .and()
+                .and()
                 .csrf().disable()
                 /*
                     验证请求
@@ -82,7 +90,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     antMatchers(HttpMethod.GET) 所有GET请求都可以访问
                     将/login.html添加为不需要认证，防止进入死循环
                 */
-                .authorizeRequests().antMatchers("/book", "/login.html", "/auth").permitAll()
+                .authorizeRequests()
+                .antMatchers("/book", "/login.html", "/auth", "/session.html").permitAll()
                 //其它请求都需要验证
                 .anyRequest().authenticated();
     }
