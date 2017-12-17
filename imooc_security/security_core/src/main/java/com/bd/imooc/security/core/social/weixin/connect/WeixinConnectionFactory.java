@@ -29,8 +29,13 @@ public class WeixinConnectionFactory extends OAuth2ConnectionFactory<Weixin> {
 
     @Override
     public Connection<Weixin> createConnection(AccessGrant accessGrant) {
-        return new OAuth2Connection<>(getProviderId(), extractProviderUserId(accessGrant), accessGrant.getAccessToken(),
-                accessGrant.getRefreshToken(), accessGrant.getExpireTime(), getOAuth2ServiceProvider(), getApiAdapter(extractProviderUserId(accessGrant)));
+        return new OAuth2Connection<>(getProviderId(), extractProviderUserId(accessGrant),
+                accessGrant.getAccessToken(),
+                accessGrant.getRefreshToken(),
+                accessGrant.getExpireTime(),
+                getOAuth2ServiceProvider(),
+                //传入OpenId
+                getApiAdapter(extractProviderUserId(accessGrant)));
     }
 
     @Override

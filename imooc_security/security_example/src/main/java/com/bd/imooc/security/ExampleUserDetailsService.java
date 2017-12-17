@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ExampleUserDetailsService implements UserDetailsService, SocialUserDetailsService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 

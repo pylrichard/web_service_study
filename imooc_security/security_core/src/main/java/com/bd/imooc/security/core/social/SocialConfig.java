@@ -38,7 +38,10 @@ public class SocialConfig extends SocialConfigurerAdapter {
 
     @Override
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
-        //执行同目录下的SQL创建UserConnection表
+        /*
+            执行同目录下的SQL创建UserConnection表
+            业务系统用户与第三方应用用户的关联关系存放在数据库中
+        */
         JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource,
                 connectionFactoryLocator,
                 Encryptors.noOpText());

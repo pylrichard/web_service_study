@@ -10,14 +10,18 @@ import org.springframework.social.oauth2.TokenStrategy;
 import java.nio.charset.Charset;
 import java.util.List;
 
+/**
+ * AbstractOAuth2ApiBinding维护AccessToken和RestTemplate
+ */
 public class WeixinImpl extends AbstractOAuth2ApiBinding implements Weixin {
     private ObjectMapper objectMapper = new ObjectMapper();
     /**
-     * 获取用户信息的url
+     * 获取用户信息的url，AccessToken由AbstractOAuth2ApiBinding添加到RestTemplate
      */
     private static final String URL_GET_USER_INFO = "https://api.weixin.qq.com/sns/userinfo?openid=";
 
     public WeixinImpl(String accessToken) {
+        //ACCESS_TOKEN_PARAMETER表示添加AccessToken到HTTP请求中
         super(accessToken, TokenStrategy.ACCESS_TOKEN_PARAMETER);
     }
 

@@ -141,6 +141,10 @@ public class UserController {
     @PostMapping("/signup")
     public void signUp(HttpServletRequest request, User user) {
         /*
+            ProviderSignInUtils从WebRequest中得到session，从session中得到第三方用户信息
+            将userId+第三方用户信息组装成一条UserConnection表记录格式，插入UserConnection表
+            见SocialConfig.providerSignInUtils
+
             根据用户的选择进行注册或绑定，不论进行哪种操作，最后都应该得到一个用户的唯一标识
             这里使用用户填写的用户名作为唯一标识来绑定服务提供商用户
         */

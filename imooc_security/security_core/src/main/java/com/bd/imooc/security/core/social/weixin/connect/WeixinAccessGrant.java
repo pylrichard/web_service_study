@@ -1,5 +1,7 @@
 package com.bd.imooc.security.core.social.weixin.connect;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.social.oauth2.AccessGrant;
 
 /**
@@ -7,6 +9,8 @@ import org.springframework.social.oauth2.AccessGrant;
  * 
  * 这里继承AccessGrant，添加了openId字段，作为对微信access_token信息的封装
  */
+@Getter
+@Setter
 public class WeixinAccessGrant extends AccessGrant {
 	private static final long serialVersionUID = -7243374526633186782L;
 	
@@ -18,13 +22,5 @@ public class WeixinAccessGrant extends AccessGrant {
 
 	public WeixinAccessGrant(String accessToken, String scope, String refreshToken, Long expiresIn) {
 		super(accessToken, scope, refreshToken, expiresIn);
-	}
-
-	public String getOpenId() {
-		return openId;
-	}
-
-	public void setOpenId(String openId) {
-		this.openId = openId;
 	}
 }

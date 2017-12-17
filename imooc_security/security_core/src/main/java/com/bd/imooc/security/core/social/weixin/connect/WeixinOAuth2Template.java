@@ -29,12 +29,19 @@ public class WeixinOAuth2Template extends OAuth2Template {
 
     public WeixinOAuth2Template(String clientId, String clientSecret, String authorizeUrl, String accessTokenUrl) {
         super(clientId, clientSecret, authorizeUrl, accessTokenUrl);
+        //OAuth2参数可以放在HTTP请求头中，也可以放在URL的参数中，此处放在URL参数中
         setUseParametersForClientAuthentication(true);
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.accessTokenUrl = accessTokenUrl;
     }
 
+    /**
+     * 微信获取accessToken的URL格式与OAuth2标准不同，需要自定义实现
+     * Spring Social得到accessToken后，会到数据库中根据providerId(weixin) + providerUserId(openId)查询相应记录，得到userId
+     * 调用SocialUserDetailsService.loadUserByUserId()获取用户信息
+     * 如果没有记录，会跳转到signup进行注册
+     */
     @Override
     public AccessGrant exchangeForAccess(String authorizationCode, String redirectUri,
                                          MultiValueMap<String, String> parameters) {
