@@ -1,6 +1,7 @@
 package com.bd.roncoo.book.shop.admin.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,6 +24,8 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 //方法调用权限判断
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+//EnableOAuth2Sso在过滤器链上添加OAuth2ClientContextFilter、OAuth2ClientAuthenticationProcessingFilter
+@EnableOAuth2Sso
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService adminUserDetailService;
