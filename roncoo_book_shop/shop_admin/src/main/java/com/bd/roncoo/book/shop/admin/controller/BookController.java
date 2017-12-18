@@ -6,6 +6,8 @@ import com.bd.roncoo.book.shop.common.service.BookService;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,7 @@ import java.util.concurrent.ConcurrentMap;
 @RestController
 @RequestMapping("/book")
 public class BookController {
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private ConcurrentMap<Long, DeferredResult<BookInfo>> map = new ConcurrentHashMap<>();
     @Autowired
     private BookService bookService;
@@ -37,6 +40,7 @@ public class BookController {
     @JsonView(BookInfo.BookListView.class)
     @ApiOperation("查询图书信息")
     public Page<BookInfo> query(BookCondition condition, @PageableDefault(size = 10) Pageable pageable) {
+        logger.info("call query");
         return bookService.query(condition, pageable);
     }
 

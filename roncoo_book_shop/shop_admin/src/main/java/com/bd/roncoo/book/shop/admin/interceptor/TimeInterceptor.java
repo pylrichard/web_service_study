@@ -1,5 +1,6 @@
 package com.bd.roncoo.book.shop.admin.interceptor;
 
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,6 +23,11 @@ public class TimeInterceptor implements HandlerInterceptor {
         System.out.println(((HandlerMethod)handler).getMethod().getName());
 
         request.setAttribute("startTime", System.currentTimeMillis());
+
+        /*
+            从Spring Security中获取userId，可以在用户登录时打印日志，日志导入EFK集群，筛选出同一用户的日志
+         */
+        MDC.put("userId", "pyl");
 
         //返回false，handler不会被调用
         return true;
