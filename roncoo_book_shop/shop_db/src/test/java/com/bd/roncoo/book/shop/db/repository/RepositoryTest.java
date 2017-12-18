@@ -1,10 +1,12 @@
 package com.bd.roncoo.book.shop.db.repository;
 
+import com.bd.roncoo.book.shop.common.dto.AuthorCondition;
 import com.bd.roncoo.book.shop.db.BaseTest;
 import com.bd.roncoo.book.shop.db.domain.Author;
 import com.bd.roncoo.book.shop.db.domain.Book;
 import com.bd.roncoo.book.shop.db.domain.EBook;
 import com.bd.roncoo.book.shop.db.domain.PrintBook;
+import com.bd.roncoo.book.shop.db.repository.specification.AuthorSpecification;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -17,6 +19,17 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * PageRequest添加无参构造函数，Dubbo服务RPC调用需要
+ * public PageRequest() {
+ * this(0, 20);
+ * }
+ * <p>
+ * Sort添加无参构造函数，Dubbo服务RPC调用需要
+ * public Sort() {
+ * this(Direction.DESC, "createdTime");
+ * }
+ */
 public class RepositoryTest extends BaseTest {
     /**
      * 依赖注入，BookRepository继承Repository接口，Spring会生成bookRepository代理对象
@@ -30,6 +43,18 @@ public class RepositoryTest extends BaseTest {
     private PrintBookRepository printBookRepository;
     @Autowired
     private PlatformTransactionManager transactionManager;
+
+
+    @Test
+    public void testSpecQuery() {
+        AuthorCondition condition = new AuthorCondition();
+        condition.setName("pyl");
+        condition.setEmail("pyl@qq.com");
+        condition.setAge(18);
+        condition.setAgeTo(40);
+        condition.setSex(Sex.MAN);
+        authorRepository.findAll(new AuthorSpecification(condition));
+    }
 
     /**
      * BookRepository继承CrudRepository

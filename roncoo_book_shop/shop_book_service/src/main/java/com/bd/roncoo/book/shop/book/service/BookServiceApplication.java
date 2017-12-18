@@ -1,6 +1,6 @@
 package com.bd.roncoo.book.shop.book.service;
 
-import com.bd.roncoo.book.shop.db.support.BookShopRepositoryImpl;
+import com.bd.roncoo.book.shop.db.repository.BookShopRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;

@@ -1,4 +1,4 @@
-package com.bd.roncoo.book.shop.db.support;
+package com.bd.roncoo.book.shop.db.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

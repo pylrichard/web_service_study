@@ -1,9 +1,9 @@
-package com.bd.roncoo.book.shop.db.support;
-
-import javax.persistence.EntityManager;
+package com.bd.roncoo.book.shop.db.repository;
 
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+
+import javax.persistence.EntityManager;
 
 /**
  * SimpleJpaRepository实现了JpaRepository<T, ID>, JpaSpecificationExecutor<T>两个接口
