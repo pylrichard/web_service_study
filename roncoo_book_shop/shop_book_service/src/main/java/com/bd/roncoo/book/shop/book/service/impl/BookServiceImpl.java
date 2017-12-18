@@ -1,5 +1,6 @@
 package com.bd.roncoo.book.shop.book.service.impl;
 
+import com.bd.roncoo.book.shop.common.aspect.ServiceLog;
 import com.bd.roncoo.book.shop.common.dto.BookCondition;
 import com.bd.roncoo.book.shop.common.dto.BookInfo;
 import com.bd.roncoo.book.shop.common.service.BookService;
@@ -38,6 +39,7 @@ public class BookServiceImpl implements BookService {
      * PageRequest是分页请求
      * Sort是分页排序策略
      */
+    @ServiceLog
     @Override
     public Page<BookInfo> query(BookCondition condition, Pageable pageable) {
         /*
