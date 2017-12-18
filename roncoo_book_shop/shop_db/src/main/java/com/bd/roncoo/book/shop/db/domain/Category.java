@@ -1,5 +1,8 @@
 package com.bd.roncoo.book.shop.db.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.awt.print.Book;
 import java.util.List;
@@ -11,6 +14,8 @@ import java.util.List;
  * 在application.properties中添加spring.jpa.generate-ddl=true才会在数据库中生成对应的表
  */
 @Entity
+@Getter
+@Setter
 public class Category extends DomainImpl {
     /**
      * 没有添加注解，默认添加@Basic
@@ -39,28 +44,4 @@ public class Category extends DomainImpl {
      */
     @OneToMany(mappedBy = "category")
     private List<Book> books;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTmp() {
-        return tmp;
-    }
-
-    public void setTmp(String tmp) {
-        this.tmp = tmp;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
 }

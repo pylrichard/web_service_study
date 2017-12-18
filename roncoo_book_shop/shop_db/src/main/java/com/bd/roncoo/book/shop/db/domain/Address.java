@@ -1,5 +1,8 @@
 package com.bd.roncoo.book.shop.db.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Embeddable;
 
 /**
@@ -9,6 +12,8 @@ import javax.persistence.Embeddable;
  * 生命周期不一致的对象之间使用一对多/多对一的关系
 */
 @Embeddable
+@Getter
+@Setter
 public class Address {
     private String province;
 
@@ -19,44 +24,4 @@ public class Address {
     private String address;
 
     private String zipCode;
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
 }

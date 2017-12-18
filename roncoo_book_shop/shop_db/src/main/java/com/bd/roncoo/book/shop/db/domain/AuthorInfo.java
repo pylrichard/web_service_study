@@ -1,5 +1,8 @@
 package com.bd.roncoo.book.shop.db.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,6 +12,8 @@ import javax.persistence.OneToOne;
  * 不常用字段保存在单独的一张表中
  */
 @Entity
+@Getter
+@Setter
 public class AuthorInfo {
     @Id
     @GeneratedValue
@@ -22,28 +27,4 @@ public class AuthorInfo {
      */
     @OneToOne(mappedBy = "info")
     private Author author;
-
-    public Long getId() {
-        return Id;
-    }
-
-    public void setId(Long id) {
-        Id = id;
-    }
-
-    public String getSchool() {
-        return school;
-    }
-
-    public void setSchool(String school) {
-        this.school = school;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
 }

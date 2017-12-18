@@ -2,13 +2,25 @@ package com.bd.roncoo.book.shop.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BookInfo {
+/**
+ * Dubbo服务返回BookInfo需要序列化
+ */
+@Setter
+@NoArgsConstructor
+public class BookInfo implements Serializable {
     public interface BookListView {}
     public interface BookDetailView extends BookListView {}
+
+    public BookInfo(String name) {
+        this.name = name;
+    }
 
     private long id;
     @ApiModelProperty("图书名称")
@@ -25,17 +37,9 @@ public class BookInfo {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     @JsonView(BookListView.class)
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @JsonView(BookDetailView.class)
@@ -43,16 +47,8 @@ public class BookInfo {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     @JsonView(BookListView.class)
     public Date getPublishDate() {
         return publishDate;
-    }
-
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
     }
 }

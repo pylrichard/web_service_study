@@ -76,34 +76,8 @@ public class BookController {
         一般在Web服务配置HTTP请求权限判断
     */
     @PreAuthorize("hasAuthority('admin')")
-    public DeferredResult<BookInfo> getInfo(@ApiParam("图书id") @PathVariable Long id) throws Exception {
-        /*
-            此处设置断点进行观察，可以执行至此，说明HTTP请求通过了权限判断
-            此处判断方法权限
-        */
-        bookService.getInfo(id);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication);
-        if (authentication != null) {
-            System.out.println(authentication.getPrincipal());
-        }
-        long startTime = System.currentTimeMillis();
-        String name = Thread.currentThread().getName();
-        System.out.println("Tomcat thread " + name + " begin");
-
-        //此线程接收请求，获取响应在另一个线程中
-        DeferredResult<BookInfo> result = new DeferredResult<>();
-        map.put(id, result);
-
-        long endTime = System.currentTimeMillis() - startTime;
-        //耗时4ms
-        System.out.println("Tomcat thread " + name + " end, execution time = " + endTime + "ms");
-
-        /*
-            Tomcat主线程返回，去处理其它请求，等待Spring管理的线程返回结果给Tomcat主线程，Tomcat主线程再返回给前端
-            前端获取响应结果需要耗时1s多，采用以上多线程模型后时间并不会缩短，但Tomcat的吞吐量提高了，可以同时处理更多请求
-         */
-        return result;
+    public BookInfo getInfo(@ApiParam("图书id") @PathVariable Long id) throws Exception {
+        return bookService.getInfo(id);
     }
 
     /**

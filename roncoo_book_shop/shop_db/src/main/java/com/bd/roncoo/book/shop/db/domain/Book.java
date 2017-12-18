@@ -1,5 +1,8 @@
 package com.bd.roncoo.book.shop.db.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -19,6 +22,8 @@ import java.util.List;
                 @NamedAttributeNode("authors")
         }
 )
+@Getter
+@Setter
 public class Book extends DomainImpl {
     private String name;
 
@@ -48,36 +53,4 @@ public class Book extends DomainImpl {
      */
     @Version
     private int version;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public List<BookAuthor> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<BookAuthor> authors) {
-        this.authors = authors;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
 }

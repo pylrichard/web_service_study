@@ -1,5 +1,8 @@
 package com.bd.roncoo.book.shop.db.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,6 +12,8 @@ import javax.persistence.ManyToOne;
  * 中间对象，保存多对多关系
  */
 @Entity
+@Getter
+@Setter
 public class BookAuthor {
     @Id
     @GeneratedValue
@@ -25,28 +30,4 @@ public class BookAuthor {
      */
     @ManyToOne
     private Author author;
-
-    public Long getId() {
-        return Id;
-    }
-
-    public void setId(Long id) {
-        Id = id;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
 }

@@ -1,5 +1,7 @@
 package com.bd.roncoo.book.shop.db.domain;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
@@ -11,6 +13,8 @@ import java.util.Date;
  * 注解@MappedSuperclass标记的父类被子类继承，修改父类的成员，子类对应的表也随之修改
  */
 @MappedSuperclass
+@Getter
+@Setter
 public class DomainImpl {
     /**
      * 注解@Id表示主键
@@ -40,20 +44,4 @@ public class DomainImpl {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime = new Date();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
 }

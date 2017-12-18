@@ -18,5 +18,10 @@
             <artifactId>shop_common</artifactId>
             <version>0.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.bd</groupId>
+            <artifactId>shop_db</artifactId>
+            <version>0.1.0</version>
+        </dependency>
     </dependencies>
 </project>
