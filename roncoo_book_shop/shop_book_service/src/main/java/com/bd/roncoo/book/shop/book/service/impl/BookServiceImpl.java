@@ -9,9 +9,12 @@ import com.bd.roncoo.book.shop.db.repository.BookRepository;
 import com.bd.roncoo.book.shop.db.repository.specification.BookSpecification;
 import com.bd.roncoo.book.shop.db.repository.support.AbstractDomain2InfoConverter;
 import com.bd.roncoo.book.shop.db.repository.support.QueryResultConverter;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,18 +34,28 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private PlatformTransactionManager transactionManager;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    /**
+     * books为缓存到Redis的缓存名称，方法返回SimpleKey对象(将方法参数转换为Redis的key)，经过序列化后到Redis中获取数据
+     * <p>
+     * 注解@Cacheable和注解@Transactional一样，getInfo()需要从外部类调用才能生效
+     */
+    @Cacheable(cacheNames = "books")
     @Override
     public BookInfo getInfo(Long id) {
-        Book book = bookRepository.findOne(id);
-        BookInfo bookInfo = new BookInfo();
-        BeanUtils.copyProperties(book, bookInfo);
+        Cache.ValueWrapper value = cacheManager.getCache("books").get(id);
 
-        /*
-            在同一个类中调用query()，注解@Transactional不起作用
-         */
-//		query(new BookCondition(), new PageRequest(0, 20));
+        if (value == null) {
+            Book book = bookRepository.findOne(id);
+            BookInfo bookInfo = new BookInfo();
+            BeanUtils.copyProperties(book, bookInfo);
 
-        return bookInfo;
+            cacheManager.getCache("books").put(id, bookInfo);
+        }
+
+        return (BookInfo) value.get();
     }
 
     /**
@@ -52,11 +65,20 @@ public class BookServiceImpl implements BookService {
      * PageImpl是返回的一页数据
      * PageRequest是分页请求
      * Sort是分页排序策略
-     *
+     * <p>
      * 添加@Transactional后，抛出异常整个事务会回滚，不会插入记录
      * 注解@Transactional要起作用，需要从外部类调用query()
+     *
+     * 注解@Cacheable中key = "#condition.name"指定只有参数condition.name的值发生改变时才执行query()到MySQL中获取数据
+     * 如在浏览器中输入http://localhost:8080/book?name=pyl&&size=10，size的值发生变化不会到MySQL中获取数据
+     * condition = "#pageable.size > 10")表示pageable.size > 10时才进行缓存
+     *
+     * 注解@CacheEvict从缓存中清除数据，allEntries = true表示清除全部数据，key = xxx表示清除相应key的数据
+     * beforeInvocation = false在方法调用之后清除数据
      */
     @ServiceLog
+    //@Cacheable(cacheNames = "books", key = "#condition.name", condition = "#pageable.size > 10")
+    @CacheEvict(cacheNames = "books", allEntries = true, beforeInvocation = false)
     @Override
     public Page<BookInfo> query(BookCondition condition, Pageable pageable) {
         /*
@@ -122,13 +144,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookInfo update(BookInfo info) {
-        /*
-            抛出异常的事务会进行回滚
-         */
-        if (StringUtils.equals(info.getName(), "b")) {
-            throw new RuntimeException("transaction test");
-        }
-
         Book book = bookRepository.findOne(info.getId());
         book.setName(info.getName());
         bookRepository.save(book);
