@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.HashMap;
@@ -22,7 +23,9 @@ import java.util.Map;
  */
 @SpringBootApplication
 @EnableSwagger2
+//注解@EnableCaching和@EnableScheduling需要在服务提供者和服务消费者都进行添加
 @EnableCaching
+@EnableScheduling
 @ImportResource("classpath:consumer.xml")
 public class AdminApplication {
     public static void main(String[] args) {

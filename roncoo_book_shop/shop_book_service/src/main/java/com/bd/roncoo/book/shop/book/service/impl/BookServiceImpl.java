@@ -3,12 +3,17 @@ package com.bd.roncoo.book.shop.book.service.impl;
 import com.bd.roncoo.book.shop.common.aspect.ServiceLog;
 import com.bd.roncoo.book.shop.common.dto.BookCondition;
 import com.bd.roncoo.book.shop.common.dto.BookInfo;
+import com.bd.roncoo.book.shop.common.lock.GlobalLock;
 import com.bd.roncoo.book.shop.common.service.BookService;
 import com.bd.roncoo.book.shop.db.domain.Book;
 import com.bd.roncoo.book.shop.db.repository.BookRepository;
 import com.bd.roncoo.book.shop.db.repository.specification.BookSpecification;
 import com.bd.roncoo.book.shop.db.repository.support.AbstractDomain2InfoConverter;
 import com.bd.roncoo.book.shop.db.repository.support.QueryResultConverter;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -17,12 +22,17 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service("bookService")
 //@Transactional注解的类的public方法在一个事务中执行
@@ -37,10 +47,19 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private JobLauncher launcher;
+
+    @Autowired
+    private Job job;
+
     /**
      * books为缓存到Redis的缓存名称，方法返回SimpleKey对象(将方法参数转换为Redis的key)，经过序列化后到Redis中获取数据
      * <p>
      * 注解@Cacheable和注解@Transactional一样，getInfo()需要从外部类调用才能生效
+     *
+     * 通过keys *在Redis中查看数据
+     * 通过client list在Redis中查看客户端连接
      */
     @Cacheable(cacheNames = "books")
     @Override
@@ -154,5 +173,22 @@ public class BookServiceImpl implements BookService {
     @Override
     public void delete(long id) {
         bookRepository.delete(id);
+    }
+
+    /**
+     * cron = "0/3 * * * * *"表示每隔3秒运行一次
+     * <p>
+     * 通过JobExplorer.findJobInstancesByJobName()查询MySQL中的Job执行情况
+     * <p>
+     * 集群中部署了多个BookService，通过分布式锁保证只有一个BookService执行定时任务
+     * 注解@GlobalLock(path = "/book/task", key = 根据参数来生成锁动态路径)
+     */
+    @Scheduled(cron = "0/3 * * * * *")
+    @GlobalLock(path = "/book/task")
+    @Override
+    public void task() throws Exception {
+        Map<String, JobParameter> param = new HashMap<>(16);
+        param.put("startTime", new JobParameter(new Date()));
+        launcher.run(job, new JobParameters(param));
     }
 }

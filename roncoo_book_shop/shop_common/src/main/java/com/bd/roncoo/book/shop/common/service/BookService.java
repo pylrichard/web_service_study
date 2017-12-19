@@ -15,4 +15,9 @@ public interface BookService {
     BookInfo update(BookInfo info);
 
     void delete(long id);
+
+    /**
+     * 定时任务方法无参数无返回值
+     */
+    void task() throws Exception;
 }
