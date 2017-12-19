@@ -23,6 +23,7 @@
         <module>imooc_security/security</module>
         <module>imooc_security/sso</module>
         <module>imooc_permission</module>
+        <module>imooc_spring</module>
     </modules>
 
     <properties>
