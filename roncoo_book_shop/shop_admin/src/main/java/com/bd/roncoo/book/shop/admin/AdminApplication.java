@@ -1,8 +1,10 @@
 package com.bd.roncoo.book.shop.admin;
 
+import com.bd.roncoo.book.shop.admin.config.BookShopAdminConfigManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizer;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
@@ -26,10 +28,19 @@ import java.util.Map;
 //注解@EnableCaching和@EnableScheduling需要在服务提供者和服务消费者都进行添加
 @EnableCaching
 @EnableScheduling
+@EnableConfigurationProperties(value = BookShopAdminConfigManager.class)
 @ImportResource("classpath:consumer.xml")
 public class AdminApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AdminApplication.class, args);
+        SpringApplication application = new SpringApplication(AdminApplication.class);
+        /*
+            通过java --jar xxx dev传参，dev在args参数数组中来进行动态设置
+            可以同时启用多个配置
+            dev是开发环境配置
+            bs是book_shop项目中本模块的配置
+        */
+        application.setAdditionalProfiles("dev", "bs");
+        application.run(args);
     }
 
     @Bean
