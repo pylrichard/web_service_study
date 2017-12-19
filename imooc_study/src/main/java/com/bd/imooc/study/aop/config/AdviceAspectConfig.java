@@ -7,16 +7,16 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class AdviceAspectConfig {
-    @Pointcut("@annotation(com.bd.imooc.study.aop.annotation.AdminOnly) && within(com.imooc..*)")
+    @Pointcut("@annotation(com.bd.imooc.study.aop.annotation.AdminOnly) && within(com.bd.imooc..*)")
     public void matchAnno(){}
 
-    @Pointcut("execution(* *..delete*(Long)) && within(com.imooc..*) ")
+    @Pointcut("execution(* *..delete*(Long)) && within(com.bd.imooc..*) ")
     public void matchLongArg(){}
 
-    @Pointcut("execution(public * com.imooc.aop.service..*Service.*(..) throws java.lang.IllegalAccessException) && within(com.imooc..*)")
+    @Pointcut("execution(public * com.bd.imooc.aop.service..*Service.*(..) throws java.lang.IllegalAccessException) && within(com.bd.imooc..*)")
     public void matchException(){}
 
-    @Pointcut("execution(String com.imooc..*.*(..)) && within(com.imooc..*)")
+    @Pointcut("execution(String com.bd.imooc..*.*(..)) && within(com.bd.imooc..*)")
     public void matchReturn(){}
 
     /*

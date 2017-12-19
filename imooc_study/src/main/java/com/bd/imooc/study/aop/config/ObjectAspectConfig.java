@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * 匹配AOP对象的目标对象为指定类型的方法,即LogService的aop代理对象的方法
- * 注解@Pointcut("this(com.imooc.log.ILogger)")
+ * 注解@Pointcut("this(com.bd.imooc.log.ILogger)")
  *
  * 匹配实现Loggable接口的目标对象(而不是aop代理后的对象)的方法
- * 注解@Pointcut("target(com.imooc.log.ILogger)")
+ * 注解@Pointcut("target(com.bd.imooc.log.ILogger)")
  *
  * Introduction为类自动生成方法
  * this拦截DeclareParents(Introduction)

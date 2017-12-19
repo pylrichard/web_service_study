@@ -35,7 +35,7 @@
             targetPackage 指定model所在的包名
             targetProject 指定所在的路径
         -->
-        <javaModelGenerator targetPackage="com.imooc.mmall.pojo" targetProject="./src/main/java">
+        <javaModelGenerator targetPackage="com.bd.imooc.mmall.pojo" targetProject="./src/main/java">
             <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
             <property name="enableSubPackages" value="false"/>
             <!-- 是否对model添加构造函数 -->
@@ -59,7 +59,7 @@
         -->
 
         <!-- targetPackage mapper接口dao生成的位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.imooc.mmall.dao" targetProject="./src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.bd.imooc.mmall.dao" targetProject="./src/main/java">
             <!-- 是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>

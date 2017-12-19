@@ -1,9 +1,9 @@
 package com.bd.imooc.study.aop.config;
 
-import com.bd.imooc.study.aop.domain.ChangeItem;
 import com.bd.imooc.study.aop.dao.ActionDAO;
 import com.bd.imooc.study.aop.domain.Action;
 import com.bd.imooc.study.aop.domain.ActionType;
+import com.bd.imooc.study.aop.domain.ChangeItem;
 import com.bd.imooc.study.aop.util.DiffUtil;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -32,10 +32,10 @@ public class DataLogAspectConfig {
     ActionDAO actionDAO;
 
     //save包括新增和更新2种操作
-    @Pointcut("execution(public * com.imooc.aop.dao.*.save*(..))")
+    @Pointcut("execution(public * com.bd.imooc.aop.dao.*.save*(..))")
     public void save() {}
 
-    @Pointcut("execution(public * com.imooc.aop.dao.*.delete*(..))")
+    @Pointcut("execution(public * com.bd.imooc.aop.dao.*.delete*(..))")
     public void delete() {}
 
     /**
