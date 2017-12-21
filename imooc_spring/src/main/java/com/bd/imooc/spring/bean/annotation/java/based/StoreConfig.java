@@ -16,7 +16,7 @@ public class StoreConfig {
     private String url;
 
     /**
-     * 注意此处使用username，会获取到OS的用户名，见50.png
+     * 注意此处使用username，会获取到OS的用户名，见51.png
      */
     @Value("${jdbc.user_name}")
     private String userName;
