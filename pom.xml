@@ -40,6 +40,7 @@
         <rocketmq.version>4.0.0-incubating</rocketmq.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <lombok.version>1.16.18</lombok.version>
+        <aspectj.version>1.8.11</aspectj.version>
     </properties>
 
     <dependencies>
