@@ -24,8 +24,8 @@ public class StoreConfig {
     @Value("${password}")
     private String password;
 
-    @Bean
-    public MyDriverManager myDriverManager() {
+    @Bean(name = "myDriverManager")
+    public MyDriverManager createDriverManager() {
         return new MyDriverManager(url, userName, password);
     }
 
@@ -33,7 +33,7 @@ public class StoreConfig {
      * 指定初始化/销毁方法，见49.png
      */
 //	@Bean(name = "stringStore", initMethod="init", destroyMethod="destroy")
-//	public Store stringStore() {
+//	public Store createStringStore() {
 //		return new StringStore();
 //	}
 
@@ -42,7 +42,7 @@ public class StoreConfig {
      */
 //	@Bean(name = "stringStore")
 //	@Scope(value="prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
-//	public Store stringStore() {
+//	public Store createStringStore() {
 //		return new StringStore();
 //	}
 
@@ -59,20 +59,20 @@ public class StoreConfig {
      * 不指定Bean名称，默认是方法名
      */
     @Bean
-    public StringStore stringStore() {
+    public StringStore createStringStore() {
         return new StringStore();
     }
 
     @Bean
-    public IntegerStore integerStore() {
+    public IntegerStore createIntegerStore() {
         return new IntegerStore();
     }
 
     /**
-     * 返回值为StringStore，自动装配发现有2个可以赋值给s1的Bean，会报错
+     * 返回值为StringStore，自动装配发现有2个可以赋值给s1的Bean(createStringStore()和createStore())，会报错
      */
-    @Bean(name = "stringStoreTest")
-    public Store stringStoreTest() {
+    @Bean(name = "store")
+    public Store createStore() {
         System.out.println("s1 : " + s1.getClass().getName());
         System.out.println("s2 : " + s2.getClass().getName());
 

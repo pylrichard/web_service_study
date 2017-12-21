@@ -12,7 +12,7 @@ public class TestJavaBased extends UnitTestBase {
     }
 
     @Test
-    public void testStore() {
+    public void testStringStore() {
         Store store = super.getBean("stringStore");
         System.out.println(store.getClass().getName());
     }
@@ -34,7 +34,7 @@ public class TestJavaBased extends UnitTestBase {
     }
 
     @Test
-    public void testStoreTest() {
-        StringStore store = super.getBean("stringStoreTest");
+    public void testCreateStore() {
+        StringStore store = super.getBean("store");
     }
 }
