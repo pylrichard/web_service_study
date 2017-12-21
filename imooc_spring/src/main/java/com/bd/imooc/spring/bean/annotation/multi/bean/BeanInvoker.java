@@ -24,7 +24,7 @@ public class BeanInvoker {
     private Map<String, BeanInterface> map;
 
     @Autowired
-    //指定唯一的Bean
+    //指定唯一的Bean，见41~47.png
     @Qualifier("beanImplTwo")
     private BeanInterface beanInterface;
 
