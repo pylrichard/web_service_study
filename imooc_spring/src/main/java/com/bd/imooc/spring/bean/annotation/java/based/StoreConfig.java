@@ -38,7 +38,7 @@ public class StoreConfig {
 //	}
 
     /**
-     * 对应testScope()
+     * 对应testScope()，@Bean默认是单例
      */
 //	@Bean(name = "stringStore")
 //	@Scope(value="prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
