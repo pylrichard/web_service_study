@@ -76,5 +76,6 @@
     <modules>
         <module>eshop_product_service</module>
         <module>eshop_price_service</module>
+        <module>eshop_inventory_service</module>
     </modules>
 </project>
