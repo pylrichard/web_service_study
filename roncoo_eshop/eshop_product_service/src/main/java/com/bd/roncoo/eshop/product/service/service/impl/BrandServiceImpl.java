@@ -3,7 +3,6 @@ package com.bd.roncoo.eshop.product.service.service.impl;
 import com.bd.roncoo.eshop.product.service.mapper.BrandMapper;
 import com.bd.roncoo.eshop.product.service.model.Brand;
 import com.bd.roncoo.eshop.product.service.rabbitmq.RabbitMQSender;
-import com.bd.roncoo.eshop.product.service.rabbitmq.RabbitQueue;
 import com.bd.roncoo.eshop.product.service.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,56 +18,27 @@ public class BrandServiceImpl implements BrandService {
 	
 	@Override
 	public void add(Brand brand, String operationType) {
-		brandMapper.add(brand); 
-		
-		String queue = null;
-		
-		if(operationType == null || "".equals(operationType)) {
-			queue = RabbitQueue.DATA_CHANGE_QUEUE;
-		} else if("refresh".equals(operationType)) {
-			queue = RabbitQueue.REFRESH_DATA_CHANGE_QUEUE;
-		} else if("high".equals(operationType)) {
-			queue = RabbitQueue.HIGH_PRIORITY_DATA_CHANGE_QUEUE;
-		}
-		
-		rabbitMQSender.send(queue,
-				"{\"event_type\": \"add\", \"data_type\": \"brand\", \"id\": " + brand.getId() + "}");
+		brandMapper.add(brand);
+		String msg = createMsg("add", brand.getId());
+		rabbitMQSender.sendMsg(operationType, msg);
 	}
 	
 	@Override
 	public void update(Brand brand, String operationType) {
-		brandMapper.update(brand); 
-		
-		String queue = null;
-		
-		if(operationType == null || "".equals(operationType)) {
-			queue = RabbitQueue.DATA_CHANGE_QUEUE;
-		} else if("refresh".equals(operationType)) {
-			queue = RabbitQueue.REFRESH_DATA_CHANGE_QUEUE;
-		} else if("high".equals(operationType)) {
-			queue = RabbitQueue.HIGH_PRIORITY_DATA_CHANGE_QUEUE;
-		}
-		
-		rabbitMQSender.send(queue,
-				"{\"event_type\": \"update\", \"data_type\": \"brand\", \"id\": " + brand.getId() + "}");
+		brandMapper.update(brand);
+		String msg = createMsg("update", brand.getId());
+		rabbitMQSender.sendMsg(operationType, msg);
 	}
 
 	@Override
 	public void delete(Long id, String operationType) {
-		brandMapper.delete(id); 
-		
-		String queue = null;
-		
-		if(operationType == null || "".equals(operationType)) {
-			queue = RabbitQueue.DATA_CHANGE_QUEUE;
-		} else if("refresh".equals(operationType)) {
-			queue = RabbitQueue.REFRESH_DATA_CHANGE_QUEUE;
-		} else if("high".equals(operationType)) {
-			queue = RabbitQueue.HIGH_PRIORITY_DATA_CHANGE_QUEUE;
-		}
-		
-		rabbitMQSender.send(queue,
-				"{\"event_type\": \"delete\", \"data_type\": \"brand\", \"id\": " + id + "}");
+		brandMapper.delete(id);
+		String msg = createMsg("delete", id);
+		rabbitMQSender.sendMsg(operationType, msg);
+	}
+
+	private String createMsg(String type, Long id) {
+		return "{\"event_type\": \"" + type + "\", \"data_type\": \"brand\", \"id\": " + id + "}";
 	}
 
 	@Override

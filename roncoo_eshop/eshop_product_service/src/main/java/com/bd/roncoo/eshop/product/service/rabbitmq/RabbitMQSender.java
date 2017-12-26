@@ -11,5 +11,17 @@ public class RabbitMQSender {
    
     public void send(String queue, String message) {  
         this.rabbitTemplate.convertAndSend(queue, message);  
-    }  
+    }
+
+    public void sendMsg(String operationType, String msg) {
+        String queue = null;
+        if(operationType == null || "".equals(operationType)) {
+            queue = RabbitQueue.DATA_CHANGE_QUEUE;
+        } else if("refresh".equals(operationType)) {
+            queue = RabbitQueue.REFRESH_DATA_CHANGE_QUEUE;
+        } else if("high".equals(operationType)) {
+            queue = RabbitQueue.HIGH_PRIORITY_DATA_CHANGE_QUEUE;
+        }
+        send(queue, msg);
+    }
 }
