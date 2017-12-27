@@ -7,6 +7,9 @@ import com.bd.roncoo.eshop.product.service.service.ProductPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 商品属性管理服务
+ */
 @Service
 public class ProductPropertyServiceImpl implements ProductPropertyService {
 	@Autowired

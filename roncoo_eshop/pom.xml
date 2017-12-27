@@ -79,5 +79,7 @@
         <module>eshop_inventory_service</module>
         <module>eshop_datasync_service</module>
         <module>eshop_dataaggr_service</module>
+        <module>eshop_datalink_service</module>
+        <module>eshop_one_service</module>
     </modules>
 </project>

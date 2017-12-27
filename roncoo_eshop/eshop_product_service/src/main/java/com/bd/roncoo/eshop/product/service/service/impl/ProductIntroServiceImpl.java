@@ -7,6 +7,9 @@ import com.bd.roncoo.eshop.product.service.service.ProductIntroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 商品介绍管理服务
+ */
 @Service
 public class ProductIntroServiceImpl implements ProductIntroService {
 	@Autowired

@@ -3,6 +3,8 @@ package com.bd.roncoo.eshop.datasync.service.rabbitmq;
 import com.alibaba.fastjson.JSONObject;
 import com.bd.roncoo.eshop.datasync.service.service.EshopProductService;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -11,6 +13,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 见169-商品详情页动态渲染系统-消息队列架构升级之去重队列.md
+ */
 @Getter
 public class QueueReceiver {
     @Autowired
@@ -19,12 +24,17 @@ public class QueueReceiver {
     private JedisPool jedisPool;
     @Autowired
     private RabbitMQSender rabbitMQSender;
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private static final String BRAND = "brand";
     private static final String CATEGORY = "category";
     private static final String PRODUCT_INTRO = "product_intro";
     private static final String PRODUCT_PROPERTY = "product_property";
     private static final String PRODUCT = "product";
     private static final String PRODUCT_SPECIFICATION = "product_specification";
+    private static final long SEND_PERIOD = 100;
+    /**
+     * 数据同步服务不用每次立刻发送维度数据变更消息，可以将维度数据变更消息采用set方式，在内存中先进行去重
+     */
     private Set<String> dimDataChangeMessageSet = Collections.synchronizedSet(new HashSet<String>());
     private String topic;
 
@@ -61,7 +71,7 @@ public class QueueReceiver {
         Jedis jedis = jedisPool.getResource();
         if("add".equals(eventType) || "update".equals(eventType)) {
             JSONObject dataJSONObject = JSONObject.parseObject(data);
-            //增加/修改消息更新数据
+            //增加/修改消息则更新数据
             jedis.set(keyPrefix + id, dataJSONObject.toJSONString());
         } else if ("delete".equals(eventType)) {
             //删除消息则删除数据
@@ -97,6 +107,8 @@ public class QueueReceiver {
 
     /**
      * 将维度数据变化消息写入RabbitMQ中另外一个Queue，供数据聚合服务消费
+     *
+     * 每隔一段时间将set的数据发送到下一个Queue中，然后将set的数据清除
      */
     private class SendThread extends Thread {
         @Override
@@ -109,7 +121,7 @@ public class QueueReceiver {
                     dimDataChangeMessageSet.clear();
                 }
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(SEND_PERIOD);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

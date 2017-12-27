@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 品牌管理服务
+ */
 @Service
 public class BrandServiceImpl implements BrandService {
 	@Autowired

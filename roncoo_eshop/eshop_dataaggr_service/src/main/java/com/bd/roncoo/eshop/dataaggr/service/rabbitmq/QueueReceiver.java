@@ -14,7 +14,9 @@ public class QueueReceiver {
     private static final String PRODUCT = "product";
 
     public void processMsg(String message) {
+        //解析eshop_datasync_service中发送的消息为json格式数据
         JSONObject messageJSONObject = JSONObject.parseObject(message);
+        //见eshop_datasync_service的processDataChangeMessage()
         String dimType = messageJSONObject.getString("dim_type");
         if(BRAND.equals(dimType)) {
             processBrandDimDataChange(messageJSONObject);
@@ -30,6 +32,9 @@ public class QueueReceiver {
     private void processDimDataChange(JSONObject messageJSONObject, String type) {
         Long id = messageJSONObject.getLong("id");
         Jedis jedis = jedisPool.getResource();
+        /*
+            品牌数据结构多变，有多个不同的表，不同的原子数据，将一个品牌对应的多个原子数据从Redis获取，聚合之后写入Redis
+         */
         String dataJSON = jedis.get(type + "_" + id);
         if(dataJSON != null && !"".equals(dataJSON)) {
             jedis.set("dim_" + type + "_" + id, dataJSON);
@@ -39,20 +44,27 @@ public class QueueReceiver {
     }
 
     private void processBrandDimDataChange(JSONObject messageJSONObject) {
-        processDimDataChange(messageJSONObject, "brand");
+        processDimDataChange(messageJSONObject, BRAND);
     }
 
     private void processCategoryDimDataChange(JSONObject messageJSONObject) {
-        processDimDataChange(messageJSONObject, "category");
+        processDimDataChange(messageJSONObject, CATEGORY);
     }
 
     private void processProductIntroDimDataChange(JSONObject messageJSONObject) {
-        processDimDataChange(messageJSONObject, "product_intro");
+        processDimDataChange(messageJSONObject, PRODUCT_INTRO);
     }
 
     private void processProductDimDataChange(JSONObject messageJSONObject) {
         Long id = messageJSONObject.getLong("id");
         Jedis jedis = jedisPool.getResource();
+        /*
+            通过mget批量查询数据，提高吞吐量
+            List<String> results = jedis.mget("product_" + id, "product_property_" + id, "product_specification_" + id)
+            String productDataJSON = results.get(0)
+    		String productPropertyDataJSON = results.get(1)
+    		String productSpecificationDataJSON = results.get(2)
+         */
         String productDataJSON = jedis.get("product_" + id);
         if(productDataJSON != null && !"".equals(productDataJSON)) {
             JSONObject productDataJSONObject = JSONObject.parseObject(productDataJSON);

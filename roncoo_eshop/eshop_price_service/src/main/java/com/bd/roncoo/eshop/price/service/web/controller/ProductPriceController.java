@@ -4,7 +4,6 @@ import com.bd.roncoo.eshop.price.service.model.ProductPrice;
 import com.bd.roncoo.eshop.price.service.service.ProductPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,7 +46,6 @@ public class ProductPriceController {
 	}
 	
 	@RequestMapping("/findById") 
-	@ResponseBody
 	public ProductPrice findById(Long id){
 		try {
 			return productPriceService.findById(id);

@@ -7,6 +7,9 @@ import com.bd.roncoo.eshop.product.service.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 分类管理服务
+ */
 @Service
 public class CategoryServiceImpl implements CategoryService {
 	@Autowired

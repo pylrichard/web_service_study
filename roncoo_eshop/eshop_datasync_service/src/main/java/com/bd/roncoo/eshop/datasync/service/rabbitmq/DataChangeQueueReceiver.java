@@ -10,9 +10,10 @@ import redis.clients.jedis.Jedis;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component  
+@Component
 @RabbitListener(queues = "data-change-queue")  
 public class DataChangeQueueReceiver extends QueueReceiver {
+	private static final int MSG_LIST_SIZE = 10;
 	private List<JSONObject> brandDataChangeMessageList = new ArrayList<>();
 	
 	public DataChangeQueueReceiver() {
@@ -30,7 +31,7 @@ public class DataChangeQueueReceiver extends QueueReceiver {
 		Jedis jedis = getJedisPool().getResource();
 		if("add".equals(eventType) || "update".equals(eventType)) {
 			brandDataChangeMessageList.add(messageJSONObject);
-			if(brandDataChangeMessageList.size() >= 2) {
+			if(brandDataChangeMessageList.size() >= MSG_LIST_SIZE) {
 				String ids = "";
 				for(int i = 0; i < brandDataChangeMessageList.size(); i++) {
 					ids += brandDataChangeMessageList.get(i).getLong("id");
@@ -38,6 +39,7 @@ public class DataChangeQueueReceiver extends QueueReceiver {
 						ids += ",";
 					}
 				}
+				//调用依赖服务API批量获取数据，提高吞吐量
 				JSONArray brandJSONArray = JSONArray.parseArray(getEshopProductService().findBrandByIds(ids));
 				for(int i = 0; i < brandJSONArray.size(); i++) {
 					JSONObject dataJSONObject = brandJSONArray.getJSONObject(i);
