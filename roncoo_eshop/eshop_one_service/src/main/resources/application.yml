@@ -1,0 +1,15 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.8.10:8761/eureka/
+
+server:
+  port: 8768
+  
+spring:
+  application:
+    name: eshop_one_service
+    
+feign: 
+  hystrix:
+    enabled: true
