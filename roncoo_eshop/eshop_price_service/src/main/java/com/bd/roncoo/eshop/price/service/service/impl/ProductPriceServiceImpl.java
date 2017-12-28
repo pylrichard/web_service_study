@@ -41,12 +41,15 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 	@Override
 	public ProductPrice findById(Long id) {
 		/*
-			先从查询Redis，如果没有获取到数据再查询MySQL，获取到数据后刷回Redis
+			先查询Redis，如果没有获取到数据再查询MySQL，获取到数据后刷回Redis
 			即MySQL+Redis双写一致性问题+解决方案
 		*/
 		return productPriceMapper.findById(id);
 	}
 
+	/**
+	 * OneService调用此API，获取实时价格
+	 */
 	@Override
 	public ProductPrice findByProductId(Long productId) {
 		Jedis jedis = jedisPool.getResource();

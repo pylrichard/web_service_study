@@ -42,16 +42,21 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 	public ProductInventory findById(Long id) {
 		return productInventoryMapper.findById(id);
 	}
-	
+
+	/**
+	 * OneService调用此API，获取实时库存
+	 */
 	@Override
 	public ProductInventory findByProductId(Long productId) {
 		Jedis jedis = jedisPool.getResource();
 		String dataJSON = jedis.get("product_inventory_" + productId);
 		if(dataJSON != null && !"".equals(dataJSON)) {
 			JSONObject dataJSONObject = JSONObject.parseObject(dataJSON);
-			dataJSONObject.put("id", "-1");  
+			//模拟主键
+			dataJSONObject.put("id", "-1");
 			return JSONObject.parseObject(dataJSONObject.toJSONString(), ProductInventory.class);
 		} else {
+			//Redis中没有获取到数据，查询MySQL
 			return productInventoryMapper.findByProductId(productId);
 		}
 	}

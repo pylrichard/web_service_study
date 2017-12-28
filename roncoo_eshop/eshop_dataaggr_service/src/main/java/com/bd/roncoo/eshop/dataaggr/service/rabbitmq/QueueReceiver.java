@@ -64,6 +64,8 @@ public class QueueReceiver {
             String productDataJSON = results.get(0)
     		String productPropertyDataJSON = results.get(1)
     		String productSpecificationDataJSON = results.get(2)
+
+    		见184-商品详情页动态渲染系统-Twemproxy hash tag+mget优化思路介绍.md
          */
         String productDataJSON = jedis.get("product_" + id);
         if(productDataJSON != null && !"".equals(productDataJSON)) {
