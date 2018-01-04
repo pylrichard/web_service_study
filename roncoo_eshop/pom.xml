@@ -81,5 +81,13 @@
         <module>eshop_dataaggr_service</module>
         <module>eshop_datalink_service</module>
         <module>eshop_one_service</module>
+        <module>zuul_server</module>
+        <module>config_server</module>
+        <module>hystrix_terbine_server</module>
+        <module>eureka_server</module>
+        <module>sleuth_server</module>
+        <module>user_service</module>
+        <module>greeting_service</module>
+        <module>say_hello_service</module>
     </modules>
 </project>

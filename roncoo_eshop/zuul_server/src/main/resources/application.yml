@@ -1,0 +1,17 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.8.10:8761/eureka/
+server:
+  port: 8766
+spring:
+  application:
+    name: zuul_server
+zuul:
+  routes:
+    say_hello_service:
+      path: /say_hello_service/**
+      serviceId: say_hello_service
+    greeting_service:
+      path: /greeting_service/**
+      serviceId: greeting_service

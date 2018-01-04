@@ -1,0 +1,14 @@
+spring:
+  application.name: hystrix_terbine_server
+server:
+  port: 8769
+security.basic.enabled: false
+turbine:
+  aggregator:
+    clusterConfig: default
+  appConfig: eshop_one_service
+  clusterNameExpression: new String("default")
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.8.10:8761/eureka/
