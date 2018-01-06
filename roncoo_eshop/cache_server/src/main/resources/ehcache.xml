@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         updateCheck="false">
+
+    <!-- EhCache支持内存+磁盘+堆外内存多层级的缓存 -->
+    <diskStore path="java.io.tmpdir/EhCache"/>
+
+    <!-- defaultCache是默认的缓存策略 -->
+    <!-- external：设置为true则timeout不生效，缓存一直存在，默认为false -->
+    <!-- maxElementsInMemory：用最大缓存数据量除以每个缓存对象大小得到最大缓存对象个数 -->
+    <!-- overflowToDisk：如果内存不够时是否溢写到磁盘 -->
+    <!-- diskPersistent：是否启用磁盘持久化机制 -->
+    <!-- timeToIdleSeconds：对象最大闲置时间，如果超时可能会过期 -->
+    <!-- timeToLiveSeconds：对象最大存活时间 -->
+    <!-- memoryStoreEvictionPolicy：当缓存对象个数达到了最大值时，根据LRU算法从缓存中清除一批数据 -->
+    <defaultCache
+            external="false"
+            maxElementsInMemory="1000"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="300"
+            timeToLiveSeconds="0"
+            memoryStoreEvictionPolicy="LRU"/>
+
+    <!-- 手动指定的缓存策略 -->
+    <!-- 对不同的数据配置不同的缓存策略 -->
+    <cache
+            name="local"
+            external="false"
+            maxElementsInMemory="1000"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="300"
+            timeToLiveSeconds="0"
+            memoryStoreEvictionPolicy="LRU"/>
+</ehcache>
