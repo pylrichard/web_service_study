@@ -19,24 +19,45 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 	@Override
 	public void add(ProductInventory productInventory) {
 		productInventoryMapper.add(productInventory);
-		Jedis jedis = jedisPool.getResource();
-		jedis.set("product_inventory_" + productInventory.getProductId(), JSONObject.toJSONString(productInventory));
-	}
+        setCache(productInventory);
+    }
 	
 	@Override
 	public void update(ProductInventory productInventory) {
-		productInventoryMapper.update(productInventory); 
-		Jedis jedis = jedisPool.getResource();
-		jedis.set("product_inventory_" + productInventory.getProductId(), JSONObject.toJSONString(productInventory));
-	}
+		productInventoryMapper.update(productInventory);
+        setCache(productInventory);
+    }
 
 	@Override
-	public void delete(Long id) {
-		ProductInventory productInventory = findById(id);
-		productInventoryMapper.delete(id); 
-		Jedis jedis = jedisPool.getResource();
-		jedis.del("product_inventory_" + productInventory.getProductId());
-	}
+    public void delete(Long id) {
+        ProductInventory productInventory = findById(id);
+        productInventoryMapper.delete(id);
+        deleteCache(productInventory);
+    }
+
+    @Override
+    public void setCache(ProductInventory productInventory) {
+        Jedis jedis = jedisPool.getResource();
+        jedis.set("product_inventory_" + productInventory.getProductId(),
+                JSONObject.toJSONString(productInventory));
+    }
+
+    @Override
+    public ProductInventory getCache(Long productId) {
+        Jedis jedis = jedisPool.getResource();
+        String result = jedis.get("product_inventory_" + productId);
+        if (result != null && !"".equals(result)) {
+            return (ProductInventory) JSONObject.parse(result);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void deleteCache(ProductInventory productInventory) {
+        Jedis jedis = jedisPool.getResource();
+        jedis.del("product_inventory_" + productInventory.getProductId());
+    }
 
 	@Override
 	public ProductInventory findById(Long id) {

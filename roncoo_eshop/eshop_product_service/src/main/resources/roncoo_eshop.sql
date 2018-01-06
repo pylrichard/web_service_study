@@ -74,9 +74,9 @@ INSERT INTO `product_intro` (`id`, `content`, `product_id`) VALUES (1, '1.jpg,2.
 /*Table structure for table `product_inventory` */
 
 CREATE TABLE `product_inventory` (
-  `id`         INT(11) NOT NULL AUTO_INCREMENT,
-  `value`      INT(11)          DEFAULT NULL,
-  `product_id` INT(11)          DEFAULT NULL,
+  `id`            INT(11) NOT NULL AUTO_INCREMENT,
+  `inventory_cnt` INT(11)          DEFAULT NULL,
+  `product_id`    INT(11)          DEFAULT NULL,
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
@@ -85,7 +85,7 @@ CREATE TABLE `product_inventory` (
 
 /*Data for the table `product_inventory` */
 
-INSERT INTO `product_inventory` (`id`, `value`, `product_id`) VALUES (1, 755, 1);
+INSERT INTO `product_inventory` (`id`, `inventory_cnt`, `product_id`) VALUES (1, 755, 1);
 
 /*Table structure for table `product_price` */
 

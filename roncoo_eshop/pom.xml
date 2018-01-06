@@ -89,5 +89,8 @@
         <module>user_service</module>
         <module>greeting_service</module>
         <module>say_hello_service</module>
+        <module>cache_server</module>
+        <module>eshop_storm</module>
+        <module>eshop_common</module>
     </modules>
 </project>

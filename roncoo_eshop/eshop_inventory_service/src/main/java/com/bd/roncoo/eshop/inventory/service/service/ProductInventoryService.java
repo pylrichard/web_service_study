@@ -8,7 +8,13 @@ public interface ProductInventoryService {
 	void update(ProductInventory productInventory);
 	
 	void delete(Long id);
-	
+
+    void setCache(ProductInventory productInventory);
+
+    void deleteCache(ProductInventory productInventory);
+
+    ProductInventory getCache(Long productId);
+
 	ProductInventory findById(Long id);
 	
 	ProductInventory findByProductId(Long productId);
