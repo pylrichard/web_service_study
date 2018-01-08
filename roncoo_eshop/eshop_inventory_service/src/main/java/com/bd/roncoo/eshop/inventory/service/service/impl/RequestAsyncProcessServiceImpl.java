@@ -1,7 +1,5 @@
 package com.bd.roncoo.eshop.inventory.service.service.impl;
 
-import com.bd.roncoo.eshop.inventory.service.request.ProductInventoryCacheRefreshRequest;
-import com.bd.roncoo.eshop.inventory.service.request.ProductInventoryDbUpdateRequest;
 import com.bd.roncoo.eshop.inventory.service.request.Request;
 import com.bd.roncoo.eshop.inventory.service.request.RequestQueue;
 import com.bd.roncoo.eshop.inventory.service.service.RequestAsyncProcessService;
@@ -9,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 
 @Service("requestAsyncProcessService")
@@ -19,27 +16,6 @@ public class RequestAsyncProcessServiceImpl implements RequestAsyncProcessServic
     @Override
     public void process(Request request) {
         try {
-            //读请求去重
-            RequestQueue requestQueue = RequestQueue.getInstance();
-            Map<Long, Boolean> flagMap = requestQueue.getFlagMap();
-            if (request instanceof ProductInventoryDbUpdateRequest) {
-                //如果是数据库更新请求，将productId对应的标识设置为true
-                flagMap.put(request.getProductId(), true);
-            } else if (request instanceof ProductInventoryCacheRefreshRequest) {
-                Boolean flag = flagMap.get(request.getProductId());
-                if (flag == null) {
-                    flagMap.put(request.getProductId(), false);
-                }
-                //如果是缓存刷新请求，判断标识不为空而且是true，说明之前有一个数据库更新请求
-                if (flag != null && flag) {
-                    flagMap.put(request.getProductId(), false);
-                }
-                //判断标识不为空而且是false，说明之前有一个数据库更新请求+一个缓存刷新请求
-                if (flag != null && !flag) {
-                    //对于读请求就过滤，不要路由到内存队列
-                    return;
-                }
-            }
             /*
                 根据每个请求的商品id，将请求路由到对应的内存队列
              */

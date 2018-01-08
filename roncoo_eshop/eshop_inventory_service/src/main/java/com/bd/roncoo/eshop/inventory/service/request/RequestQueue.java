@@ -11,11 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RequestQueue {
     /**
-     * 内存队列
+     * 内存队列，一个队列对应一个工作线程
      */
     private List<ArrayBlockingQueue<Request>> queues = new ArrayList<>();
     /**
-     * 标识位map
+     * 标识位map，根据value为true还是false，判断之前执行的是写请求(数据库更新请求)还是读请求(缓存更新请求)
      */
     private Map<Long, Boolean> flagMap = new ConcurrentHashMap<>();
 

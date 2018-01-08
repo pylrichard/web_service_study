@@ -4,4 +4,6 @@ public interface Request {
     void process();
 
     Long getProductId();
+
+    boolean isForceRefresh();
 }

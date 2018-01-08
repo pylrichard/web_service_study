@@ -19,6 +19,16 @@ import org.springframework.transaction.PlatformTransactionManager;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+/**
+ * 缓存与数据库双写一致性保障方案
+ * 1 线程池+内存队列初始化见InitListener、RequestProcessorThreadPool、RequestProcessorThread、RequestQueue
+ * 2 读请求见ProductInventoryCacheRefreshRequest(从数据库读取数据更新到缓存)、写请求见ProductInventoryDbUpdateRequest(更新数据库)
+ * 3 读/写请求异步执行见RequestAsyncProcessServiceImpl
+ * 4 写请求处理见ProductInventoryController.update()、读请求处理见findByProductId()
+ * 5 读请求去重优化见RequestProcessorThread
+ * <p>
+ * 先根据1理解初始化流程，再根据4理解写请求/读请求处理流程
+ */
 @EnableAutoConfiguration
 @SpringBootApplication
 @ComponentScan

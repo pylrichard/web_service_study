@@ -14,6 +14,10 @@
         <version>0.1.0</version>
     </parent>
 
+    <!--
+        手动安装依赖
+        mvn install:install-file -Dfile=jedis-x.x.x.jar -DgroupId=redis.clients -DartifactId=jedis -Dversion=x.x.x -Dpackaging=jar
+    -->
     <dependencies>
         <dependency>
             <groupId>mysql</groupId>

@@ -24,7 +24,7 @@ public class ProductInventoryDbUpdateRequest implements Request {
         productInventoryService.deleteCache(productInventory);
         //模拟先删除Redis中的缓存，还没更新数据库中的库存，此时发送过来一个读请求
         try {
-            Thread.sleep(20000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -38,5 +38,10 @@ public class ProductInventoryDbUpdateRequest implements Request {
     @Override
     public Long getProductId() {
         return productInventory.getProductId();
+    }
+
+    @Override
+    public boolean isForceRefresh() {
+        return false;
     }
 }

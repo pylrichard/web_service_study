@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.bd.roncoo.eshop.inventory.service.mapper.ProductInventoryMapper;
 import com.bd.roncoo.eshop.inventory.service.model.ProductInventory;
 import com.bd.roncoo.eshop.inventory.service.service.ProductInventoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -11,6 +13,7 @@ import redis.clients.jedis.JedisPool;
 
 @Service
 public class ProductInventoryServiceImpl implements ProductInventoryService {
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private ProductInventoryMapper productInventoryMapper;
 	@Autowired
@@ -26,7 +29,9 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 	public void update(ProductInventory productInventory) {
 		productInventoryMapper.update(productInventory);
         setCache(productInventory);
-    }
+		logger.info("已修改数据库中的库存，商品id=" + productInventory.getProductId()
+				+ ", 商品库存数量=" + productInventory.getInventoryCnt());
+	}
 
 	@Override
     public void delete(Long id) {
@@ -38,9 +43,11 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     @Override
     public void setCache(ProductInventory productInventory) {
         Jedis jedis = jedisPool.getResource();
-        jedis.set("product_inventory_" + productInventory.getProductId(),
-                JSONObject.toJSONString(productInventory));
-    }
+		String key = "product_inventory_" + productInventory.getProductId();
+		jedis.set(key, JSONObject.toJSONString(productInventory));
+		logger.info("已更新商品库存的缓存，商品id=" + productInventory.getProductId()
+				+ ", 商品库存数量=" + productInventory.getInventoryCnt() + ", key=" + key);
+	}
 
     @Override
     public ProductInventory getCache(Long productId) {
@@ -56,8 +63,10 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     @Override
     public void deleteCache(ProductInventory productInventory) {
         Jedis jedis = jedisPool.getResource();
-        jedis.del("product_inventory_" + productInventory.getProductId());
-    }
+		String key = "product_inventory_" + productInventory.getProductId();
+		jedis.del(key);
+		logger.info("已删除Redis中的缓存，key=" + key);
+	}
 
 	@Override
 	public ProductInventory findById(Long id) {

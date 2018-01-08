@@ -19,6 +19,11 @@ public class RequestProcessorThreadPool {
     private ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_NUM);
 
     public RequestProcessorThreadPool() {
+        /*
+            一个队列对应一个工作线程
+            每个工作线程串行执行队列中的请求
+            比如工作线程完成写请求(数据库更新请求)后，执行下一个读请求(缓存更新请求，从数据库读取最新的值，然后刷新缓存)
+         */
         RequestQueue requestQueue = RequestQueue.getInstance();
         for (int i = 0; i < THREAD_NUM; i++) {
             ArrayBlockingQueue<Request> queue = new ArrayBlockingQueue<>(QUEUE_SIZE);
