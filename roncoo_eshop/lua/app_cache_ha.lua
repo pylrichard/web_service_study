@@ -10,7 +10,6 @@ local REDIS_MASTER_IP = "192.168.8.10"
 local REDIS_MASTER_PORT = 1111
 local REDIS_SLAVE_IP = "192.168.8.11"
 local REDIS_SLAVE_PORT = 1112
-local cjson = require("cjson")
 local http = require("resty.http")
 local redis = require("resty.redis")
 local uri_args = ngx.req.get_uri_args()
@@ -31,7 +30,7 @@ local function try_upgrade_datalink_service()
     if diff_time > DIFF_TIME then
 	    local httpc = http.new()
 		-- 重连数据直连服务
-	    local resp, err = httpc:request_uri("http://DATALINK_SERVICE_IP:DATALINK_SERVICE_PORT", {
+        local resp, err = httpc:request_uri("http://" .. DATALINK_SERVICE_IP .. ":" .. DATALINK_SERVICE_PORT, {
             method = "GET",
     	    path = "/product?productId="..product_id
 	    })
@@ -44,7 +43,7 @@ end
 
 local function access_datalink_service()
     local httpc = http.new()
-	local resp, err = httpc:request_uri("http://DATALINK_SERVICE_IP:DATALINK_SERVICE_PORT", {
+    local resp, err = httpc:request_uri("http://" .. DATALINK_SERVICE_IP .. ":" .. DATALINK_SERVICE_PORT, {
 	    method = "GET",
 	    path = "/product?productId="..product_id
 	})
@@ -81,6 +80,18 @@ local function try_upgrade_redis_slave()
 	end
 end
 
+local function close_redis(red)
+    if not red then
+        return
+    end
+    local pool_max_idle_time = 10000
+    local pool_size = 100
+    local ok, err = red:set_keepalive(pool_max_idle_time, pool_size)
+    if not ok then
+        ngx.say("set keepalive error : ", err)
+    end
+end
+
 local function access_redis_slave()
     local ok, err, red = connect_redis(REDIS_SLAVE_IP, REDIS_SLAVE_PORT)
 
@@ -102,21 +113,9 @@ local function access_redis_slave()
 end
 
 local function access_redis_master()
-	local ok, err, red = connect_redis((REDIS_MASTER_IP, REDIS_MASTER_PORT)
+    local ok, err, red = connect_redis(REDIS_MASTER_IP, REDIS_MASTER_PORT)
     local redis_resp, redis_err = red:get("dim_product_"..product_id)
 	product_cache = redis_resp
-end
-
-local function close_redis(red)
-    if not red then
-        return
-	end
-	local pool_max_idle_time = 10000
-	local pool_size = 100
-	local ok, err = red:set_keepalive(pool_max_idle_time, pool_size)
-	if not ok then
-		ngx.say("set keepalive error : ", err)
-	end
 end
 
 if product_cache == "" or product_cache == nil then
@@ -130,23 +129,23 @@ if product_cache == "" or product_cache == nil then
 
         -- 如果要进行数据直连服务降级，访问Redis主集群
 		if data_link_downgrade == true then
-	        access_redis_master
-	        try_upgrade_datalink_service
+            access_redis_master()
+            try_upgrade_datalink_service()
 		else
-			access_datalink_service
-			try_upgrade_redis_slave
+            access_datalink_service()
+            try_upgrade_redis_slave()
 		end
     else
-        local redis_resp, redis_err = access_redis_slave
+        local redis_resp, redis_err = access_redis_slave()
 	  
 	    if redis_resp == ngx.null or redis_resp == "" or redis_resp == nil then
 	        local data_link_downgrade = nginx_local_cache:get("data_link_downgrade")
 
 		    if data_link_downgrade == "true" then
-	            access_redis_master
-		        try_upgrade_datalink_service
+                access_redis_master()
+                try_upgrade_datalink_service()
 		    else
-			    access_datalink_service
+                access_datalink_service()
 	    	end
         else
 		    product_cache = redis_resp
@@ -154,9 +153,9 @@ if product_cache == "" or product_cache == nil then
     end
 
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
-    local expire+_time = math.random(600, 1200)
+    local expire_time = math.random(600, 1200)
     -- 更新Nginx本地Cache
-    nginx_local_cache:set(product_cache_key, product_cache, expire+_time)
+    nginx_local_cache:set(product_cache_key, product_cache, expire_time)
 end
 
 local context = {

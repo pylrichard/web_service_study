@@ -12,7 +12,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
- * 系统初始化的监听器
+ * 系统初始化监听器
  */
 public class InitListener implements ServletContextListener {
     @Override

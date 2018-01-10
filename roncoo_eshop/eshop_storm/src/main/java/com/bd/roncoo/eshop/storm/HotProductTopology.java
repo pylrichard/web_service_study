@@ -12,6 +12,11 @@ import org.apache.storm.utils.Utils;
 
 /**
  * 热数据统计拓扑
+ *
+ * 提交jar到Storm执行
+ * storm jar eshop_storm-0.1.0.jar com.bd.roncoo.eshop.storm.HotProductTopology HotProductTopology
+ *
+ * storm kill HotProductTopology
  */
 public class HotProductTopology {
     public static void main(String[] args) {
@@ -22,6 +27,7 @@ public class HotProductTopology {
                 .shuffleGrouping("AccessLogKafkaSpout");
         builder.setBolt("ProductCountBolt", new ProductCountBolt(), 2)
                 .setNumTasks(2)
+                //根据商品id进行分组
                 .fieldsGrouping("LogParseBolt", new Fields("productId"));
         Config config = new Config();
         if (args != null && args.length > 0) {
@@ -32,6 +38,9 @@ public class HotProductTopology {
                 e.printStackTrace();
             }
         } else {
+            /*
+                本地模式启动
+             */
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology("HotProductTopology", config, builder.createTopology());
             Utils.sleep(30000);

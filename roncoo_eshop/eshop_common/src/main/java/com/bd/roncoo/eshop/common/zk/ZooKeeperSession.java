@@ -53,7 +53,7 @@ public class ZooKeeperSession {
                     Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
             logger.info("success to acquire lock for product[id=" + productId + "]");
         } catch (Exception e) {
-            //如果商品对应的锁的node已经存在，会触发NodeExistsException
+            //如果商品对应的锁的ZNode已经存在，会触发NodeExistsException
             int count = 0;
             while (true) {
                 try {

@@ -1,13 +1,13 @@
 package com.bd.roncoo.eshop.cache.server.controller;
 
 import com.bd.roncoo.eshop.cache.server.degrade.IsDegrade;
-import com.bd.roncoo.eshop.cache.server.http.HttpClientUtils;
 import com.bd.roncoo.eshop.cache.server.hystrix.command.*;
 import com.bd.roncoo.eshop.cache.server.model.ProductInfo;
 import com.bd.roncoo.eshop.cache.server.model.ShopInfo;
 import com.bd.roncoo.eshop.cache.server.preheat.CachePreheatThread;
 import com.bd.roncoo.eshop.cache.server.rebuild.RebuildCacheQueue;
 import com.bd.roncoo.eshop.cache.server.service.CacheService;
+import com.bd.roncoo.eshop.common.http.HttpClientUtils;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixObservableCommand;
 import org.slf4j.Logger;

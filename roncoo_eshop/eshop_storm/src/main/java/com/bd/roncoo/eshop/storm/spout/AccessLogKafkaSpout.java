@@ -22,12 +22,12 @@ import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
- * Kafka消费数据Spout
+ * Kafka消费数据Spout，独立线程进行消费并写入队列
  */
 public class AccessLogKafkaSpout extends BaseRichSpout {
     private static final long serialVersionUID = 8698470299234327074L;
     private static final Logger logger = LoggerFactory.getLogger(AccessLogKafkaSpout.class);
-    private ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<String>(1000);
+    private ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(1000);
     private SpoutOutputCollector collector;
 
     @Override
@@ -50,7 +50,7 @@ public class AccessLogKafkaSpout extends BaseRichSpout {
         ConsumerConnector consumerConnector = Consumer.
                 createJavaConsumerConnector(consumerConfig);
         String topic = "access-log";
-        Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
+        Map<String, Integer> topicCountMap = new HashMap<>(16);
         topicCountMap.put(topic, 1);
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap =
                 consumerConnector.createMessageStreams(topicCountMap);
@@ -72,6 +72,7 @@ public class AccessLogKafkaSpout extends BaseRichSpout {
         @Override
         @SuppressWarnings("unchecked")
         public void run() {
+            //获取Nginx+Lua发送的日志消息
             ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
             while (it.hasNext()) {
                 String message = new String(it.next().message());
@@ -85,13 +86,17 @@ public class AccessLogKafkaSpout extends BaseRichSpout {
         }
     }
 
+    /**
+     * 每次判断队列中是否有数据，有则获取并发送，不能阻塞
+     */
     @Override
     public void nextTuple() {
         if (queue.size() > 0) {
             try {
                 String message = queue.take();
+                //发送日志给LogParseBolt.execute()进行处理
                 collector.emit(new Values(message));
-                logger.info("AccessLogKafkaSpout发射出去一条日志 message=" + message);
+                logger.info("AccessLogKafkaSpout发送一条日志 message=" + message);
             } catch (Exception e) {
                 e.printStackTrace();
             }

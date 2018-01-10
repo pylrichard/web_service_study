@@ -18,9 +18,7 @@ import java.util.Map;
  */
 public class LogParseBolt extends BaseRichBolt {
     private static final long serialVersionUID = -8017609899644290359L;
-
     private static final Logger logger = LoggerFactory.getLogger(LogParseBolt.class);
-
     private OutputCollector collector;
 
     @Override
@@ -31,12 +29,15 @@ public class LogParseBolt extends BaseRichBolt {
 
     @Override
     public void execute(Tuple tuple) {
+        //接收AccessLogKafkaSpout发送的日志
         String message = tuple.getStringByField("message");
         logger.info("LogParseBolt接收到一条日志 message=" + message);
         JSONObject messageJSON = JSONObject.parseObject(message);
         JSONObject uriArgsJSON = messageJSON.getJSONObject("uri_args");
+        //获取商品id
         Long productId = uriArgsJSON.getLong("productId");
         if (productId != null) {
+            //发送日志给ProductCountBolt.execute()
             collector.emit(new Values(productId));
             logger.info("LogParseBolt发送一个请求 productId=" + productId);
         }
