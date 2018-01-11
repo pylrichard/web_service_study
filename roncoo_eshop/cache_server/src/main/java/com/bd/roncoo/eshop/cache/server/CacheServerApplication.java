@@ -16,12 +16,19 @@ import redis.clients.jedis.JedisCluster;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 商品详情页缓存数据服务工作流程
+ * 1 监听多个Kafka Topic，每个Topic对应一个服务
+ * 2 如果一个服务发生数据变更，发送消息到Topic
+ * 3 缓存数据服务监听到消息后，调用对应的服务API从MySQL获取数据
+ * 4 缓存数据服务获取到数据后，将数据写入本地缓存(EhCache)和Redis
+ */
 @EnableAutoConfiguration
 @SpringBootApplication
 public class CacheServerApplication {
     @Bean
-    public JedisCluster JedisClusterFactory() {
-        Set<HostAndPort> jedisClusterNodes = new HashSet<HostAndPort>();
+    public JedisCluster jedisClusterFactory() {
+        Set<HostAndPort> jedisClusterNodes = new HashSet<>();
         jedisClusterNodes.add(new HostAndPort("192.168.8.10", 7003));
         jedisClusterNodes.add(new HostAndPort("192.168.8.10", 7004));
         jedisClusterNodes.add(new HostAndPort("192.168.8.11", 7006));
@@ -35,6 +42,7 @@ public class CacheServerApplication {
     public ServletListenerRegistrationBean servletListenerRegistrationBean() {
         ServletListenerRegistrationBean servletListenerRegistrationBean =
                 new ServletListenerRegistrationBean();
+        //设置初始化监听器
         servletListenerRegistrationBean.setListener(new InitListener());
 
         return servletListenerRegistrationBean;

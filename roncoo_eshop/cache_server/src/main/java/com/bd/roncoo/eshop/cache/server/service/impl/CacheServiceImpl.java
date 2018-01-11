@@ -10,16 +10,10 @@ import com.bd.roncoo.eshop.cache.server.service.CacheService;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.JedisCluster;
-
-import javax.annotation.Resource;
 
 @Service("cacheService")
 public class CacheServiceImpl implements CacheService {
     public static final String CACHE_NAME = "local";
-
-    @Resource
-    private JedisCluster jedisCluster;
 
     /**
      * 将商品信息保存到本地缓存中

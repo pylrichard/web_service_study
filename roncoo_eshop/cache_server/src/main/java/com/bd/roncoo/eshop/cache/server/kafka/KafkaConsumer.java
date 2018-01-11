@@ -23,13 +23,13 @@ public class KafkaConsumer implements Runnable {
     @Override
     @SuppressWarnings("rawtypes")
     public void run() {
-        Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
+        Map<String, Integer> topicCountMap = new HashMap<>(16);
+        //用1个线程消费Topic
         topicCountMap.put(topic, 1);
-
+        //key是topic
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap =
                 consumerConnector.createMessageStreams(topicCountMap);
         List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(topic);
-
         for (KafkaStream stream : streams) {
             new Thread(new KafkaMessageProcessor(stream)).start();
         }

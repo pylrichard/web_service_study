@@ -34,8 +34,15 @@ public class KafkaMessageProcessor implements Runnable {
             String message = new String(it.next().message());
             //将message转换成json对象
             JSONObject messageJSONObject = JSONObject.parseObject(message);
-            //提取消息对应的服务的标识
+            //提取消息对应的服务标识
             String serviceId = messageJSONObject.getString("serviceId");
+            /*
+                1 服务发送来数据变更消息(比如商品信息服务，商品店铺信息服务)，每个消息包含服务名以及商品id
+                2 接收到消息后，根据商品id调用对应服务API获取数据，此处模拟获取到数据
+                3 商品信息包含id、名称、价格、图片列表、商品规格、售后信息、颜色、尺寸
+                4 商品店铺信息属于其他维度，用此维度模拟缓存数据维度化拆分，包含id、店铺名称、店铺等级、店铺好评率
+                5 分别获取到数据后，将数据转换成json格式，分别存储到EhCache和Redis
+             */
             if ("productInfoService".equals(serviceId)) {
                 processProductInfoChangeMessage(messageJSONObject);
             } else if ("shopInfoService".equals(serviceId)) {
@@ -45,7 +52,7 @@ public class KafkaMessageProcessor implements Runnable {
     }
 
     /**
-     * 处理商品信息变更的消息
+     * 处理商品信息变更消息
      */
     private void processProductInfoChangeMessage(JSONObject messageJSONObject) {
         //提取商品id
@@ -58,11 +65,11 @@ public class KafkaMessageProcessor implements Runnable {
                 "\"service\": \"iPhone的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", " +
                 "\"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:00:00\"}";
         ProductInfo productInfo = JSONObject.parseObject(productInfoJSON, ProductInfo.class);
-        //将数据写入Redis之前，先获取zk分布式锁
+        //将数据写入Redis之前，先获取ZK分布式锁
         ZooKeeperSession zkSession = ZooKeeperSession.getInstance();
         zkSession.acquireDistributedLock(productId);
         //获取到锁后从Redis获取数据
-        ProductInfo existedProductInfo = cacheService.getProductInfoFromReidsCache(productId);
+        ProductInfo existedProductInfo = cacheService.getProductInfoFromRedisCache(productId);
         if (existedProductInfo != null) {
 			/*
 				比较当前数据的时间和已有数据的时间
@@ -90,13 +97,13 @@ public class KafkaMessageProcessor implements Runnable {
         }
         cacheService.saveProductInfo2LocalCache(productInfo);
         logger.info("获取保存到本地缓存的商品信息：" + cacheService.getProductInfoFromLocalCache(productId));
-        cacheService.saveProductInfo2ReidsCache(productInfo);
+        cacheService.saveProductInfo2RedisCache(productInfo);
         //释放分布式锁
         zkSession.releaseDistributedLock(productId);
     }
 
     /**
-     * 处理店铺信息变更的消息
+     * 处理店铺信息变更消息
      */
     @SuppressWarnings("unused")
     private void processShopInfoChangeMessage(JSONObject messageJSONObject) {
@@ -110,6 +117,6 @@ public class KafkaMessageProcessor implements Runnable {
         ShopInfo shopInfo = JSONObject.parseObject(shopInfoJSON, ShopInfo.class);
         cacheService.saveShopInfo2LocalCache(shopInfo);
         logger.info("获取保存到本地缓存的店铺信息：" + cacheService.getShopInfoFromLocalCache(shopId));
-        cacheService.saveShopInfo2ReidsCache(shopInfo);
+        cacheService.saveShopInfo2RedisCache(shopInfo);
     }
 }

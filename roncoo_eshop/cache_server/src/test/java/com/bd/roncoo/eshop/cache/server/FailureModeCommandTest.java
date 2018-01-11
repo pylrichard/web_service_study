@@ -1,9 +1,8 @@
 package com.bd.roncoo.eshop.cache.server;
 
-import com.roncoo.eshop.cache.ha.hystrix.command.FailureModeCommand;
+import com.bd.roncoo.eshop.cache.server.hystrix.command.FailureModeCommand;
 
 public class FailureModeCommandTest {
-
     public static void main(String[] args) {
         try {
             FailureModeCommand failureModeCommand = new FailureModeCommand(true);
@@ -12,5 +11,4 @@ public class FailureModeCommandTest {
             e.printStackTrace();
         }
     }
-
 }

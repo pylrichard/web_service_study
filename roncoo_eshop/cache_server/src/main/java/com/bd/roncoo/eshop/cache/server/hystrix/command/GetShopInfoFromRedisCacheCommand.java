@@ -25,7 +25,7 @@ public class GetShopInfoFromRedisCacheCommand extends HystrixCommand<ShopInfo> {
     @Override
     protected ShopInfo run() throws Exception {
         JedisCluster jedisCluster = (JedisCluster) SpringContext.getApplicationContext()
-                .getBean("JedisClusterFactory");
+                .getBean("jedisClusterFactory");
         String key = "shop_info_" + shopId;
         String json = jedisCluster.get(key);
         if (json != null) {
