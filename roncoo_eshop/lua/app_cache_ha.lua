@@ -14,10 +14,13 @@ local http = require("resty.http")
 local redis = require("resty.redis")
 local uri_args = ngx.req.get_uri_args()
 local product_id = uri_args["productId"]
+-- my_cache名称可配置
 local nginx_local_cache = ngx.shared.my_cache
 local product_cache_key = "product_"..product_id
 -- 从Nginx本地Cache获取数据
 local product_cache = nginx_local_cache:get(product_cache_key)
+-- local cjson = require("cjson")
+-- local product_cache_json = cjson.decode(product_cache)
 
 local function get_diff_time(downgrade_time)
     local cur_time = os.time()

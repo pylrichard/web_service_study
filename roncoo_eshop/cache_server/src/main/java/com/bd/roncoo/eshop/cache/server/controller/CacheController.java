@@ -77,11 +77,18 @@ public class CacheController {
                 logger.info("从EhCache中获取缓存，商品信息=" + productInfo);
             }
         }
+        /*
+            被动重建
+            在Nginx本地缓存->Redis->EhCache这3级缓存中都没有获取到数据，可能被LRU清理掉了
+            调用服务API获取数据返回给Nginx，同时推送重建消息到内存队列，缓存重建线程异步消费
+            缓存重建线程先获取分布式锁，然后比较更新时间，判断是否需要更新Redis
+            见57-分布式缓存重建并发冲突问题以及Zookeeper分布式锁解决方案
+         */
         if (productInfo == null) {
             GetProductInfoCommand command = new GetProductInfoCommand(productId);
             productInfo = command.execute();
             /*
-				将数据推送到内存队列中
+                将数据推送到内存队列中，重建缓存
 			 */
             RebuildCacheQueue rebuildCacheQueue = RebuildCacheQueue.getInstance();
             rebuildCacheQueue.putProductInfo(productInfo);

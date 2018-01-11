@@ -14,6 +14,11 @@ import org.slf4j.LoggerFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 主动更新
+ * 监听Kafka Topic，获取到商品数据变更消息之后，调用商品服务API获取数据，更新到EhCache和Redis中
+ * 先获取分布式锁，然后比较更新时间，判断是否需要更新Redis
+ */
 @SuppressWarnings("rawtypes")
 public class KafkaMessageProcessor implements Runnable {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -72,7 +77,7 @@ public class KafkaMessageProcessor implements Runnable {
         ProductInfo existedProductInfo = cacheService.getProductInfoFromRedisCache(productId);
         if (existedProductInfo != null) {
 			/*
-				比较当前数据的时间和已有数据的时间
+                比较当前数据的更新时间和已有数据的更新时间
 			 */
             try {
                 Date date = sdf.parse(productInfo.getModifiedTime());

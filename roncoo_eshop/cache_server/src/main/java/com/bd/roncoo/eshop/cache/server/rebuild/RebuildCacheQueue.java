@@ -8,7 +8,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  * 重建缓存的内存队列
  */
 public class RebuildCacheQueue {
-    private ArrayBlockingQueue<ProductInfo> queue = new ArrayBlockingQueue<ProductInfo>(1000);
+    private ArrayBlockingQueue<ProductInfo> queue = new ArrayBlockingQueue<>(1000);
 
     public void putProductInfo(ProductInfo productInfo) {
         try {

@@ -12,6 +12,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * 加锁就是创建某个product id对应的一个临时ZNode
+ * ZK保证只会创建一个临时ZNode，其他请求如果再要创建临时ZNode，就会触发NodeExistsException
+ * 如果临时ZNode创建成功，说明成功加锁，此时可以执行对Redis数据的操作
+ * 如果临时ZNode创建失败，说明其它服务已经获取到锁，在操作Redis中的数据，那么就不断等待，直到可以获取到锁为止
+ * 释放锁就是删除临时ZNode，此时其他服务可以成功创建临时ZNode，获取到锁
+ */
 public class ZooKeeperSession {
     /**
      * 使用CountDownLatch进行多线程并发同步，传入的数字参数代表
