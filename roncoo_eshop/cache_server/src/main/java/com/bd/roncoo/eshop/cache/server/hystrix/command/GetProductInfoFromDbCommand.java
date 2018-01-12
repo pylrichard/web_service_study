@@ -5,10 +5,10 @@ import com.bd.roncoo.eshop.cache.server.model.ProductInfo;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 
-public class GetProductInfoFromMySQLCommand extends HystrixCommand<ProductInfo> {
+public class GetProductInfoFromDbCommand extends HystrixCommand<ProductInfo> {
     private Long productId;
 
-    public GetProductInfoFromMySQLCommand(Long productId) {
+    public GetProductInfoFromDbCommand(Long productId) {
         super(HystrixCommandGroupKey.Factory.asKey("ProductInfoService"));
         this.productId = productId;
     }

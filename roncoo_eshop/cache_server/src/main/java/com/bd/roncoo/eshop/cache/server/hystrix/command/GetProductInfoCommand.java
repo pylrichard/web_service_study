@@ -16,6 +16,8 @@ import java.util.Date;
  * HystrixCommand封装服务调用请求，使用线程池内的一个线程来处理请求
  * 如果此时并发调用请求数有1000，但是线程池内只有10个线程，只会使用这10个线程处理请求
  * 不会因为依赖服务调用延迟，将Tomcat内所有的线程耗尽，导致缓存数据服务不可用
+ *
+ * 运行在独立线程池的线程中
  */
 public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
     public static final HystrixCommandKey KEY = HystrixCommandKey.Factory.asKey("GetProductInfoCommand");
@@ -25,15 +27,20 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ProductService"))
                 .andCommandKey(KEY)
                 /*
+                    默认的thread pool key是command group名称
+                    对同一个服务的不同接口使用独立的线程池，见92-Hystrix的线程池+服务+接口划分以及资源池的容量大小控制
+
                     设置线程池参数
                  */
                 .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey("GetProductInfoPool"))
                 .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
+                        //线程池大小
                         .withCoreSize(3)
                         .withMaximumSize(30)
                         .withAllowMaximumSizeToDivergeFromCoreSize(true)
                         .withKeepAliveTimeMinutes(1)
                         .withMaxQueueSize(12)
+                        //command在提交到线程池之前，会先进入一个队列中，队列满之后才会reject之后的command
                         .withQueueSizeRejectionThreshold(15))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                         .withCircuitBreakerRequestVolumeThreshold(30)

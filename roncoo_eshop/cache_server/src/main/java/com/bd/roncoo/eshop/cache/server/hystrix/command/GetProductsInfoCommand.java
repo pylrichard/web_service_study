@@ -12,10 +12,10 @@ import rx.schedulers.Schedulers;
 /**
  * 批量查询多个商品数据的command
  */
-public class GetProductInfosCommand extends HystrixObservableCommand<ProductInfo> {
+public class GetProductsInfoCommand extends HystrixObservableCommand<ProductInfo> {
     private String[] productIds;
 
-    public GetProductInfosCommand(String[] productIds) {
+    public GetProductsInfoCommand(String[] productIds) {
         super(HystrixCommandGroupKey.Factory.asKey("GetProductInfoGroup"));
         this.productIds = productIds;
     }

@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
+/**
+ * 运行在Tomcat的线程中
+ */
 @RestController
 public class CacheController {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -52,9 +55,11 @@ public class CacheController {
             见57-分布式缓存重建并发冲突问题以及Zookeeper分布式锁解决方案
          */
         if (productInfo == null) {
+            //线程池隔离
             HystrixCommand<ProductInfo> getProductInfoCommand = new GetProductInfoCommand(productId);
             //同步调用
             productInfo = getProductInfoCommand.execute();
+            //信号量隔离
             Long cityId = productInfo.getCityId();
             GetCityNameCommand getCityNameCommand = new GetCityNameCommand(cityId);
             String cityName = getCityNameCommand.execute();
@@ -88,16 +93,16 @@ public class CacheController {
     /**
      * 批量查询多条商品数据的请求
      */
-    @GetMapping("/getProductInfos")
-    public String getProductInfos(String productIds) {
-        HystrixObservableCommand<ProductInfo> getProductInfosCommand =
-                new GetProductInfosCommand(productIds.split(","));
+    @GetMapping("/getProductsInfo")
+    public String getProductsInfo(String productIds) {
+        HystrixObservableCommand<ProductInfo> getProductsInfoCommand =
+                new GetProductsInfoCommand(productIds.split(","));
         //立即执行command
-        Observable<ProductInfo> observable = getProductInfosCommand.observe();
+        Observable<ProductInfo> observable = getProductsInfoCommand.observe();
         /*
             不会立即执行command，调用subscribe()后才会执行
          */
-        observable = getProductInfosCommand.toObservable();
+        observable = getProductsInfoCommand.toObservable();
         observable.subscribe(new Observer<ProductInfo>() {
             @Override
             public void onCompleted() {
@@ -124,9 +129,9 @@ public class CacheController {
         }
         List<Future<ProductInfo>> futures = new ArrayList<>();
         for (String productId : productIds.split(",")) {
-            GetProductInfosCollapse getProductInfosCollapse =
-                    new GetProductInfosCollapse(Long.valueOf(productId));
-            futures.add(getProductInfosCollapse.queue());
+            GetProductsInfoCollapse getProductsInfoCollapse =
+                    new GetProductsInfoCollapse(Long.valueOf(productId));
+            futures.add(getProductsInfoCollapse.queue());
         }
         try {
             for (Future<ProductInfo> future : futures) {

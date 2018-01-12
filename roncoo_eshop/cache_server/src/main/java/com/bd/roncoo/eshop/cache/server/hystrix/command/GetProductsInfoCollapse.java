@@ -10,12 +10,12 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.List;
 
-public class GetProductInfosCollapse extends HystrixCollapser<List<ProductInfo>, ProductInfo, Long> {
-    private static Logger logger = LoggerFactory.getLogger(GetProductInfosCollapse.class);
+public class GetProductsInfoCollapse extends HystrixCollapser<List<ProductInfo>, ProductInfo, Long> {
+    private static Logger logger = LoggerFactory.getLogger(GetProductsInfoCollapse.class);
     private Long productId;
 
-    public GetProductInfosCollapse(Long productId) {
-        super(Setter.withCollapserKey(HystrixCollapserKey.Factory.asKey("GetProductInfosCollapse"))
+    public GetProductsInfoCollapse(Long productId) {
+        super(Setter.withCollapserKey(HystrixCollapserKey.Factory.asKey("GetProductsInfoCollapse"))
                 .andCollapserPropertiesDefaults(HystrixCollapserProperties.Setter()
                         .withMaxRequestsInBatch(100)
                         .withTimerDelayInMilliseconds(20)));
@@ -61,7 +61,7 @@ public class GetProductInfosCollapse extends HystrixCollapser<List<ProductInfo>,
 
         public BatchCommand(Collection<CollapsedRequest<ProductInfo, Long>> requests) {
             super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ProductService"))
-                    .andCommandKey(HystrixCommandKey.Factory.asKey("GetProductInfosCollapserBatchCommand")));
+                    .andCommandKey(HystrixCommandKey.Factory.asKey("GetProductsInfoCollapserBatchCommand")));
             this.requests = requests;
         }
 
@@ -75,7 +75,7 @@ public class GetProductInfosCollapse extends HystrixCollapser<List<ProductInfo>,
             String params = paramsBuilder.toString();
             params = params.substring(0, params.length() - 1);
             //将多个商品id合并在一个batch内，发送一次网络请求获取所有结果
-            String url = "http://localhost:8082/getProductInfos?productIds=" + params;
+            String url = "http://localhost:8082/getProductsInfo?productIds=" + params;
             String response = HttpClientUtils.sendGetRequest(url);
             List<ProductInfo> productInfos = JSONArray.parseArray(response, ProductInfo.class);
             for (ProductInfo productInfo : productInfos) {
