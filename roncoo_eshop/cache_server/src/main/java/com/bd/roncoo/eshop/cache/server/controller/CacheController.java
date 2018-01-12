@@ -7,7 +7,6 @@ import com.bd.roncoo.eshop.cache.server.model.ShopInfo;
 import com.bd.roncoo.eshop.cache.server.preheat.CachePreheatThread;
 import com.bd.roncoo.eshop.cache.server.rebuild.RebuildCacheQueue;
 import com.bd.roncoo.eshop.cache.server.service.CacheService;
-import com.bd.roncoo.eshop.common.http.HttpClientUtils;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixObservableCommand;
 import org.slf4j.Logger;
@@ -29,43 +28,11 @@ public class CacheController {
     @Resource
     private CacheService cacheService;
 
-    @GetMapping("/change/product")
-    public String changeProduct(Long productId) {
-        String url = "http://localhost:8082/getProductInfo?productId=" + productId;
-        String response = HttpClientUtils.sendGetRequest(url);
-        logger.info(response);
-
-        return "success";
-    }
-
     /**
-     * 各级缓存失效，Nginx发送请求到缓存服务获取原始数据
+     * 各级缓存失效，Nginx会发送请求到缓存数据服务获取数据
      */
     @GetMapping("/getProductInfo")
     public ProductInfo getProductInfo(Long productId) {
-        HystrixCommand<ProductInfo> getProductInfoCommand = new GetProductInfoCommand(productId);
-        ProductInfo productInfo = getProductInfoCommand.execute();
-        Long cityId = productInfo.getCityId();
-        GetCityNameCommand getCityNameCommand = new GetCityNameCommand(cityId);
-        String cityName = getCityNameCommand.execute();
-        productInfo.setCityName(cityName);
-        Long brandId = productInfo.getBrandId();
-        GetBrandNameCommand getBrandNameCommand = new GetBrandNameCommand(brandId);
-        String brandName = getBrandNameCommand.execute();
-        productInfo.setBrandName(brandName);
-        Future<ProductInfo> future = getProductInfoCommand.queue();
-        try {
-            Thread.sleep(1000);
-            logger.info("商品信息:" + future.get());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return productInfo;
-    }
-
-    @GetMapping("/getProductInfoFromCache")
-    public ProductInfo getProductInfoFromCache(Long productId) {
         ProductInfo productInfo = null;
         productInfo = cacheService.getProductInfoFromRedisCache(productId);
         if (productInfo != null) {
@@ -85,8 +52,29 @@ public class CacheController {
             见57-分布式缓存重建并发冲突问题以及Zookeeper分布式锁解决方案
          */
         if (productInfo == null) {
-            GetProductInfoCommand command = new GetProductInfoCommand(productId);
-            productInfo = command.execute();
+            HystrixCommand<ProductInfo> getProductInfoCommand = new GetProductInfoCommand(productId);
+            //同步调用
+            productInfo = getProductInfoCommand.execute();
+            Long cityId = productInfo.getCityId();
+            GetCityNameCommand getCityNameCommand = new GetCityNameCommand(cityId);
+            String cityName = getCityNameCommand.execute();
+            productInfo.setCityName(cityName);
+            Long brandId = productInfo.getBrandId();
+            GetBrandNameCommand getBrandNameCommand = new GetBrandNameCommand(brandId);
+            String brandName = getBrandNameCommand.execute();
+            productInfo.setBrandName(brandName);
+            /*
+                异步调用
+                queue()将command放入线程池的一个等待队列，返回一个Future对象
+                过一段时间对Future调用get()获取数据
+             */
+            Future<ProductInfo> future = getProductInfoCommand.queue();
+            try {
+                Thread.sleep(1000);
+                logger.info("商品信息:" + future.get());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             /*
                 将数据推送到内存队列中，重建缓存
 			 */
@@ -104,10 +92,12 @@ public class CacheController {
     public String getProductInfos(String productIds) {
         HystrixObservableCommand<ProductInfo> getProductInfosCommand =
                 new GetProductInfosCommand(productIds.split(","));
+        //立即执行command
         Observable<ProductInfo> observable = getProductInfosCommand.observe();
-        //还没有执行
+        /*
+            不会立即执行command，调用subscribe()后才会执行
+         */
         observable = getProductInfosCommand.toObservable();
-        //调用subscribe()后才会执行
         observable.subscribe(new Observer<ProductInfo>() {
             @Override
             public void onCompleted() {

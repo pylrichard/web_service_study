@@ -16,7 +16,8 @@ import java.util.Date;
 
 /**
  * 主动更新
- * 监听Kafka Topic，获取到商品数据变更消息之后，调用商品服务API获取数据，更新到EhCache和Redis中
+ * 缓存数据服务监听Kafka Topic，获取到商品数据变更消息之后，调用商品服务API获取数据，可能会遇到各种不稳定的情况，比如调用超时
+ * 获取到数据后更新到EhCache和Redis中
  * 先获取分布式锁，然后比较更新时间，判断是否需要更新Redis
  */
 @SuppressWarnings("rawtypes")

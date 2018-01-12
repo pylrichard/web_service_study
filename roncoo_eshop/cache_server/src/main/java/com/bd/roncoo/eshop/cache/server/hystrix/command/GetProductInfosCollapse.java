@@ -1,8 +1,8 @@
 package com.bd.roncoo.eshop.cache.server.hystrix.command;
 
 import com.alibaba.fastjson.JSONArray;
-import com.bd.roncoo.eshop.cache.server.http.HttpClientUtils;
 import com.bd.roncoo.eshop.cache.server.model.ProductInfo;
+import com.bd.roncoo.eshop.common.http.HttpClientUtils;
 import com.netflix.hystrix.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

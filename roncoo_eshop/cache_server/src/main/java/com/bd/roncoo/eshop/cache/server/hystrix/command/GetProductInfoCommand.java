@@ -11,6 +11,12 @@ import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategyDefaul
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Hystrix中最基本的资源隔离就是线程池隔离
+ * HystrixCommand封装服务调用请求，使用线程池内的一个线程来处理请求
+ * 如果此时并发调用请求数有1000，但是线程池内只有10个线程，只会使用这10个线程处理请求
+ * 不会因为依赖服务调用延迟，将Tomcat内所有的线程耗尽，导致缓存数据服务不可用
+ */
 public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
     public static final HystrixCommandKey KEY = HystrixCommandKey.Factory.asKey("GetProductInfoCommand");
     private Long productId;
@@ -18,6 +24,9 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
     public GetProductInfoCommand(Long productId) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ProductService"))
                 .andCommandKey(KEY)
+                /*
+                    设置线程池参数
+                 */
                 .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey("GetProductInfoPool"))
                 .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
                         .withCoreSize(3)

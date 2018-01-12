@@ -1,8 +1,8 @@
 package com.bd.roncoo.eshop.cache.server.hystrix.command;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bd.roncoo.eshop.cache.server.http.HttpClientUtils;
 import com.bd.roncoo.eshop.cache.server.model.ProductInfo;
+import com.bd.roncoo.eshop.common.http.HttpClientUtils;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixObservableCommand;
 import rx.Observable;
