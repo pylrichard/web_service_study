@@ -1,8 +1,15 @@
 package com.bd.roncoo.eshop.cache.server;
 
 import com.bd.roncoo.eshop.common.http.HttpClientUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * 见97-深入理解线程池隔离技术的设计原则以及动手实战接口限流实验
+ */
 public class RejectTest {
+    private static Logger logger = LoggerFactory.getLogger(CircuitBreakerTest.class);
+
     public static void main(String[] args) throws Exception {
         for (int i = 0; i < 25; i++) {
             new TestThread(i).start();
@@ -18,8 +25,9 @@ public class RejectTest {
 
         @Override
         public void run() {
-            String response = HttpClientUtils.sendGetRequest("http://localhost:8081/getProductInfo?productId=-2");
-            System.out.println("第" + (index + 1) + "次请求，结果为：" + response);
+            String request = "http://localhost:8081/getProductInfo?productId=";
+            String response = HttpClientUtils.sendGetRequest(request + "-2");
+            logger.info("第" + (index + 1) + "次请求，结果为：" + response);
         }
     }
 }

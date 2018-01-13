@@ -37,17 +37,30 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
                 .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey("GetProductInfoPool"))
                 .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
                         //线程池大小
-                        .withCoreSize(3)
+                        .withCoreSize(8)
                         .withMaximumSize(30)
                         .withAllowMaximumSizeToDivergeFromCoreSize(true)
                         .withKeepAliveTimeMinutes(1)
-                        .withMaxQueueSize(12)
-                        //command在提交到线程池之前，会先进入一个队列中，队列满之后才会reject之后的command
-                        .withQueueSizeRejectionThreshold(15))
+                        //等待队列大小，不设置withMaxQueueSize和withQueueSizeRejectionThreshold，等待队列是关闭的
+                        .withMaxQueueSize(10)
+                        /*
+                            command在提交到线程池之前，会先进入一个队列中，队列满之后才会reject之后的command
+                            如果withMaxQueueSize < withQueueSizeRejectionThreshold
+                            那么withQueueSizeRejectionThreshold = withMaxQueueSize
+                            可以接受8(线程池执行) + 10(等待队列缓冲)个请求，多余的请求进入fallback降级
+                            线程池内有线程空闲了，等待队列中的请求没有timeout，就交给空闲线程执行
+                         */
+                        .withQueueSizeRejectionThreshold(8))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                        //见96-深入理解Hystrix的短路器执行原理以及模拟接口异常时的短路实验
                         .withCircuitBreakerRequestVolumeThreshold(30)
                         .withCircuitBreakerErrorThresholdPercentage(40)
                         .withCircuitBreakerSleepWindowInMilliseconds(3000)
+                        /*
+                            默认是1000ms
+                            timeout设置大一些，否则请求在等待队列中时间一长就会触发timeout(进入fallback降级)
+                            等不到线程池去执行
+                         */
                         .withExecutionTimeoutInMilliseconds(500)
                         .withFallbackIsolationSemaphoreMaxConcurrentRequests(30))
         );
@@ -56,22 +69,19 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
 
     @Override
     protected ProductInfo run() throws Exception {
-        if (productId.equals(-1L) || productId.equals(-2L)) {
+        //见96-深入理解Hystrix的短路器执行原理以及模拟接口异常时的短路实验
+        if (productId.equals(-1L)) {
             throw new Exception();
         }
-        if (productId == 100) {
-            //生产环境如果没有查询到数据，返回一个商品信息
-            ProductInfo productInfo = new ProductInfo();
-            productInfo.setId(productId);
-
-            return productInfo;
-        } else {
-            //发送请求调用商品服务API
-            String url = "http://localhost:8082/getProductInfo?productId=" + productId;
-            String response = HttpClientUtils.sendGetRequest(url);
-
-            return JSONObject.parseObject(response, ProductInfo.class);
+        //见97-深入理解线程池隔离技术的设计原则以及动手实战接口限流实验、98-基于timeout机制为商品服务接口的调用超时提供安全保护
+        if (productId.equals(-2L)) {
+            Thread.sleep(1000);
         }
+        //发送请求调用商品服务API
+        String url = "http://localhost:8082/getProductInfo?productId=" + productId;
+        String response = HttpClientUtils.sendGetRequest(url);
+
+        return JSONObject.parseObject(response, ProductInfo.class);
     }
 
     /**
@@ -153,7 +163,7 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
         }
     }
 
-    private class HBaseColdDataCommand extends HystrixCommand<ProductInfo> {
+    private static class HBaseColdDataCommand extends HystrixCommand<ProductInfo> {
         private Long productId;
 
         public HBaseColdDataCommand(Long productId) {
