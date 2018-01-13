@@ -91,7 +91,7 @@ public class CacheController {
     }
 
     /**
-     * 批量查询多条商品数据的请求
+     * 批量查询多条商品数据
      */
     @GetMapping("/getProductsInfo")
     public String getProductsInfo(String productIds) {
@@ -119,18 +119,22 @@ public class CacheController {
                 logger.info("商品信息:" + productInfo);
             }
         });
+        /*
+            见94-基于request cache请求缓存技术优化批量商品数据查询接口
+         */
         for (String productId : productIds.split(",")) {
             GetProductInfoCommand getProductInfoCommand = new GetProductInfoCommand(
                     Long.valueOf(productId));
             ProductInfo productInfo = getProductInfoCommand.execute();
             logger.info("商品信息:" + productInfo);
+            //判断返回结果是否来自缓存
             String result = getProductInfoCommand.isResponseFromCache() ? "是" : "否";
             logger.info("是否来自缓存:" + result);
         }
         List<Future<ProductInfo>> futures = new ArrayList<>();
         for (String productId : productIds.split(",")) {
-            GetProductsInfoCollapse getProductsInfoCollapse =
-                    new GetProductsInfoCollapse(Long.valueOf(productId));
+            GetProductsInfoCollapse getProductsInfoCollapse = new GetProductsInfoCollapse(
+                    Long.valueOf(productId));
             futures.add(getProductsInfoCollapse.queue());
         }
         try {

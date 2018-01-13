@@ -60,6 +60,9 @@ public class CacheServerApplication {
         return servletListenerRegistrationBean;
     }
 
+    /**
+     * 注册Filter
+     */
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(
@@ -71,7 +74,8 @@ public class CacheServerApplication {
 
     @Bean
     public ServletRegistrationBean indexServletRegistration() {
-        ServletRegistrationBean registration = new ServletRegistrationBean(new HystrixMetricsStreamServlet());
+        ServletRegistrationBean registration = new ServletRegistrationBean(
+                new HystrixMetricsStreamServlet());
         registration.addUrlMappings("/hystrix.stream");
 
         return registration;

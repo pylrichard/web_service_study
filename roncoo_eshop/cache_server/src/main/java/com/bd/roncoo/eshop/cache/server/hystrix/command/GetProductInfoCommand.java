@@ -18,6 +18,8 @@ import java.util.Date;
  * 不会因为依赖服务调用延迟，将Tomcat内所有的线程耗尽，导致缓存数据服务不可用
  *
  * 运行在独立线程池的线程中
+ *
+ * 工作原理和执行步骤见93-深入分析Hystrix执行时的8大流程步骤以及内部原理
  */
 public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
     public static final HystrixCommandKey KEY = HystrixCommandKey.Factory.asKey("GetProductInfoCommand");
@@ -72,11 +74,18 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
         }
     }
 
+    /**
+     * 手动清理缓存
+     */
     public static void flushCache(Long productId) {
         HystrixRequestCache.getInstance(KEY,
                 HystrixConcurrencyStrategyDefault.getInstance()).clear("product_info_" + productId);
     }
 
+    /**
+     * 获取缓存key
+     * 见94-基于request cache请求缓存技术优化批量商品数据查询接口
+     */
     @Override
     protected String getCacheKey() {
         return "product_info_" + productId;

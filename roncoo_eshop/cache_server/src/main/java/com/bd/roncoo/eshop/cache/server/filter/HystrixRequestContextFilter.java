@@ -7,6 +7,7 @@ import java.io.IOException;
 
 /**
  * Hystrix请求上下文过滤器
+ * 见94-基于request cache请求缓存技术优化批量商品数据查询接口
  */
 public class HystrixRequestContextFilter implements Filter {
     @Override
