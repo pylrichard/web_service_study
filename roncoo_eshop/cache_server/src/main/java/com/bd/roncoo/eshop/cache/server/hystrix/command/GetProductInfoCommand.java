@@ -101,6 +101,11 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
         return "product_info_" + productId;
     }
 
+    /**
+     * 如果主机房的服务出现故障
+     * 第一级降级访问备用机房的服务
+     * 第二级降级用stubbed fallback
+     */
     @Override
     protected ProductInfo getFallback() {
         //也可以调用new HBaseColdDataCommand(productId).execute()
@@ -111,14 +116,14 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
         private Long productId;
 
         public FirstLevelFallbackCommand(Long productId) {
-            /*
-				第一级降级策略中command运行在fallback中
-				做多级降级时创建独立的降级command线程池
-				如果主流程的command都失效，线程池可能已被占满
-				所以降级command必须使用独立线程池
-			*/
             super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ProductService"))
                     .andCommandKey(HystrixCommandKey.Factory.asKey("FirstLevelFallbackCommand"))
+                    /*
+                        第一级降级中command运行在fallback中
+				        做多级降级时降级command创建独立的线程池
+				        如果主流程的command都失效，线程池可能已被占满
+				        所以降级command必须使用独立线程池
+			        */
                     .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey("FirstLevelFallbackPool"))
             );
 
@@ -127,19 +132,30 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
 
         @Override
         protected ProductInfo run() throws Exception {
-            //第一级降级策略从备用机房的机器调用接口
+            /*
+                模拟第一级降级失效，进入第二级降级
+             */
             if (productId.equals(-2L)) {
                 throw new Exception();
             }
-            String url = "http://localhost:8082/getProductInfo?productId=" + productId;
-            String response = HttpClientUtils.sendGetRequest(url);
+            /*
+                第一级降级访问备用机房的商品服务
+             */
+            String request = "http://localhost:8082/getProductInfo?productId=" + productId;
+            String response = HttpClientUtils.sendGetRequest(request);
 
             return JSONObject.parseObject(response, ProductInfo.class);
         }
 
+        /**
+         * 第二级降级stubbed fallback
+         */
         @Override
         protected ProductInfo getFallback() {
-            //第二级降级策略和第一级降级策略都失效
+            /*
+                见102-为商品服务接口调用增加stubbed fallback降级机制
+                结合业务场景尽可能从请求参数获取数据，从本地缓存获取数据，并设置默认值，返回给Tomcat调用线程
+             */
             ProductInfo productInfo = new ProductInfo();
             //从请求参数中获取数据
             productInfo.setId(productId);
