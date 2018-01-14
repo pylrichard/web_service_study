@@ -131,15 +131,18 @@ public class CacheController {
             String result = getProductInfoCommand.isResponseFromCache() ? "是" : "否";
             logger.info("是否来自缓存:" + result);
         }
+        /*
+            见100-基于request collapser请求合并技术进一步优化批量查询
+         */
         List<Future<ProductInfo>> futures = new ArrayList<>();
         for (String productId : productIds.split(",")) {
-            GetProductsInfoCollapse getProductsInfoCollapse = new GetProductsInfoCollapse(
+            GetProductsInfoCollapser getProductsInfoCollapser = new GetProductsInfoCollapser(
                     Long.valueOf(productId));
-            futures.add(getProductsInfoCollapse.queue());
+            futures.add(getProductsInfoCollapser.queue());
         }
         try {
             for (Future<ProductInfo> future : futures) {
-                logger.info("CacheController的结果:" + future.get());
+                logger.info("GetProductsInfoCollapser的结果:" + future.get());
             }
         } catch (Exception e) {
             e.printStackTrace();
