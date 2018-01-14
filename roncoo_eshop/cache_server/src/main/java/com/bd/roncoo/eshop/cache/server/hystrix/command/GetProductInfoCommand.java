@@ -29,10 +29,10 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ProductService"))
                 .andCommandKey(KEY)
                 /*
+                    默认情况下通过command group定义一个线程池
+                    通过command group聚合监控和报警信息，同一个command group中的请求会进入同一个线程池
                     默认的thread pool key是command group名称
                     对同一个服务的不同接口使用独立的线程池，见92-Hystrix的线程池+服务+接口划分以及资源池的容量大小控制
-
-                    设置线程池参数
                  */
                 .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey("GetProductInfoPool"))
                 .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()

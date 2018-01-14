@@ -5,11 +5,14 @@ import com.bd.roncoo.eshop.cache.server.model.ProductInfo;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 
+/**
+ * 见104-基于facade command开发商品服务接口的手动降级机制
+ */
 public class GetProductInfoFromDbCommand extends HystrixCommand<ProductInfo> {
     private Long productId;
 
     public GetProductInfoFromDbCommand(Long productId) {
-        super(HystrixCommandGroupKey.Factory.asKey("ProductInfoService"));
+        super(HystrixCommandGroupKey.Factory.asKey("ProductService"));
         this.productId = productId;
     }
 

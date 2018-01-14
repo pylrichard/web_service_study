@@ -13,6 +13,11 @@ import org.apache.storm.utils.Utils;
 /**
  * 热数据统计拓扑
  *
+ * 使用多级降级方案：
+ * 第一级降级使用备用机房的统计服务
+ * 第二级降级使用HBase+Redis+ES按分钟粒度近实时进行数据统计
+ * 第三级降级使用HDFS+Spark按小时粒度离线批处理进行数据统计
+ *
  * 提交jar到Storm执行
  * storm jar eshop_storm-0.1.0.jar com.bd.roncoo.eshop.storm.HotProductTopology HotProductTopology
  *

@@ -9,21 +9,16 @@ import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.HystrixCommandProperties.ExecutionIsolationStrategy;
 
 /**
- * 封装多个command
+ * 见104-基于facade command开发商品服务接口的手动降级机制
  */
 public class GetProductInfoFacadeCommand extends HystrixCommand<ProductInfo> {
     private Long productId;
 
     public GetProductInfoFacadeCommand(Long productId) {
-        /*
-            默认情况下
-            通过command group定义一个线程池
-            通过command group聚合监控和报警信息
-            同一个command group中的请求会进入同一个线程池
-         */
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ProductService"))
                 .andCommandKey(HystrixCommandKey.Factory.asKey("GetProductInfoFacadeCommand"))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                        //使用信号量机制做限流和资源隔离，因为这个command不需要关心timeout问题
                         .withExecutionIsolationStrategy(ExecutionIsolationStrategy.SEMAPHORE)
                         .withExecutionIsolationSemaphoreMaxConcurrentRequests(15)));
         this.productId = productId;
@@ -31,6 +26,9 @@ public class GetProductInfoFacadeCommand extends HystrixCommand<ProductInfo> {
 
     @Override
     protected ProductInfo run() throws Exception {
+        /*
+            根据手动降级标识判断要执行的command
+         */
         if (!IsDegrade.isDegrade()) {
             return new GetProductInfoCommand(productId).execute();
         } else {

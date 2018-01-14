@@ -151,6 +151,9 @@ public class CacheController {
         return "success";
     }
 
+    /**
+     * 设置手动降级标识
+     */
     @GetMapping("/isDegrade")
     public String isDegrade(boolean degrade) {
         IsDegrade.setDegrade(degrade);
