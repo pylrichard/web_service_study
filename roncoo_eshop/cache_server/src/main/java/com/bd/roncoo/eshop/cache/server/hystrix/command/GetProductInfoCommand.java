@@ -95,8 +95,21 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
         //发送请求调用商品服务API
         String url = "http://localhost:8082/getProductInfo?productId=" + productId;
         String response = HttpClientUtils.sendGetRequest(url);
+        ProductInfo productInfo = JSONObject.parseObject(response, ProductInfo.class);
+        if (productInfo == null) {
+            /*
+                见118-在缓存数据服务中实现缓存穿透的保护性机制
+                如果从商品服务查询到的数据为空
+                往Redis、EhCache、Nginx本地缓存中写入一个内容为空的productInfo对象
+                避免缓存穿透，大量请求访问MySQL
+                数据同步服务异步监听数据变更消息，如果商品服务添加了数据，数据同步服务会从商品服务获取数据
+                再更新到各级缓存中
+             */
+            productInfo = new ProductInfo();
+            productInfo.setId(productId);
+        }
 
-        return JSONObject.parseObject(response, ProductInfo.class);
+        return productInfo;
     }
 
     /**
@@ -119,11 +132,10 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
     /**
      * 如果主机房的服务出现故障
      * 第一级降级访问备用机房的服务
-     * 第二级降级用stubbed fallback
+     * 第二级降级从HBase获取冷数据
      */
     @Override
     protected ProductInfo getFallback() {
-        //也可以调用new HBaseColdDataCommand(productId).execute()
         return new FirstLevelFallbackCommand(productId).execute();
     }
 
@@ -163,7 +175,39 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
         }
 
         /**
-         * 第二级降级stubbed fallback
+         * 第二级降级从HBase获取冷数据
+         */
+        @Override
+        protected ProductInfo getFallback() {
+            return new HBaseColdDataCommand(productId).execute();
+        }
+    }
+
+    /**
+     * 见116-为依赖服务限流场景增加stubbed fallback降级机制
+     */
+    private static class HBaseColdDataCommand extends HystrixCommand<ProductInfo> {
+        private Long productId;
+
+        public HBaseColdDataCommand(Long productId) {
+            super(HystrixCommandGroupKey.Factory.asKey("HBaseGroup"));
+            this.productId = productId;
+        }
+
+        @Override
+        protected ProductInfo run() throws Exception {
+            /*
+				TODO 查询HBase
+			 */
+            String productInfoJSON = "{\"id\": " + productId + ", \"name\": \"iPhone7手机\", " +
+                    "\"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iPhone7的规格\", " +
+                    "\"service\": \"iPhone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", " +
+                    "\"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:01:00\"}";
+            return JSONObject.parseObject(productInfoJSON, ProductInfo.class);
+        }
+
+        /**
+         * 第三级降级进入stubbed fallback
          */
         @Override
         protected ProductInfo getFallback() {
@@ -189,38 +233,6 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
             productInfo.setShopId(-1L);
             productInfo.setSize("默认大小");
             productInfo.setSpecification("默认规格");
-
-            return productInfo;
-        }
-    }
-
-    private static class HBaseColdDataCommand extends HystrixCommand<ProductInfo> {
-        private Long productId;
-
-        public HBaseColdDataCommand(Long productId) {
-            super(HystrixCommandGroupKey.Factory.asKey("HBaseGroup"));
-            this.productId = productId;
-        }
-
-        @Override
-        protected ProductInfo run() throws Exception {
-			/*
-				TODO 查询HBase
-			 */
-            String productInfoJSON = "{\"id\": " + productId + ", \"name\": \"iPhone7手机\", " +
-                    "\"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iPhone7的规格\", " +
-                    "\"service\": \"iPhone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", " +
-                    "\"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:01:00\"}";
-            return JSONObject.parseObject(productInfoJSON, ProductInfo.class);
-        }
-
-        @Override
-        protected ProductInfo getFallback() {
-            ProductInfo productInfo = new ProductInfo();
-            productInfo.setId(productId);
-			/*
-				TODO 拼装内存数据
-			 */
 
             return productInfo;
         }

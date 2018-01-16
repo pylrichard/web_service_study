@@ -17,6 +17,9 @@ public class GetProductInfoFromRedisCacheCommand extends HystrixCommand<ProductI
     public GetProductInfoFromRedisCacheCommand(Long productId) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("RedisGroup"))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                        /*
+                            见114-为Redis集群崩溃时的场景部署定制化的熔断策略
+                         */
                         .withExecutionTimeoutInMilliseconds(100)
                         .withCircuitBreakerRequestVolumeThreshold(1000)
                         .withCircuitBreakerErrorThresholdPercentage(70)
@@ -38,6 +41,9 @@ public class GetProductInfoFromRedisCacheCommand extends HystrixCommand<ProductI
         return null;
     }
 
+    /**
+     * 返回null，在CacheController.getProductInfo()中会判断并从EhCache中获取数据
+     */
     @Override
     protected ProductInfo getFallback() {
         return null;

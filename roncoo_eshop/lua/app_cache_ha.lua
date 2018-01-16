@@ -155,6 +155,7 @@ if product_cache == "" or product_cache == nil then
 	    end
     end
 
+	-- 过期时间在10~20分钟范围内动态生成，避免大量缓存在同一时间失效，发送大量请求访问Redis获取数据
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     local expire_time = math.random(600, 1200)
     -- 更新Nginx本地Cache
