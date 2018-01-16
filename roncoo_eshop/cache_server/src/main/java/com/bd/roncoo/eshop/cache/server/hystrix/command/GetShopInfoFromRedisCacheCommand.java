@@ -8,10 +8,14 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import redis.clients.jedis.JedisCluster;
 
+/**
+ * 见112-基于Hystrix完成对Redis访问的资源隔离以避免缓存服务被拖垮
+ */
 public class GetShopInfoFromRedisCacheCommand extends HystrixCommand<ShopInfo> {
     private Long shopId;
 
     public GetShopInfoFromRedisCacheCommand(Long shopId) {
+        //访问Redis使用同一个线程池
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("RedisGroup"))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                         .withExecutionTimeoutInMilliseconds(100)

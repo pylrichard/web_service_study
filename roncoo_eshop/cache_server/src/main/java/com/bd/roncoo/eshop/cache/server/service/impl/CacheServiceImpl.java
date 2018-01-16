@@ -69,6 +69,10 @@ public class CacheServiceImpl implements CacheService {
         return null;
     }
 
+    /*
+        见112-基于Hystrix完成对Redis访问的资源隔离以避免缓存服务被拖垮
+     */
+
     /**
      * 将商品信息保存到Redis中
      */

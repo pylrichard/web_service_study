@@ -8,6 +8,9 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import redis.clients.jedis.JedisCluster;
 
+/**
+ * 见112-基于Hystrix完成对Redis访问的资源隔离以避免缓存服务被拖垮
+ */
 public class SaveShopInfo2RedisCacheCommand extends HystrixCommand<Boolean> {
     private ShopInfo shopInfo;
 

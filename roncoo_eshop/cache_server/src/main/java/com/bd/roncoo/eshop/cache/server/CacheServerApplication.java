@@ -72,8 +72,11 @@ public class CacheServerApplication {
         return filterRegistrationBean;
     }
 
+    /**
+     * 注册HystrixMetricsStreamServlet
+     */
     @Bean
-    public ServletRegistrationBean indexServletRegistration() {
+    public ServletRegistrationBean metricsServletRegistration() {
         ServletRegistrationBean registration = new ServletRegistrationBean(
                 new HystrixMetricsStreamServlet());
         registration.addUrlMappings("/hystrix.stream");

@@ -38,8 +38,23 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
                 .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
                         //线程池大小
                         .withCoreSize(8)
+                        /*
+                            线程池的最大大小
+                            只有设置allowMaximumSizeToDivergeFromCoreSize为true时才生效
+                         */
                         .withMaximumSize(30)
+                        /*
+                            假设某个依赖服务在高峰期需要20个线程，此时其它依赖服务只需要几个就可以了
+                            使用线程池大小动态调整来满足
+                            如果线程池在coreSize范围内没有空闲线程了
+                            随着并发量增加，在maximumSize范围内会自动获取新线程
+                         */
                         .withAllowMaximumSizeToDivergeFromCoreSize(true)
+                        /*
+                            设置线程持有时间，单位是分钟
+                            如果在coreSize之外获取到的线程在keepAliveTimeMinutes范围内是空闲状态
+                            就会被自动释放
+                         */
                         .withKeepAliveTimeMinutes(1)
                         //等待队列大小，不设置withMaxQueueSize和withQueueSizeRejectionThreshold，等待队列是关闭的
                         .withMaxQueueSize(10)
