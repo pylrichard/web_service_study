@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.bd</groupId>
-    <artifactId>java_study</artifactId>
+    <artifactId>web_service_study</artifactId>
     <version>0.1.0</version>
     <packaging>pom</packaging>
 

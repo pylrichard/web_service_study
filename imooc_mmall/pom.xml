@@ -8,7 +8,7 @@
     <packaging>war</packaging>
 
     <parent>
-        <artifactId>java_study</artifactId>
+        <artifactId>web_service_study</artifactId>
         <groupId>com.bd</groupId>
         <version>0.1.0</version>
     </parent>
