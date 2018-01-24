@@ -121,6 +121,7 @@ local function access_redis_master()
 	product_cache = redis_resp
 end
 
+-- Nginx本地Cache没有获取到数据
 if product_cache == "" or product_cache == nil then
     -- 获取从集群降级标识
     local redis_slave_downgrade = nginx_local_cache:get("redis_slave_downgrade")
@@ -130,7 +131,7 @@ if product_cache == "" or product_cache == nil then
         -- 获取数据直连服务降级标识
         local data_link_downgrade = nginx_local_cache:get("data_link_downgrade")
 
-        -- 如果要进行数据直连服务降级，访问Redis主集群
+        -- 如果要进行数据直连服务降级，访问Redis主集群，并尝试访问数据直连服务
 		if data_link_downgrade == true then
             access_redis_master()
             try_upgrade_datalink_service()
@@ -140,7 +141,8 @@ if product_cache == "" or product_cache == nil then
 		end
     else
         local redis_resp, redis_err = access_redis_slave()
-	  
+
+		-- 没有降级则访问Redis从集群，从集群没有获取到数据，则依次访问数据直连服务和Redis主集群
 	    if redis_resp == ngx.null or redis_resp == "" or redis_resp == nil then
 	        local data_link_downgrade = nginx_local_cache:get("data_link_downgrade")
 
@@ -158,7 +160,7 @@ if product_cache == "" or product_cache == nil then
 	-- 过期时间在10~20分钟范围内动态生成，避免大量缓存在同一时间失效，发送大量请求访问Redis获取数据
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     local expire_time = math.random(600, 1200)
-    -- 更新Nginx本地Cache
+    -- 获取到数据后更新Nginx本地Cache
     nginx_local_cache:set(product_cache_key, product_cache, expire_time)
 end
 

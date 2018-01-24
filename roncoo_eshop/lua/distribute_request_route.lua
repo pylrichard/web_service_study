@@ -1,5 +1,5 @@
 -- 提升缓存命中率，采用分发层+应用层双层Nginx架构，见51-基于分发层+应用层的双层Nginx架构提升缓存命中率方案分析
--- 分发层Nginx负责流量分发的，定义规则比如根据productId进行hash，然后对后端应用Nginx数量进行取模
+-- 分发层Nginx负责流量分发，定义规则比如根据productId进行hash，然后对后端应用Nginx数量进行取模
 -- 将某一个商品的访问请求固定路由到一个应用Nginx，保证只会从Redis获取一次缓存数据，之后从Nginx本地缓存获取
 -- 可以大幅度提升Nginx本地缓存命中率，大幅度减少Redis压力，提升性能
 --
@@ -13,10 +13,11 @@
 -- 获取请求参数
 local uri_args = ngx.req.get_uri_args()
 local product_id = uri_args["productId"]
+-- 应用Nginx服务器IP地址列表
 local hosts = { "192.168.8.10:8000", "192.168.8.11:8000" }
 -- 根据商品id分发请求到hosts中的服务器
 local hash = ngx.crc32_long(product_id)
--- 对应用Nginx数量取模，得到服务器索引
+-- 对应用Nginx数量取模，得到服务器IP地址列表索引
 local index = (hash % 2) + 1
 local backend = "http://" .. hosts[index]
 local request_path = uri_args["requestPath"]

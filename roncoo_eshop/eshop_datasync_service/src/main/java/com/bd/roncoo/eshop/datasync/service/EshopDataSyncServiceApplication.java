@@ -10,7 +10,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
- * 数据同步服务，获取各种原子数据的变更消息
+ * 数据同步服务获取各种原子数据的变更消息
  *
  * 1 通过Feign调用eshop_product_service服务的接口获取数据
  * 2 将原子数据在Redis中进行增删改

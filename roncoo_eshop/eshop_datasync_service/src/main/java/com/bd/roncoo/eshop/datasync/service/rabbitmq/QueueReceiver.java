@@ -50,17 +50,17 @@ public class QueueReceiver {
         String dataType = jsonObject.getString("data_type");
         Long id = jsonObject.getLong("id");
         Long productId = jsonObject.getLong("product_id");
-        if(BRAND.equals(dataType)) {
+        if (BRAND.equals(dataType)) {
             processBrandDataChangeMessage(jsonObject, id);
-        } else if(CATEGORY.equals(dataType)) {
+        } else if (CATEGORY.equals(dataType)) {
             processCategoryDataChangeMessage(jsonObject, id);
-        } else if(PRODUCT_INTRO.equals(dataType)) {
+        } else if (PRODUCT_INTRO.equals(dataType)) {
             processProductIntroDataChangeMessage(jsonObject, id, productId);
-        } else if(PRODUCT_PROPERTY.equals(dataType)) {
+        } else if (PRODUCT_PROPERTY.equals(dataType)) {
             processProductPropertyDataChangeMessage(jsonObject, id, productId);
-        } else if(PRODUCT.equals(dataType)) {
+        } else if (PRODUCT.equals(dataType)) {
             processProductDataChangeMessage(jsonObject, id, productId);
-        } else if(PRODUCT_SPECIFICATION.equals(dataType)) {
+        } else if (PRODUCT_SPECIFICATION.equals(dataType)) {
             processProductSpecificationDataChangeMessage(jsonObject, id, productId);
         }
     }
@@ -69,7 +69,7 @@ public class QueueReceiver {
         String eventType = messageJSONObject.getString("event_type");
         String keyPrefix = type + "_";
         Jedis jedis = jedisPool.getResource();
-        if("add".equals(eventType) || "update".equals(eventType)) {
+        if ("add".equals(eventType) || "update".equals(eventType)) {
             JSONObject dataJSONObject = JSONObject.parseObject(data);
             //增加/修改消息则更新数据
             jedis.set(keyPrefix + id, dataJSONObject.toJSONString());
@@ -89,7 +89,10 @@ public class QueueReceiver {
     }
 
     private void processProductIntroDataChangeMessage(JSONObject messageJSONObject, Long id, Long productId) {
-        //key中包含productId，供数据聚合服务进行聚合
+        /*
+            key中包含productId，供数据聚合服务进行聚合
+            商品介绍可以进行分段存储，见177-商品详情页动态渲染系统-商品介绍分段存储以及分段加载的介绍
+         */
         processDataChangeMessage(messageJSONObject, productId, eshopProductService.findProductIntroById(id), PRODUCT_INTRO);
     }
 
@@ -107,15 +110,15 @@ public class QueueReceiver {
 
     /**
      * 将维度数据变化消息写入RabbitMQ中另外一个Queue，供数据聚合服务消费
-     *
+     * <p>
      * 每隔一段时间将set的数据发送到下一个Queue中，然后将set的数据清除
      */
     private class SendThread extends Thread {
         @Override
         public void run() {
-            while(true) {
-                if(!dimDataChangeMessageSet.isEmpty()) {
-                    for(String message : dimDataChangeMessageSet) {
+            while (true) {
+                if (!dimDataChangeMessageSet.isEmpty()) {
+                    for (String message : dimDataChangeMessageSet) {
                         rabbitMQSender.send(topic, message);
                     }
                     dimDataChangeMessageSet.clear();
