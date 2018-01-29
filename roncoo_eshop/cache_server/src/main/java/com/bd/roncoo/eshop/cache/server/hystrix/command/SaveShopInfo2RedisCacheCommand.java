@@ -28,7 +28,7 @@ public class SaveShopInfo2RedisCacheCommand extends HystrixCommand<Boolean> {
     @Override
     protected Boolean run() throws Exception {
         JedisCluster jedisCluster = (JedisCluster) SpringContext.getApplicationContext()
-                .getBean("jedisClusterFactory");
+                .getBean("jedisCluster");
         String key = "shop_info_" + shopInfo.getId();
         jedisCluster.set(key, JSONObject.toJSONString(shopInfo));
 

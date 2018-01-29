@@ -1,6 +1,6 @@
 -- 见178-商品详情页动态渲染系统-高可用架构优化之读链路多级降级思路介绍
 --
--- 读链路:Nginx local cache -> 本机房Redis从集群 -> 数据直连服务的JVM堆缓存 -> Redis主集群 -> 依赖服务
+-- 读链路:Nginx本地缓存 -> 本机房Redis从集群 -> 数据直连服务EhCache -> Redis主集群 -> 依赖服务
 -- 读链路的降级:本机房Redis从集群不可用，降级为访问数据直连服务，数据直连服务不可用，降级为跨机房访问Redis主集群
 local DIFF_TIME = 60
 local FAILURE_CNT = 10

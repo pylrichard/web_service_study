@@ -30,6 +30,7 @@ public class GetProductsInfoCommand extends HystrixObservableCommand<ProductInfo
                         String url = "http://localhost:8082/getProductInfo?productId=" + productId;
                         String response = HttpClientUtils.sendGetRequest(url);
                         ProductInfo productInfo = JSONObject.parseObject(response, ProductInfo.class);
+                        //见CacheController.getProductsInfo().Observer.onNext()
                         observer.onNext(productInfo);
                     }
                     observer.onCompleted();

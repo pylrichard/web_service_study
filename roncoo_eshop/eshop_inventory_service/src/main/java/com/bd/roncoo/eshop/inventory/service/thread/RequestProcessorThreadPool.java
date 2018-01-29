@@ -9,8 +9,6 @@ import java.util.concurrent.Executors;
 
 /**
  * 请求处理线程池
- *
- * 见37-高并发场景下的缓存+数据库双写不一致问题分析与解决方案设计
  */
 public class RequestProcessorThreadPool {
     /**

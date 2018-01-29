@@ -29,7 +29,7 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ProductService"))
                 .andCommandKey(KEY)
                 /*
-                    默认情况下通过command group定义一个线程池
+                    默认情况下通过command group(代表一个依赖服务)定义一个线程池
                     通过command group聚合监控和报警信息，同一个command group中的请求会进入同一个线程池
                     默认的thread pool key是command group名称
                     对同一个服务的不同接口使用独立的线程池，见92-Hystrix的线程池+服务+接口划分以及资源池的容量大小控制
@@ -102,7 +102,7 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
                 如果从商品服务查询到的数据为空
                 往Redis、EhCache、Nginx本地缓存中写入一个内容为空的productInfo对象
                 避免缓存穿透，大量请求访问MySQL
-                数据同步服务异步监听数据变更消息，如果商品服务添加了数据，数据同步服务会从商品服务获取数据
+                缓存数据服务异步监听数据变更消息，如果商品服务添加了数据，缓存数据服务会从商品服务获取数据
                 再更新到各级缓存中
              */
             productInfo = new ProductInfo();
@@ -133,6 +133,7 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
      * 如果主机房的服务出现故障
      * 第一级降级访问备用机房的服务
      * 第二级降级从HBase获取冷数据
+     * 第三级降级进入stubbed fallback
      */
     @Override
     protected ProductInfo getFallback() {

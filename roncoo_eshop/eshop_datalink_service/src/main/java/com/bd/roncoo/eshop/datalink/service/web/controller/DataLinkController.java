@@ -14,8 +14,11 @@ public class DataLinkController {
 	private EshopProductService eshopProductService;
 	@Autowired
 	private JedisPool jedisPool;
-	
-	@GetMapping("/product")
+
+    /**
+     * 对比CacheController.getProductInfo()
+     */
+    @GetMapping("/product")
 	public String getProduct(Long productId) {
 		/*
 			TODO 先读取本地EhCache，没有获取到数据再读取Redis主集群

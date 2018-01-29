@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 服务启动时进行缓存预热，通过双重ZK分布式锁保证缓存只被缓存服务预热一次
+ * 服务启动时进行缓存预热，通过双重ZK分布式锁保证缓存只被缓存数据服务预热一次
  */
 public class CachePreheatThread extends Thread {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -63,7 +63,7 @@ public class CachePreheatThread extends Thread {
                                 "\"modifiedTime\": \"2017-01-01 12:00:00\"}";
                         ProductInfo productInfo = JSONObject.parseObject(productInfoJSON, ProductInfo.class);
                         /*
-                            刷新商品数据到EhCache和Redis
+                            写入商品数据到EhCache和Redis主集群
                          */
                         cacheService.saveProductInfo2LocalCache(productInfo);
                         logger.info("CachePreheatThread将商品数据设置到本地缓存中 productInfo=" + productInfo);

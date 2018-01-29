@@ -14,21 +14,23 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * 加锁就是创建某个product id对应的一个临时ZNode
- * ZK保证只会创建一个临时ZNode，其他请求如果再要创建临时ZNode，就会触发NodeExistsException
+ *
+ * ZK保证只会创建一个临时ZNode，其它请求如果再要创建临时ZNode，就会触发NodeExistsException
  * 如果临时ZNode创建成功，说明成功加锁，此时可以执行对Redis数据的操作
  * 如果临时ZNode创建失败，说明其它服务已经获取到锁，在操作Redis中的数据，那么就不断等待，直到可以获取到锁为止
+ *
  * 释放锁就是删除临时ZNode，此时其他服务可以成功创建临时ZNode，获取到锁
  */
 public class ZooKeeperSession {
     /**
-     * 使用CountDownLatch进行多线程并发同步，传入的数字参数代表
+     * 使用CountDownLatch进行通知会话创建完成结果
      */
     private static CountDownLatch connectedSemaphore = new CountDownLatch(1);
     private Logger logger = LoggerFactory.getLogger(getClass());
     private ZooKeeper zookeeper;
 
     public ZooKeeperSession() {
-        //因为连接Zookeeper Server创建会话时是异步执行，所以使用监听器通知何时完成与ZK Server的连接
+        //因为连接ZK Server创建会话时是异步执行，所以使用监听器通知何时完成与ZK Server的连接
         try {
             this.zookeeper = new ZooKeeper(
                     "192.168.8.10:2181,192.168.8.11:2181,192.168.8.12:2181",
@@ -36,9 +38,9 @@ public class ZooKeeperSession {
                     new ZooKeeperWatcher());
             try {
                 /*
-                    其他的线程可以调用countDown()减1
+                    其它线程/其它函数可以调用countDown()减1
 					调用CountDownLatch.await()判断是否等于0，不等于则进行等待
-					相等的话则之前调用await()的线程会恢复执行
+					相等则之前调用await()的线程会恢复执行
 				*/
                 connectedSemaphore.await();
             } catch (InterruptedException e) {
@@ -59,7 +61,7 @@ public class ZooKeeperSession {
             zookeeper.create(path, "".getBytes(),
                     Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
             logger.info("success to acquire lock for product[id=" + productId + "]");
-        } catch (Exception e) {
+        } catch (Exception e1) {
             //如果商品对应的锁的ZNode已经存在，会触发NodeExistsException
             int count = 0;
             while (true) {
@@ -88,7 +90,7 @@ public class ZooKeeperSession {
             zookeeper.create(path, "".getBytes(),
                     Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
             logger.info("success to acquire lock for " + path);
-        } catch (Exception e) {
+        } catch (Exception e1) {
             int count = 0;
             while (true) {
                 try {
@@ -179,7 +181,11 @@ public class ZooKeeperSession {
         @Override
         public void process(WatchedEvent event) {
             logger.info("Receive watched event: " + event.getState());
+            /*
+                完成与ZK Server的连接并创建会话
+             */
             if (KeeperState.SyncConnected == event.getState()) {
+                //唤醒缓存数据服务的主线程
                 connectedSemaphore.countDown();
             }
         }

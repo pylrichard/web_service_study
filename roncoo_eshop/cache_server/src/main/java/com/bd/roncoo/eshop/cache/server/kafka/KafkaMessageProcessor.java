@@ -16,7 +16,8 @@ import java.util.Date;
 
 /**
  * 主动更新
- * 缓存数据服务监听Kafka Topic，获取到商品数据变更消息之后，调用商品服务API获取数据，可能会遇到各种不稳定的情况，比如调用超时
+ * 缓存数据服务监听Kafka Topic，获取到商品数据变更消息之后，调用商品服务API获取数据
+ * 可能会遇到各种不稳定的情况，比如调用超时
  * 获取到数据后更新到EhCache和Redis中
  * 先获取分布式锁，然后比较更新时间，判断是否需要更新Redis
  */
@@ -24,6 +25,9 @@ import java.util.Date;
 public class KafkaMessageProcessor implements Runnable {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    /**
+     * 不断从KafkaStream获取消息
+     */
     private KafkaStream kafkaStream;
     private CacheService cacheService;
 
@@ -79,10 +83,12 @@ public class KafkaMessageProcessor implements Runnable {
         if (existedProductInfo != null) {
 			/*
                 比较当前数据的更新时间和已有数据的更新时间
+                部署多个缓存数据服务实例，更新缓存数据会有先后
 			 */
             try {
                 Date date = sdf.parse(productInfo.getModifiedTime());
                 Date existedDate = sdf.parse(existedProductInfo.getModifiedTime());
+                //已有数据比当前数据更新，就不进行更新
                 if (date.before(existedDate)) {
                     logger.info("current date[" + productInfo.getModifiedTime() + "] is before existed date["
                             + existedProductInfo.getModifiedTime() + "]");

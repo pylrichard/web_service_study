@@ -32,11 +32,17 @@ public class CacheController {
     private CacheService cacheService;
 
     /**
-     * 各级缓存失效，Nginx会发送请求到缓存数据服务获取数据
+     * Nginx本地缓存+Redis从集群缓存都失效，Nginx的Lua脚本会发送请求到缓存数据服务获取数据
+     * 见app_cache_ha.lua
+     *
+     * 对比DataLinkController.getProduct()
      */
     @GetMapping("/getProductInfo")
     public ProductInfo getProductInfo(Long productId) {
         ProductInfo productInfo = null;
+        /*
+            缓存数据服务可以访问/主动更新Redis主集群，但不访问Redis从集群
+         */
         productInfo = cacheService.getProductInfoFromRedisCache(productId);
         if (productInfo != null) {
             logger.info("从Redis中获取缓存，商品信息=" + productInfo);
@@ -47,14 +53,10 @@ public class CacheController {
                 logger.info("从EhCache中获取缓存，商品信息=" + productInfo);
             }
         }
-        /*
-            被动重建
-            在Nginx本地缓存->Redis->EhCache这3级缓存中都没有获取到数据，可能被LRU清理掉了
-            调用服务API获取数据返回给Nginx，同时推送重建消息到内存队列，缓存重建线程异步消费
-            缓存重建线程先获取分布式锁，然后比较更新时间，判断是否需要更新Redis
-            见57-分布式缓存重建并发冲突问题以及Zookeeper分布式锁解决方案
-         */
         if (productInfo == null) {
+            /*
+                在多级缓存都没有获取到数据，就调用服务API获取数据返回给Nginx
+             */
             //线程池隔离
             HystrixCommand<ProductInfo> getProductInfoCommand = new GetProductInfoCommand(productId);
             //同步调用
@@ -81,7 +83,10 @@ public class CacheController {
                 e.printStackTrace();
             }
             /*
-                将数据推送到内存队列中，重建缓存
+                被动重建
+                推送数据到重建内存队列，缓存重建线程异步执行重建
+                缓存重建线程先获取分布式锁，然后比较更新时间，判断是否需要更新Redis主集群
+                见57-分布式缓存重建并发冲突问题以及Zookeeper分布式锁解决方案
 			 */
             RebuildCacheQueue rebuildCacheQueue = RebuildCacheQueue.getInstance();
             rebuildCacheQueue.putProductInfo(productInfo);
@@ -114,6 +119,9 @@ public class CacheController {
                 e.printStackTrace();
             }
 
+            /**
+             * 见GetProductsInfoCommand.construct()中的observer.onNext(productInfo)
+             */
             @Override
             public void onNext(ProductInfo productInfo) {
                 logger.info("商品信息:" + productInfo);

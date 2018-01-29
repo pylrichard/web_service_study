@@ -21,6 +21,7 @@ import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * 缓存与数据库双写一致性保障方案
+ * 见37-高并发场景下的缓存+数据库双写不一致问题分析与解决方案设计
  * 1 线程池+内存队列初始化见InitListener、RequestProcessorThreadPool、RequestProcessorThread、RequestQueue
  * 2 读请求见ProductInventoryCacheRefreshRequest(从数据库读取数据更新到缓存)、写请求见ProductInventoryDbUpdateRequest(更新数据库)
  * 3 读/写请求异步执行见RequestAsyncProcessServiceImpl
