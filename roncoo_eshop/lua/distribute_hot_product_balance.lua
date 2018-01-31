@@ -1,8 +1,4 @@
 -- 见81-在Nginx+Lua中实现热点缓存自动降级为负载均衡流量分发策略的逻辑
-
-math.randomseed(tostring(os.time()):reverse():sub(1, 7))
-math.random(1, 2)
-
 local uri_args = ngx.req.get_uri_args()
 local productId = uri_args["productId"]
 local shopId = uri_args["shopId"]

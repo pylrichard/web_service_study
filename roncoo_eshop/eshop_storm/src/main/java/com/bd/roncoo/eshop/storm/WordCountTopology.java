@@ -82,7 +82,7 @@ public class WordCountTopology {
         }
 
         /**
-         * 每次接收到一条数据后交给executor()执行
+         * 每次接收到一条数据后交给execute()执行
          */
         @Override
         public void execute(Tuple tuple) {
@@ -103,7 +103,7 @@ public class WordCountTopology {
         private static final long serialVersionUID = 7208077706057284643L;
         private static final Logger logger = LoggerFactory.getLogger(WordCount.class);
         private OutputCollector collector;
-        private Map<String, Long> wordCounts = new HashMap<String, Long>();
+        private Map<String, Long> wordCounts = new HashMap<>();
 
         @Override
         @SuppressWarnings("rawtypes")

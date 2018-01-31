@@ -41,7 +41,8 @@ public class CachePreheatThread extends Thread {
                 /*
                     获取到分布式锁后检查TaskId的预热状态，如果已经预热过了，不需要再次预热
                  */
-                String taskIdStatus = zkSession.getNodeData("/taskId-status-" + taskId);
+                String taskIdStatusPath = "/taskId-status-" + taskId;
+                String taskIdStatus = zkSession.getNodeData(taskIdStatusPath);
                 logger.info("CachePreheatThread获取task的预热状态 taskId=" + taskId + ", status=" + taskIdStatus);
                 if ("".equals(taskIdStatus)) {
                     //ProductCountThread.run()中写入
@@ -50,7 +51,7 @@ public class CachePreheatThread extends Thread {
                     JSONArray productIdJSONArray = JSONArray.parseArray(productIdList);
                     /*
                         执行预热操作，遍历productId列表
-                    */
+                     */
                     for (int i = 0; i < productIdJSONArray.size(); i++) {
                         Long productId = productIdJSONArray.getLong(i);
                         /*
@@ -70,9 +71,9 @@ public class CachePreheatThread extends Thread {
                         cacheService.saveProductInfo2RedisCache(productInfo);
                         logger.info("CachePreheatThread将商品数据设置到Redis缓存中 productInfo=" + productInfo);
                     }
-                    zkSession.createNode("/taskId-status-" + taskId);
+                    zkSession.createNode(taskIdStatusPath);
                     //设置TaskId对应的预热状态为成功，不需要再次预热
-                    zkSession.setNodeData("/taskId-status-" + taskId, "success");
+                    zkSession.setNodeData(taskIdStatusPath, "success");
                 }
                 zkSession.releaseDistributedLock(taskIdStatusLockPath);
                 zkSession.releaseDistributedLock(taskIdLockPath);

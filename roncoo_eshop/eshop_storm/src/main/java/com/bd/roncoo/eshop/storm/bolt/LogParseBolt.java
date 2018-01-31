@@ -37,7 +37,7 @@ public class LogParseBolt extends BaseRichBolt {
         //获取商品id
         Long productId = uriArgsJSON.getLong("productId");
         if (productId != null) {
-            //发送日志给ProductCountBolt.execute()
+            //发送给ProductCountBolt.execute()
             collector.emit(new Values(productId));
             logger.info("LogParseBolt发送一个请求 productId=" + productId);
         }
