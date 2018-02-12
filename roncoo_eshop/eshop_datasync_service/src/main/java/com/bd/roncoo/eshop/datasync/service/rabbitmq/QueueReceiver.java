@@ -23,7 +23,7 @@ public class QueueReceiver {
     @Autowired
     private JedisPool jedisPool;
     @Autowired
-    private RabbitMQSender rabbitMQSender;
+    private RabbitMqSender rabbitMqSender;
     private Logger logger = LoggerFactory.getLogger(getClass());
     private static final String BRAND = "brand";
     private static final String CATEGORY = "category";
@@ -119,7 +119,7 @@ public class QueueReceiver {
             while (true) {
                 if (!dimDataChangeMessageSet.isEmpty()) {
                     for (String message : dimDataChangeMessageSet) {
-                        rabbitMQSender.send(topic, message);
+                        rabbitMqSender.send(topic, message);
                     }
                     dimDataChangeMessageSet.clear();
                 }

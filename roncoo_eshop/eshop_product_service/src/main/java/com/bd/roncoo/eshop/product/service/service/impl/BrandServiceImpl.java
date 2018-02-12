@@ -2,7 +2,7 @@ package com.bd.roncoo.eshop.product.service.service.impl;
 
 import com.bd.roncoo.eshop.product.service.mapper.BrandMapper;
 import com.bd.roncoo.eshop.product.service.model.Brand;
-import com.bd.roncoo.eshop.product.service.rabbitmq.RabbitMQSender;
+import com.bd.roncoo.eshop.product.service.rabbitmq.RabbitMqSender;
 import com.bd.roncoo.eshop.product.service.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,27 +17,27 @@ public class BrandServiceImpl implements BrandService {
 	@Autowired
 	private BrandMapper brandMapper;
 	@Autowired
-	private RabbitMQSender rabbitMQSender;
+	private RabbitMqSender rabbitMqSender;
 	
 	@Override
 	public void add(Brand brand, String operationType) {
 		brandMapper.add(brand);
 		String msg = createMsg("add", brand.getId());
-		rabbitMQSender.sendMsg(operationType, msg);
+		rabbitMqSender.sendMsg(operationType, msg);
 	}
 	
 	@Override
 	public void update(Brand brand, String operationType) {
 		brandMapper.update(brand);
 		String msg = createMsg("update", brand.getId());
-		rabbitMQSender.sendMsg(operationType, msg);
+		rabbitMqSender.sendMsg(operationType, msg);
 	}
 
 	@Override
 	public void delete(Long id, String operationType) {
 		brandMapper.delete(id);
 		String msg = createMsg("delete", id);
-		rabbitMQSender.sendMsg(operationType, msg);
+		rabbitMqSender.sendMsg(operationType, msg);
 	}
 
 	private String createMsg(String type, Long id) {

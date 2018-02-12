@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * 生产者
  */
 @Component  
-public class RabbitMQSender {  
+public class RabbitMqSender {
     @Autowired
     private AmqpTemplate rabbitTemplate;  
    

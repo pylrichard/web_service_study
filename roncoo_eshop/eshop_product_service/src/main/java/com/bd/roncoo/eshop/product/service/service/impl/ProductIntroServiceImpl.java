@@ -2,7 +2,7 @@ package com.bd.roncoo.eshop.product.service.service.impl;
 
 import com.bd.roncoo.eshop.product.service.mapper.ProductIntroMapper;
 import com.bd.roncoo.eshop.product.service.model.ProductIntro;
-import com.bd.roncoo.eshop.product.service.rabbitmq.RabbitMQSender;
+import com.bd.roncoo.eshop.product.service.rabbitmq.RabbitMqSender;
 import com.bd.roncoo.eshop.product.service.service.ProductIntroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,20 +15,20 @@ public class ProductIntroServiceImpl implements ProductIntroService {
 	@Autowired
 	private ProductIntroMapper productIntroMapper;
 	@Autowired
-	private RabbitMQSender rabbitMQSender;
+	private RabbitMqSender rabbitMqSender;
 	
 	@Override
 	public void add(ProductIntro productIntro, String operationType) {
 		productIntroMapper.add(productIntro); 
 		String msg = createMsg("add", productIntro.getId(), productIntro.getProductId());
-		rabbitMQSender.send(operationType, msg);
+		rabbitMqSender.send(operationType, msg);
 	}
 
 	@Override
 	public void update(ProductIntro productIntro, String operationType) {
 		productIntroMapper.update(productIntro);
 		String msg = createMsg("update", productIntro.getId(), productIntro.getProductId());
-		rabbitMQSender.send(operationType, msg);
+		rabbitMqSender.send(operationType, msg);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class ProductIntroServiceImpl implements ProductIntroService {
 		ProductIntro productIntro = findById(id);
 		productIntroMapper.delete(id);
 		String msg = createMsg("delete", id, productIntro.getProductId());
-		rabbitMQSender.send(operationType, msg);
+		rabbitMqSender.send(operationType, msg);
 	}
 
 	private String createMsg(String type, Long id, Long productId) {

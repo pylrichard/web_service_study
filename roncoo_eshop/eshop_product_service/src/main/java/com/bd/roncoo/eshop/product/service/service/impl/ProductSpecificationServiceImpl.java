@@ -2,7 +2,7 @@ package com.bd.roncoo.eshop.product.service.service.impl;
 
 import com.bd.roncoo.eshop.product.service.mapper.ProductSpecificationMapper;
 import com.bd.roncoo.eshop.product.service.model.ProductSpecification;
-import com.bd.roncoo.eshop.product.service.rabbitmq.RabbitMQSender;
+import com.bd.roncoo.eshop.product.service.rabbitmq.RabbitMqSender;
 import com.bd.roncoo.eshop.product.service.service.ProductSpecificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,20 +15,20 @@ public class ProductSpecificationServiceImpl implements ProductSpecificationServ
 	@Autowired
 	private ProductSpecificationMapper productSpecificationMapper;
 	@Autowired
-	private RabbitMQSender rabbitMQSender;
+	private RabbitMqSender rabbitMqSender;
 	
 	@Override
 	public void add(ProductSpecification productSpecification, String operationType) {
 		productSpecificationMapper.add(productSpecification);
 		String msg = createMsg("add", productSpecification.getId(), productSpecification.getProductId());
-		rabbitMQSender.sendMsg(operationType, msg);
+		rabbitMqSender.sendMsg(operationType, msg);
 	}
 
 	@Override
 	public void update(ProductSpecification productSpecification, String operationType) {
 		productSpecificationMapper.update(productSpecification); 
 		String msg = createMsg("update", productSpecification.getId(), productSpecification.getProductId());
-		rabbitMQSender.sendMsg(operationType, msg);
+		rabbitMqSender.sendMsg(operationType, msg);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class ProductSpecificationServiceImpl implements ProductSpecificationServ
 		ProductSpecification productSpecification = findById(id);
 		productSpecificationMapper.delete(id);
 		String msg = createMsg("delete", id, productSpecification.getProductId());
-		rabbitMQSender.sendMsg(operationType, msg);
+		rabbitMqSender.sendMsg(operationType, msg);
 	}
 
 	private String createMsg(String type, Long id, Long productId) {
