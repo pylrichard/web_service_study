@@ -8,6 +8,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>pay_facade_bank</module>
+        <module>pay_service_bank</module>
     </modules>
 
     <parent>
