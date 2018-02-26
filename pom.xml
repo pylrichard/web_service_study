@@ -28,6 +28,7 @@
         <module>imooc_house_search</module>
         <module>imooc_seckill</module>
         <module>roncoo_pay</module>
+        <module>design_pattern_study</module>
     </modules>
 
     <properties>
