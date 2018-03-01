@@ -4,8 +4,8 @@ import com.bd.java.se.study.sort.util.CompareDesc;
 import com.bd.java.se.study.sort.util.SortUtil;
 
 public class QuickSort {
-    static int ARRAY_AVAILABLE_LENGTH = 7;
-    long pivotValue;
+    private static final int ARRAY_AVAILABLE_LENGTH = 7;
+    private long pivotValue;
 
     public void sort(SortArray array) {
         sortImpl(array, 0, array.getDataSize() - 1);
@@ -13,7 +13,6 @@ public class QuickSort {
 
     private void sortImpl(SortArray array, int low, int high) {
         int pivot;
-
         //快速排序对于大数组，见大话数据结构/9.9.3-6.png
         if (array.getDataSize() > ARRAY_AVAILABLE_LENGTH) {
             //优化递归操作，见大话数据结构/9.9.3-7.png
@@ -28,7 +27,6 @@ public class QuickSort {
             sort.setCompare(compare);
             sort.sortV2(array);
         }
-
     }
 
     /**
@@ -38,7 +36,6 @@ public class QuickSort {
      */
     private int partition(SortArray array, int low, int high) {
         int mid = low + (high - low) >> 1;
-
         //优化选取枢轴，见大话数据结构/9.9.3-1~3.png
         if (array.getData(low) > array.getData(high)) {
             SortUtil.swap(array, low, high);
@@ -52,7 +49,6 @@ public class QuickSort {
         //保存枢轴的值
         this.pivotValue = array.getData(low);
         long pivotValue = array.getData(low);
-
         while (low < high) {
             while (low < high && array.getData(high) >= pivotValue) {
                 high--;
@@ -64,8 +60,8 @@ public class QuickSort {
             }
             array.setData(high, array.getData(low));
         }
-
         array.setData(low, this.pivotValue);
+
         return low;
     }
 }
