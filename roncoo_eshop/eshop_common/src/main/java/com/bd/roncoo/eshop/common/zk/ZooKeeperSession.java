@@ -53,7 +53,7 @@ public class ZooKeeperSession {
     }
 
     /**
-     * 获取分布式锁
+     * 获取分布式锁，没有获取到就循环等待，直到获取到锁
      */
     public void acquireDistributedLock(Long productId) {
         String path = "/product-lock-" + productId;
@@ -83,7 +83,7 @@ public class ZooKeeperSession {
     }
 
     /**
-     * 获取分布式锁
+     * 获取分布式锁，没有获取到就循环等待，直到获取到锁
      */
     public void acquireDistributedLock(String path) {
         try {
@@ -109,7 +109,7 @@ public class ZooKeeperSession {
     }
 
     /**
-     * 获取分布式锁
+     * 获取分布式锁，没有获取到就返回false
      */
     public boolean acquireFastFailedDistributedLock(String path) {
         try {
@@ -185,7 +185,7 @@ public class ZooKeeperSession {
                 完成与ZK Server的连接并创建会话
              */
             if (KeeperState.SyncConnected == event.getState()) {
-                //唤醒缓存数据服务的主线程
+                //唤醒等待的线程
                 connectedSemaphore.countDown();
             }
         }
