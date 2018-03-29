@@ -29,6 +29,7 @@
         <module>roncoo_pay</module>
         <module>design_pattern_study</module>
         <module>multithread_study</module>
+        <module>roncoo_study</module>
     </modules>
 
     <properties>
