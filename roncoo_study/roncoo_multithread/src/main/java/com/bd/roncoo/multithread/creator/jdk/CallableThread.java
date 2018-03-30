@@ -7,10 +7,10 @@ import java.util.concurrent.FutureTask;
 /**
  * 带返回值
  */
-public class Thread4 implements Callable<Integer> {
+public class CallableThread implements Callable<Integer> {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        Thread4 thread4 = new Thread4();
-        FutureTask<Integer> task = new FutureTask<>(thread4);
+        CallableThread callableThread = new CallableThread();
+        FutureTask<Integer> task = new FutureTask<>(callableThread);
         Thread thread = new Thread(task);
         thread.start();
         System.out.println("子线程已启动");

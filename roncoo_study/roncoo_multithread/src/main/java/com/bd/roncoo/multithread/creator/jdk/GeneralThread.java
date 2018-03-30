@@ -3,17 +3,17 @@ package com.bd.roncoo.multithread.creator.jdk;
 /**
  * ¼Ì³ĞThreadÀà
  */
-public class Thread1 extends Thread {
-    public Thread1(String name) {
+public class GeneralThread extends Thread {
+    public GeneralThread(String name) {
         super(name);
     }
 
     public static void main(String[] args) {
-        Thread1 thread1 = new Thread1("1st-thread");
-        Thread1 thread2 = new Thread1("2nd-thread");
-        thread1.start();
+        GeneralThread generalThread = new GeneralThread("1st-thread");
+        GeneralThread thread2 = new GeneralThread("2nd-thread");
+        generalThread.start();
         thread2.start();
-        thread1.interrupt();
+        generalThread.interrupt();
     }
 
     @Override

@@ -3,9 +3,9 @@ package com.bd.roncoo.multithread.creator.jdk;
 /**
  * 实现Runnable接口
  */
-public class Thread2 implements Runnable {
+public class RunnableThread implements Runnable {
     public static void main(String[] args) {
-        Thread thread = new Thread(new Thread2());
+        Thread thread = new Thread(new RunnableThread());
         thread.start();
     }
 

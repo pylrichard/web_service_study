@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 /**
  * Ïß³Ì³Ø
  */
-public class Thread6 {
+public class PoolThread {
     public static void main(String[] args) {
         ExecutorService threadPool = Executors.newCachedThreadPool();
         for (int i = 0; i < 100; i++) {

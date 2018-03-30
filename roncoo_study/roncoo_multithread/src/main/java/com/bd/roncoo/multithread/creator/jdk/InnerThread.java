@@ -3,7 +3,7 @@ package com.bd.roncoo.multithread.creator.jdk;
 /**
  * 匿名内部类
  */
-public class Thread3 {
+public class InnerThread {
     public static void main(String[] args) {
         /*new Thread() {
             public void run() {
