@@ -9,6 +9,7 @@
 
     <modules>
         <module>imooc_free</module>
+        <module>imooc_spring_primer</module>
     </modules>
 
     <parent>

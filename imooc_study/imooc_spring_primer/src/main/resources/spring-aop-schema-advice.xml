@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+    <!--
+    	Schema-defined Aspect只支持单例
+    	注意包路径，本项目有多个MoocAspect
+    -->
+    <bean id="moocAspect" class="com.bd.imooc.spring.primer.aop.schema.advice.MoocAspect"/>
+
+    <bean id="aspectBiz" class="com.bd.imooc.spring.primer.aop.schema.advice.biz.AspectBiz"/>
+
+    <!-- 见73.png -->
+    <aop:config>
+        <aop:aspect id="moocAspectAOP" ref="moocAspect">
+            <!-- 匹配以Biz结尾的类的所有方法 -->
+            <!-- 			<aop:pointcut expression="execution(* com.bd.imooc.spring.aop.schema.advice.biz.*Biz.*(..))" id="moocPointcut"/> -->
+            <!-- method指向moocAspect的方法，前置通知即AspectBiz.biz()之前before()被调用 -->
+            <!-- 			<aop:before method="before" pointcut-ref="moocPointcut"/> -->
+            <!-- 返回后通知，见69.png -->
+            <!-- 			<aop:after-returning method="afterReturning" pointcut-ref="moocPointcut"/> -->
+            <!-- 抛出异常后通知，与返回后通知互斥 -->
+            <!-- 			<aop:after-throwing method="afterThrowing" pointcut-ref="moocPointcut"/> -->
+            <!-- 后通知，无论抛出异常还是正常返回 -->
+            <!-- 			<aop:after method="after" pointcut-ref="moocPointcut"/> -->
+            <!-- 环绕通知 -->
+            <!-- 			<aop:around method="around" pointcut-ref="moocPointcut"/> -->
+            <!-- 环绕通知带参数，(String, int)限定参数类型，args限定参数名称 -->
+            <!-- 			<aop:around method="aroundInit" pointcut="execution(* AspectBiz.init(String, int))  -->
+            <!-- 							and args(bizName, times)"/> -->
+
+            <!--
+                Introduction，见89.png
+                接口实现类代表匹配到的对象，即FitImpl代表biz包下的类，见TestAOPSchemaAdvice.testFit()
+            -->
+            <aop:declare-parents types-matching="com.bd.imooc.spring.aop.schema.advice.biz.*(+)"
+                                 implement-interface="com.bd.imooc.spring.primer.aop.schema.advice.Fit"
+                                 default-impl="com.bd.imooc.spring.primer.aop.schema.advice.FitImpl"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

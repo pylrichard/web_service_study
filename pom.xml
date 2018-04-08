@@ -21,7 +21,6 @@
         <module>imooc_security/security</module>
         <module>imooc_security/sso</module>
         <module>imooc_permission</module>
-        <module>imooc_spring</module>
         <module>roncoo_eshop</module>
         <module>imooc_seckill</module>
         <module>roncoo_pay</module>

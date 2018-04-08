@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-init-method="defaultInit" default-destroy-method="defaultDestroy">
+
+    <!--  default-init-method/default-destroy-method在xml中配置，但代码中没有相应方法，可以运行 -->
+    <!--  init-method/destroy-method在xml中配置，但代码中没有相应方法，不可以运行，会报错 -->
+    <!--  default-init-method/default-destroy-method/init-method/destroy-method在xml中都配置
+          并且代码中有相应方法和afterPropertiesSet/destroy，结果见16.png -->
+    <bean id="beanLifeCycle" class="com.bd.imooc.spring.primer.bean.lifecycle.BeanLifeCycle" init-method="start"
+          destroy-method="stop"/>
+</beans>
