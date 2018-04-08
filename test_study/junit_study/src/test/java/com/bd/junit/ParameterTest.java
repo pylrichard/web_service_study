@@ -1,6 +1,5 @@
-package com.bd.junit.study;
+package com.bd.junit;
 
-import com.bd.junit.study.Calculate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

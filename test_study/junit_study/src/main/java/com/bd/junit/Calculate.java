@@ -1,4 +1,4 @@
-package com.bd.junit.study;
+package com.bd.junit;
 
 /**
  * 右键选择Calculate，Go To/Test自动生成测试用例

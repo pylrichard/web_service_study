@@ -1,4 +1,4 @@
-package com.bd.junit.study.spring;
+package com.bd.junit.spring;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +17,7 @@ public class SpringTest {
 
     @Test
     public void test() {
-        Date date = (Date)context.getBean("date");
+        Date date = (Date) context.getBean("date");
         System.out.println(date);
     }
 }

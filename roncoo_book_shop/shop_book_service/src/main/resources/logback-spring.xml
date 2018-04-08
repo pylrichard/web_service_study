@@ -4,6 +4,7 @@
     <springProfile name="pro">
         <property name="TO_CONSOLE" value="false"/>
     </springProfile>
+
     <springProfile name="!pro">
         <property name="TO_CONSOLE" value="true"/>
     </springProfile>

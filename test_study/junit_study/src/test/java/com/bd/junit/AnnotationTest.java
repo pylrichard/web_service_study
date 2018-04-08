@@ -1,6 +1,5 @@
-package com.bd.junit.study;
+package com.bd.junit;
 
-import com.bd.junit.study.Calculate;
 import org.junit.Ignore;
 import org.junit.Test;
 

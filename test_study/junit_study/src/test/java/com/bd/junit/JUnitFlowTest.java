@@ -1,4 +1,4 @@
-package com.bd.junit.study;
+package com.bd.junit;
 
 import org.junit.*;
 

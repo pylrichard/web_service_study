@@ -30,6 +30,7 @@
         <module>design_pattern_study</module>
         <module>multithread_study</module>
         <module>roncoo_study</module>
+        <module>test_study</module>
     </modules>
 
     <properties>

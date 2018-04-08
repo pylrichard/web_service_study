@@ -1,6 +1,5 @@
-package com.bd.junit.study;
+package com.bd.junit;
 
-import com.bd.junit.study.Calculate;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
