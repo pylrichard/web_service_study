@@ -8,7 +8,7 @@
 
     <parent>
         <groupId>com.bd</groupId>
-        <artifactId>web_service_study</artifactId>
+        <artifactId>algorithm_study</artifactId>
         <version>0.1.0</version>
     </parent>
 </project>

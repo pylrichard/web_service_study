@@ -11,7 +11,6 @@
 
     <modules>
         <module>java_study</module>
-        <module>sword_of_offer</module>
         <module>imooc_study</module>
         <module>roncoo_spring_boot</module>
         <module>spring_boot_admin_monitor</module>
@@ -22,12 +21,12 @@
         <module>imooc_security/sso</module>
         <module>imooc_permission</module>
         <module>roncoo_eshop</module>
-        <module>imooc_seckill</module>
         <module>roncoo_pay</module>
         <module>design_pattern_study</module>
         <module>multithread_study</module>
         <module>roncoo_study</module>
         <module>test_study</module>
+        <module>algorithm_study</module>
     </modules>
 
     <properties>

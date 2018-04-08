@@ -11,7 +11,7 @@ public class DbUtil {
     static {
         try {
             InputStream in = DbUtil.class.getClassLoader()
-                    .getResourceAsStream("application.properties");
+                    .getResourceAsStream("imooc_seckill/src/main/resources/application.properties");
             props = new Properties();
             props.load(in);
             in.close();
