@@ -10,8 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>java_se_study</module>
-        <module>junit_study</module>
+        <module>java_study</module>
         <module>sword_of_offer</module>
         <module>imooc_study</module>
         <module>roncoo_spring_boot</module>
@@ -24,7 +23,6 @@
         <module>imooc_permission</module>
         <module>imooc_spring</module>
         <module>roncoo_eshop</module>
-        <module>imooc_house_search</module>
         <module>imooc_seckill</module>
         <module>roncoo_pay</module>
         <module>design_pattern_study</module>
