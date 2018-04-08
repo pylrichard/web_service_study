@@ -11,6 +11,7 @@
         <module>imooc_free</module>
         <module>imooc_spring_primer</module>
         <module>imooc_seckill</module>
+        <module>imooc_mmall</module>
     </modules>
 
     <parent>
