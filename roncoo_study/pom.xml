@@ -16,5 +16,7 @@
         <module>roncoo_multithread</module>
         <module>roncoo_book_shop</module>
         <module>roncoo_eshop</module>
+        <module>roncoo_spring_boot_primer</module>
+        <module>spring_boot_admin_monitor</module>
     </modules>
 </project>
