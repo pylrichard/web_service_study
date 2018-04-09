@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>roncoo_eshop</artifactId>
+    <packaging>pom</packaging>
+
+    <parent>
+        <artifactId>roncoo_study</artifactId>
+        <groupId>com.bd</groupId>
+        <version>0.1.0</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <modules>
+        <module>eshop_product_service</module>
+        <module>eshop_price_service</module>
+        <module>eshop_inventory_service</module>
+        <module>eshop_datasync_service</module>
+        <module>eshop_dataaggr_service</module>
+        <module>eshop_datalink_service</module>
+        <module>eshop_one_service</module>
+        <module>zuul_server</module>
+        <module>config_server</module>
+        <module>hystrix_terbine_server</module>
+        <module>eureka_server</module>
+        <module>sleuth_server</module>
+        <module>user_service</module>
+        <module>greeting_service</module>
+        <module>say_hello_service</module>
+        <module>cache_server</module>
+        <module>eshop_storm</module>
+        <module>eshop_common</module>
+    </modules>
+</project>
