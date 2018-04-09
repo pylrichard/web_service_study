@@ -12,13 +12,13 @@
     <modules>
         <module>java_study</module>
         <module>imooc_study</module>
-        <module>ace_trade</module>
         <module>roncoo_pay</module>
         <module>design_pattern_study</module>
         <module>multithread_study</module>
         <module>roncoo_study</module>
         <module>test_study</module>
         <module>algorithm_study</module>
+        <module>mq_study</module>
     </modules>
 
     <properties>
