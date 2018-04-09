@@ -14,5 +14,6 @@
 
     <modules>
         <module>roncoo_multithread</module>
+        <module>roncoo_book_shop</module>
     </modules>
 </project>
