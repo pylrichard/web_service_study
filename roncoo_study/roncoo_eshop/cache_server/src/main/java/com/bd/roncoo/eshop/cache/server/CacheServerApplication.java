@@ -36,6 +36,9 @@ import java.util.Set;
  * 2 如果一个服务发生数据变更，发送消息到Topic
  * 3 缓存数据服务监听到消息后，调用对应的服务API从MySQL获取数据
  * 4 缓存数据服务获取到数据后，将数据写入本地EhCache和Redis主集群
+ *
+ * MySQL数据量比Redis数据量大
+ * 利用Redis的LRU淘汰机制，对key设置一个TTL过期时间，如果不是热数据就会被淘汰，以此来保证Redis中都是热数据
  */
 @EnableAutoConfiguration
 @SpringBootApplication

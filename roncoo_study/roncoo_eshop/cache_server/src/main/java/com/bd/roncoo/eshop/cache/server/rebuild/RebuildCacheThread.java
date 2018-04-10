@@ -45,7 +45,9 @@ public class RebuildCacheThread implements Runnable {
                 见CacheController.getProductInfo()往RebuildCacheQueue填充数据
              */
             ProductInfo productInfo = rebuildCacheQueue.takeProductInfo();
-            //获取ZK分布式锁
+            /*
+                TODO 此处虽然比较了更新时间，还需要获取ZK分布式锁是因为比较更新时间不是原子操作，会存在并发问题
+             */
             zkSession.acquireDistributedLock(productInfo.getId());
             ProductInfo existedProductInfo = cacheService.getProductInfoFromRedisCache(productInfo.getId());
             if (existedProductInfo != null) {
