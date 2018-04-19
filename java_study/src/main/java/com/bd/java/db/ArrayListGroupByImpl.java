@@ -13,18 +13,18 @@ public class ArrayListGroupByImpl {
         DataDto[] dataDtoArray = new DataDto[]{dataDto1, dataDto2, dataDto3,
                 dataDto4, dataDto5, dataDto6};
         List<DataDto> dataDtoList = Arrays.asList(dataDtoArray);
-        //������
+        //key是分组列，value是分组行结果集
         Map<Long, List<DataDto>> dataDtoMap = new HashMap<>();
         for (DataDto dataDto : dataDtoList) {
             Long id = dataDto.getId();
             List<DataDto> mapValue = dataDtoMap.get(id);
             if (mapValue == null) {
-                //û�ж�Ӧvalue���򴴽�List��Ϊvalue
+                //分组列对应还没有行则新建
                 mapValue = new ArrayList<>();
                 mapValue.add(dataDto);
                 dataDtoMap.put(id, mapValue);
             } else {
-                //���ڶ�Ӧvalue����������ݵ�value
+                //存储行到结果集
                 mapValue.add(dataDto);
             }
         }
