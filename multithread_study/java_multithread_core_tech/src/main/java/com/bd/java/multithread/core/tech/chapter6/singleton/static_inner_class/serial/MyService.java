@@ -1,4 +1,4 @@
-package com.bd.java.multithread.core.tech.chapter6.singleton_static_inner_class_serial;
+package com.bd.java.multithread.core.tech.chapter6.singleton.static_inner_class.serial;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;

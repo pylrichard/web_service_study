@@ -1,4 +1,4 @@
-package com.bd.java.multithread.core.tech.chapter6.singleton_static_inner_class;
+package com.bd.java.multithread.core.tech.chapter6.singleton.static_inner_class;
 
 public class SingletonStaticInnerClassTest {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package com.bd.java.multithread.core.tech.chapter6.singleton_double_check_lock;
+package com.bd.java.multithread.core.tech.chapter6.singleton.double_check.lock;
 
 public class MyService {
     volatile private static MyService service;

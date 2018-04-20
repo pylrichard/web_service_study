@@ -1,6 +1,6 @@
-package com.bd.java.multithread.core.tech.chapter6.singleton_static_code_block;
+package com.bd.java.multithread.core.tech.chapter6.singleton.double_check.lock;
 
-public class SingletonStaticCodeBlockTest {
+public class SingletonDoubleCheckLockTest {
     public static void main(String[] args) {
         MyThread t1 = new MyThread();
         MyThread t2 = new MyThread();
