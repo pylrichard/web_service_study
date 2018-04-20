@@ -4,7 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * 定时任务
+ * 瀹氭椂浠诲姟
  */
 public class TimerThread {
     public static void main(String[] args) {

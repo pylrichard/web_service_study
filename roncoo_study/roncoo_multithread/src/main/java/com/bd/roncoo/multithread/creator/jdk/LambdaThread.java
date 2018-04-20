@@ -4,19 +4,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Lambda表达式
+ * Lambda鍒涘缓鏂瑰紡
  */
 public class LambdaThread {
     public static void main(String[] args) {
         List<Integer> values = Arrays.asList(10, 20, 30, 40);
         int result = new LambdaThread().add(values);
-        System.out.println("计算结果为:" + result);
+        System.out.println("鎵ц缁撴灉:" + result);
     }
 
     public int add(List<Integer> values) {
-        //验证顺序执行
+        //楠岃瘉涓茶鎵ц
         values.forEach(System.out::println);
-        //验证并行执行
+        //楠岃瘉骞惰鎵ц
         values.parallelStream().forEach(System.out::println);
         return values.parallelStream().mapToInt(i -> i * 2).sum();
     }

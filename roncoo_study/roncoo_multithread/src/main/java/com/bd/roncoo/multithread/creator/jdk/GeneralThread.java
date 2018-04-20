@@ -1,7 +1,7 @@
 package com.bd.roncoo.multithread.creator.jdk;
 
 /**
- * 继承Thread类
+ * 閫氱敤绾跨▼鍒涘缓鏂瑰紡
  */
 public class GeneralThread extends Thread {
     public GeneralThread(String name) {
@@ -9,17 +9,17 @@ public class GeneralThread extends Thread {
     }
 
     public static void main(String[] args) {
-        GeneralThread generalThread = new GeneralThread("1st-thread");
+        GeneralThread thread1 = new GeneralThread("1st-thread");
         GeneralThread thread2 = new GeneralThread("2nd-thread");
-        generalThread.start();
+        thread1.start();
         thread2.start();
-        generalThread.interrupt();
+        thread1.interrupt();
     }
 
     @Override
     public void run() {
         while (!interrupted()) {
-            System.out.println(getName() + "线程运行");
+            System.out.println(getName() + "姝ｅ湪杩愯");
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {

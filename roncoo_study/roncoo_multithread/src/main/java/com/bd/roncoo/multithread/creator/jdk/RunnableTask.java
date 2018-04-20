@@ -1,18 +1,18 @@
 package com.bd.roncoo.multithread.creator.jdk;
 
 /**
- * 实现Runnable接口
+ * 涓嶅甫杩斿洖鍊肩殑鍒涘缓鏂瑰紡
  */
-public class RunnableThread implements Runnable {
+public class RunnableTask implements Runnable {
     public static void main(String[] args) {
-        Thread thread = new Thread(new RunnableThread());
+        Thread thread = new Thread(new RunnableTask());
         thread.start();
     }
 
     @Override
     public void run() {
         while (true) {
-            System.out.println("线程运行");
+            System.out.println("run()");
         }
     }
 }

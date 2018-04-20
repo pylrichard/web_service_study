@@ -1,26 +1,13 @@
 package com.bd.roncoo.multithread.creator.jdk;
 
 /**
- * ÄäÃûÄÚ²¿Àà
+ * å†…éƒ¨ç±»åˆ›å»º
  */
 public class InnerThread {
     public static void main(String[] args) {
-        /*new Thread() {
-            public void run() {
-                System.out.println("Ïß³ÌÔËĞĞ");
-            }
-        }.start();*/
-
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Ïß³ÌÔËĞĞ");
-            }
-        }).start();*/
-
         /*
-            ´Ë´¦Ö´ĞĞThread run()£¬¼ûThread.run()µ÷ÓÃtarget.run()
-            ¶àÌ¬µ÷ÓÃ×ÓÀà·½·¨
+            æ‰§è¡ŒThread run()ï¼ŒThread.run()ä¸­åŒ…å«target.run()
+            å¤šæ€æƒ…å†µä¸‹æ‰§è¡Œå­ç±»æ–¹æ³•
          */
         new Thread(new Runnable() {
             @Override

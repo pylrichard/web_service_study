@@ -5,22 +5,22 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 /**
- * ´ø·µ»ØÖµ
+ * å¸¦è¿”å›å€¼çš„åˆ›å»ºæ–¹å¼
  */
-public class CallableThread implements Callable<Integer> {
+public class CallableTask implements Callable<Integer> {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        CallableThread callableThread = new CallableThread();
-        FutureTask<Integer> task = new FutureTask<>(callableThread);
+        CallableTask callableTask = new CallableTask();
+        FutureTask<Integer> task = new FutureTask<>(callableTask);
         Thread thread = new Thread(task);
         thread.start();
-        System.out.println("×ÓÏß³ÌÒÑÆô¶¯");
+        System.out.println("å­çº¿ç¨‹å¼€å§‹æ‰§è¡Œ");
         Integer result = task.get();
-        System.out.println("×ÓÏß³ÌÖ´ĞĞ½á¹ûÎª:" + result);
+        System.out.println("æ‰§è¡Œç»“æœ:" + result);
     }
 
     @Override
     public Integer call() throws Exception {
-        System.out.println("call()Ö´ĞĞ");
+        System.out.println("æ‰§è¡Œcall()");
         Thread.sleep(200);
         return 1;
     }
