@@ -3,7 +3,7 @@ package com.bd.roncoo.spring.boot.primer;
 import com.bd.roncoo.spring.boot.primer.bean.UserLog;
 import com.bd.roncoo.spring.boot.primer.component.JMSComponent;
 import com.bd.roncoo.spring.boot.primer.component.RedisComponent;
-import com.bd.roncoo.spring.boot.primer.controller.APIController;
+import com.bd.roncoo.spring.boot.primer.controller.ApiController;
 import com.bd.roncoo.spring.boot.primer.dao.UserLogDAO;
 import com.bd.roncoo.spring.boot.primer.mapper.UserLogMapper;
 import org.apache.http.HttpException;
@@ -61,7 +61,7 @@ public class RoncooSpringBootPrimerApplicationTest {
 
     @Before
     public void before() {
-        this.mvc = MockMvcBuilders.standaloneSetup(new APIController()).build();
+        this.mvc = MockMvcBuilders.standaloneSetup(new ApiController()).build();
     }
 
     @Test

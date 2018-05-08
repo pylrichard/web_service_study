@@ -1,5 +1,6 @@
 package com.bd.roncoo.book.shop.db.domain;
 
+import com.bd.roncoo.book.shop.common.dto.Sex;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;

@@ -118,10 +118,12 @@
         WHERE role_id = #{roleId}
     </delete>
 
-    <insert id="batchInsert" parameterType="map">
+    <insert id="batchInsert" parameterType="list">
+        #注意与数据库字段名相对应
         insert into sys_role_acl (role_id, acl_id, operator, operate_time, operate_ip)
         values
         <foreach collection="roleAclList" item="roleAcl" separator=",">
+            #注意此处使用Java实体类中的字段名，不可使用数据库字段名
             (#{roleAcl.roleId}, #{roleAcl.aclId}, #{roleAcl.operator}, #{roleAcl.operateTime}, #{roleAcl.operateIp})
         </foreach>
     </insert>

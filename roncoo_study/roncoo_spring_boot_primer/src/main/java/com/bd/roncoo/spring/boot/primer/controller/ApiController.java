@@ -5,7 +5,7 @@ import com.bd.roncoo.spring.boot.primer.bean.User;
 import com.bd.roncoo.spring.boot.primer.bean.UserLog;
 import com.bd.roncoo.spring.boot.primer.cache.UserLogCache;
 import com.bd.roncoo.spring.boot.primer.enums.ResultEnum;
-import com.bd.roncoo.spring.boot.primer.exception.RoncooExcepiton;
+import com.bd.roncoo.spring.boot.primer.exception.RoncooException;
 import com.bd.roncoo.spring.boot.primer.util.ResultUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.ApiOperation;
@@ -27,8 +27,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api")
-public class APIController {
-    private static final Logger logger = LoggerFactory.getLogger(APIController.class);
+public class ApiController {
+    private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
 
     @Value(value = "${rsb.secret}")
     private String secret;
@@ -76,9 +76,9 @@ public class APIController {
 
         int age = user.getAge();
         if (age <= 18) {
-            throw new RoncooExcepiton(ResultEnum.SCHOOL);
+            throw new RoncooException(ResultEnum.SCHOOL);
         } else if (age > 18 && age < 25) {
-            throw new RoncooExcepiton(ResultEnum.UNIVERSITY);
+            throw new RoncooException(ResultEnum.UNIVERSITY);
         } else {
             return ResultUtil.success(user);
         }

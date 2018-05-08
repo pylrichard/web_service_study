@@ -22,6 +22,9 @@ public interface SysRoleAclMapper {
 
     void deleteByRoleId(@Param("roleId") int roleId);
 
+    /**
+     * 注解@Param指定参数名字，在Mapper.xml的collection=中引用，否则会报not found错误
+     */
     void batchInsert(@Param("roleAclList") List<SysRoleAcl> roleAclList);
 
     List<Integer> getRoleIdListByAclId(@Param("aclId") int aclId);

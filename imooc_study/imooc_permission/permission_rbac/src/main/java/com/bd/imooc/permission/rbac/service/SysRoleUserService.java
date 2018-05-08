@@ -56,11 +56,13 @@ public class SysRoleUserService {
             return;
         }
         List<SysRoleUser> roleUserList = Lists.newArrayList();
+        Date date = new Date();
         for (Integer userId : userIdList) {
             SysRoleUser roleUser = SysRoleUser.builder().roleId(roleId).userId(userId)
                     .operator(RequestHolder.getCurrentUser().getUsername())
                     .operateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()))
-                    .operateTime(new Date()).build();
+                    //批量插入的数据使用相同的时间
+                    .operateTime(date).build();
             roleUserList.add(roleUser);
         }
         sysRoleUserMapper.batchInsert(roleUserList);

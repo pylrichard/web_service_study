@@ -10,6 +10,8 @@ import java.util.Map;
 
 /**
  * 发生异常后，由ExceptionHandlerController处理异常，返回json格式的数据，而不是转到404/500.html
+ * Spring MVC采用继承HandlerExceptionResolver
+ * Dubbo使用com.alibaba.dubbo.rpc.filter.ExceptionFilter
  */
 @RestControllerAdvice
 public class ExceptionHandlerController {

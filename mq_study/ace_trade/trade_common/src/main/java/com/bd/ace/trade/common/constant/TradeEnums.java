@@ -45,7 +45,6 @@ public class TradeEnums {
         public String getServerUrl() {
             return "http://" + this.serverHost + ":" + this.serverPort + "/" + this.contextPath + "/";
         }
-
     }
 
     public enum RetEnum {
@@ -74,7 +73,6 @@ public class TradeEnums {
         public void setDesc(String desc) {
             this.desc = desc;
         }
-
     }
 
     public enum OrderStatusEnum {

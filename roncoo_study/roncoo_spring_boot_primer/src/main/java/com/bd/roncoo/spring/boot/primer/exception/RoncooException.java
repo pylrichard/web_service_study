@@ -5,10 +5,10 @@ import com.bd.roncoo.spring.boot.primer.enums.ResultEnum;
 /**
  * Spring对RuntimeException进行事务回滚，Exception不会回滚
  */
-public class RoncooExcepiton extends RuntimeException {
+public class RoncooException extends RuntimeException {
     private Integer code;
 
-    public RoncooExcepiton(ResultEnum resultEnum) {
+    public RoncooException(ResultEnum resultEnum) {
         super(resultEnum.getMsg());
         this.code = resultEnum.getCode();
     }

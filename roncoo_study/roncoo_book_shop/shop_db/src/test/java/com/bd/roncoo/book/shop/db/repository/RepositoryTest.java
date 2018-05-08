@@ -1,6 +1,7 @@
 package com.bd.roncoo.book.shop.db.repository;
 
 import com.bd.roncoo.book.shop.common.dto.AuthorCondition;
+import com.bd.roncoo.book.shop.common.dto.Sex;
 import com.bd.roncoo.book.shop.db.BaseTest;
 import com.bd.roncoo.book.shop.db.domain.Author;
 import com.bd.roncoo.book.shop.db.domain.Book;
@@ -43,7 +44,6 @@ public class RepositoryTest extends BaseTest {
     private PrintBookRepository printBookRepository;
     @Autowired
     private PlatformTransactionManager transactionManager;
-
 
     @Test
     public void testSpecQuery() {
