@@ -1,0 +1,80 @@
+group 'com.bd.imooc.gradle'
+
+//打包生成war，web模块需要
+apply plugin: 'war'
+
+allprojects {
+    //所有模块都需要
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.8
+
+    publishing {
+        publications {
+            //构建目标
+            gradlePub(MavenPublication) {
+                from components.java
+            }
+        }
+
+        repositories {
+            //发布到私服
+            maven {
+                name 'gradleRepo'
+                url ''
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations.all {
+    resolutionStrategy {
+        //遇到版本冲突报错
+        failOnVersionConflict()
+        //统一指定一个版本，help/dependencies查看依赖关系
+        force 'org.slf4j:slf4j-api:1.7.22'
+    }
+}
+
+dependencies {
+    //依赖本项目模块
+    //compile project(':模块名')
+    compile (group: 'org.hibernate', name: 'hibernate-core', version: '3.6.3.Final') {
+        //排除低版本相应的jar
+        //exclude group: "org.slf4j", module: "slf4j-api"
+    }
+    //大部分情况下使用编译时依赖
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    //比如代码中调用JDK的JDBC接口，在运行时加载具体实现的jar
+    testRuntime group: 'junit', name: 'junit', version: '4.12'
+}
+
+def createDir = {
+    path ->
+        File dir = new File(path)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+}
+
+task makeDir() {
+    def paths = ['src/main/java', 'src/main/resources', 'src/test/java', 'src/test/resources']
+    doFirst {
+        paths.forEach(createDir)
+    }
+}
+
+task makeWebDir() {
+    //任务配置，要定义在动作执行前
+    dependsOn('makeDir')
+    def paths = ['src/main/webapp']
+    //任务执行
+    doLast {
+        paths.forEach(createDir)
+    }
+}

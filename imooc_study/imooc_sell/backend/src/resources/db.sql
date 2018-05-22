@@ -12,28 +12,33 @@ CREATE TABLE `product_category` (
   COMMENT '创建时间',
   `update_time`   TIMESTAMP   NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp
   COMMENT '修改时间',
-  PRIMARY KEY (`category_id`)
+  PRIMARY KEY (`category_id`),
+  # 类目编号保持唯一
+  UNIQUE KEY `u_category_type` (`category_type`)
 )
   COMMENT '商品类目表';
 
 CREATE TABLE `product_info` (
-  `product_id`          BIGINT        NOT NULL AUTO_INCREMENT
+  # 使用VARCHAR做主键，可以避免数字类型上限问题
+  `product_id`     BIGINT        NOT NULL AUTO_INCREMENT
   COMMENT '商品id',
-  `product_name`        VARCHAR(64)   NOT NULL
+  `product_name`   VARCHAR(64)   NOT NULL
   COMMENT '商品名称',
-  `product_price`       DECIMAL(8, 2) NOT NULL
+  `product_price`  DECIMAL(8, 2) NOT NULL
   COMMENT '商品单价',
-  `product_stock`       INT           NOT NULL
+  `product_stock`  INT           NOT NULL
   COMMENT '商品库存',
-  `product_description` VARCHAR(64) COMMENT '商品描述',
-  `product_icon`        VARCHAR(512) COMMENT '小图',
-  `product_status`      TINYINT(3)             DEFAULT '0'
+  `product_desc`   VARCHAR(64) COMMENT '商品描述',
+  `product_icon`   VARCHAR(512) COMMENT '图片链接',
+  `product_status` TINYINT(3)             DEFAULT '0'
   COMMENT '商品状态，0正常，1下架',
-  `category_type`       INT           NOT NULL
+  `category_type`  INT           NOT NULL
   COMMENT '类目编号',
-  `create_time`         TIMESTAMP     NOT NULL DEFAULT current_timestamp
+  # 5.6下2个字段设置DEFAULT current_timestamp会报错，推荐使用5.7
+  `create_time`    TIMESTAMP     NOT NULL DEFAULT current_timestamp
   COMMENT '创建时间',
-  `update_time`         TIMESTAMP     NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp
+  # ON UPDATE在记录更新时同步更新时间
+  `update_time`    TIMESTAMP     NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp
   COMMENT '修改时间',
   PRIMARY KEY (`product_id`)
 )
@@ -68,9 +73,9 @@ CREATE TABLE `order_info` (
 CREATE TABLE `order_detail` (
   `detail_id`        BIGINT        NOT NULL AUTO_INCREMENT
   COMMENT '订单明细id',
-  `order_id`         VARCHAR(32)   NOT NULL
+  `order_id`         BIGINT        NOT NULL
   COMMENT '订单id',
-  `product_id`       VARCHAR(32)   NOT NULL
+  `product_id`       BIGINT        NOT NULL
   COMMENT '商品id',
   `product_name`     VARCHAR(64)   NOT NULL
   COMMENT '商品名称',
